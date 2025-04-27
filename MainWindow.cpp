@@ -9,6 +9,7 @@
 #include <Menu.h>
 #include <MenuItem.h>
 #include <View.h>
+#include <cctype>
 
 #include "TextUtils.h"
 
@@ -20,17 +21,21 @@ MainWindow::MainWindow(void)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
-
-
-	BRect textRect = BRect(10, 30, Bounds().Width() - 10, Bounds().Height() - 10);
-	textView = new BTextView(textRect, "TextView", textRect.InsetByCopy(2, 2),
-							B_FOLLOW_ALL, B_WILL_DRAW);
+	textView = new BTextView("TextView");
 	textView->MakeEditable(true);
 	textView->SetText("Paste your text here...");
 
+	// Status bar
+	statusBar = new BStringView("StatusBar", "Row: 0, Col: 0");
+	statusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
+
+	// Layout
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar)
-		.Add(textView)
+		.Add(textView, 1)
+		.AddGroup(B_HORIZONTAL)
+			.Add(statusBar)
+			.SetInsets(5, 5, 5, 5)
 		.End();
 
 	BMessage settings;
@@ -42,6 +47,10 @@ MainWindow::MainWindow(void)
 		ResizeTo(frame.Width(), frame.Height());
 	}
 	MoveOnScreen();
+
+	// Use MessageRunner as temporary solution for status bar
+	BMessage* updateMessage = new BMessage(M_UPDATE_STATUSBAR);
+	statusUpdater = new BMessageRunner(this, updateMessage, 100000);
 }
 
 
@@ -54,8 +63,12 @@ MainWindow::~MainWindow()
 void
 MainWindow::MessageReceived(BMessage *msg)
 {
+	UpdateStatusBar();
 	switch (msg->what)
 	{
+		case M_UPDATE_STATUSBAR:
+			UpdateStatusBar();
+			break;
 		case M_TRANSFORM_UPPERCASE:
 			ConvertToUppercase(textView);
 			break;
@@ -141,7 +154,7 @@ MainWindow::_BuildMenu()
 	item = new BMenuItem("RaNDoM caSE", new BMessage(M_TRANSFORM_RANDOM_CASE), 'R');
 	subMenu->AddItem(item);
 
-	item = new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE), 'A');
+	item = new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE));
 	subMenu->AddItem(item);
 
 	menu->AddItem(subMenu);
@@ -217,4 +230,42 @@ MainWindow::_SaveSettings()
 		status = settings.Flatten(&file);
 
 	return status;
+}
+
+
+void
+MainWindow::UpdateStatusBar()
+{
+	// Calculate Row/column based on cursor position
+	int32 start, end;
+	textView->GetSelection(&start, &end);
+	BString textBuffer = textView->Text();
+
+	int32 row = 1;
+	for (int32 i = 0; i < start; ++i) {
+		if (textBuffer[i] == '\n') {
+			row++;
+		}
+	}
+	int col = start - textBuffer.FindLast('\n', start);
+
+	// Calculate character count and word count
+	textBuffer.ReplaceAll('\n', ' ');
+	textBuffer.ReplaceAll('\t', ' ');
+	int32 charCount = textView->TextLength();
+	int32 wordCount = 0;
+	bool inWord = false;
+	for (int32 i = 0; i < charCount; ++i) {
+		if (std::isspace(textBuffer[i])) {
+			inWord = false;
+		} else if (!inWord) {
+			inWord = true;
+			wordCount++;
+		}
+	}
+
+	// Update the status bar text
+	BString statusText;
+	statusText.SetToFormat("%d:%d | Chars: %d | Words: %d", row, col, charCount, wordCount);
+	statusBar->SetText(statusText.String());
 }
