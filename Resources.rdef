@@ -1,0 +1,16 @@
+resource app_signature "application/x-vnd.jpw-TextWorker";
+
+resource app_flags B_SINGLE_LAUNCH;
+
+resource app_version {
+	major = 0,
+	middle = 1,
+	minor = 0,
+
+	variety = 1,
+
+	internal = 0,
+
+	short_info = "Effortlessly format text with this lightweight utility",
+	long_info = "Transform your text with easy using this versatile formatting tool. From uppercase conversion to line break removal and simple text encoding."
+};
