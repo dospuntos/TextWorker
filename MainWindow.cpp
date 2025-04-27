@@ -2,6 +2,9 @@
 
 #include <Alert.h>
 #include <Application.h>
+#include <File.h>
+#include <FindDirectory.h>
+#include <Path.h>
 #include <LayoutBuilder.h>
 #include <Menu.h>
 #include <MenuItem.h>
@@ -9,23 +12,42 @@
 
 #include "TextUtils.h"
 
+static const char* kSettingsFile = "TextWorker_settings";
+
 
 MainWindow::MainWindow(void)
 	:	BWindow(BRect(100,100,500,400),"TextWorker",B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
-	BRect r(Bounds());
-	r.bottom = 20;
 	BMenuBar* menuBar = _BuildMenu();
+
+
+
 	BRect textRect = BRect(10, 30, Bounds().Width() - 10, Bounds().Height() - 10);
 	textView = new BTextView(textRect, "TextView", textRect.InsetByCopy(2, 2),
 							B_FOLLOW_ALL, B_WILL_DRAW);
 	textView->MakeEditable(true);
-	textView->SetText("Paste your text here" B_UTF8_ELLIPSIS);
+	textView->SetText("Paste your text here...");
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar)
 		.Add(textView)
 		.End();
+
+	BMessage settings;
+	_LoadSettings(settings);
+
+	BRect frame;
+	if (settings.FindRect("main_window_rect", &frame) == B_OK) {
+		MoveTo(frame.LeftTop());
+		ResizeTo(frame.Width(), frame.Height());
+	}
+	MoveOnScreen();
+}
+
+
+MainWindow::~MainWindow()
+{
+	_SaveSettings();
 }
 
 
@@ -146,5 +168,53 @@ MainWindow::_BuildMenu()
 	menuBar->AddItem(menu);
 
 	return menuBar;
+}
 
+
+status_t
+MainWindow::_LoadSettings(BMessage& settings)
+{
+	BPath path;
+	status_t status;
+	status = find_directory(B_USER_SETTINGS_DIRECTORY, &path);
+	if (status != B_OK)
+		return status;
+
+	status = path.Append(kSettingsFile);
+	if (status != B_OK)
+		return status;
+
+	BFile file;
+	status = file.SetTo(path.Path(), B_READ_ONLY);
+	if (status != B_OK)
+		return status;
+
+	return settings.Unflatten(&file);
+}
+
+
+status_t
+MainWindow::_SaveSettings()
+{
+	BPath path;
+	status_t status = find_directory(B_USER_SETTINGS_DIRECTORY, &path);
+	if (status != B_OK)
+		return status;
+
+	status = path.Append(kSettingsFile);
+	if (status != B_OK)
+		return status;
+
+	BFile file;
+	status = file.SetTo(path.Path(), B_WRITE_ONLY | B_CREATE_FILE | B_ERASE_FILE);
+	if (status != B_OK)
+		return status;
+
+	BMessage settings;
+	status = settings.AddRect("main_window_rect", Frame());
+
+	if (status == B_OK)
+		status = settings.Flatten(&file);
+
+	return status;
 }

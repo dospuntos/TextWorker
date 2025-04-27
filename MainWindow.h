@@ -21,11 +21,17 @@ class MainWindow : public BWindow
 {
 public:
 						MainWindow(void);
+			virtual		~MainWindow();
+
 			void		MessageReceived(BMessage *msg);
 			bool		QuitRequested(void);
 
 private:
 			BMenuBar*	_BuildMenu();
+
+			status_t	_LoadSettings(BMessage& settings);
+			status_t	_SaveSettings();
+
 			BTextView*  textView;
 
 
