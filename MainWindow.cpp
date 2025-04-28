@@ -12,6 +12,7 @@
 #include <cctype>
 
 #include "TextUtils.h"
+#include "Toolbar.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -25,6 +26,9 @@ MainWindow::MainWindow(void)
 	textView->MakeEditable(true);
 	textView->SetText("Paste your text here...");
 
+	// Toolbar
+	Toolbar* toolbar = new Toolbar();
+
 	// Status bar
 	statusBar = new BStringView("StatusBar", "Row: 0, Col: 0");
 	statusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
@@ -32,6 +36,7 @@ MainWindow::MainWindow(void)
 	// Layout
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar)
+		.Add(toolbar)
 		.Add(textView, 1)
 		.AddGroup(B_HORIZONTAL)
 			.Add(statusBar)
