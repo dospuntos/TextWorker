@@ -7,12 +7,15 @@
 #include <Path.h>
 #include <LayoutBuilder.h>
 #include <Menu.h>
+#include <ScrollView.h>
 #include <MenuItem.h>
+#include <Button.h>
 #include <View.h>
 #include <cctype>
 
 #include "TextUtils.h"
 #include "Toolbar.h"
+#include "Sidebar.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -26,8 +29,15 @@ MainWindow::MainWindow(void)
 	textView->MakeEditable(true);
 	textView->SetText("Paste your text here...");
 
+	// Scroll view for textView - not working
+	//BScrollView* scrollView = new BScrollView(
+		//"ScrollView", textView, B_FOLLOW_ALL, 1, true, true);
+
 	// Toolbar
 	Toolbar* toolbar = new Toolbar();
+
+	// Sidebar
+	Sidebar* sidebar = new Sidebar();
 
 	// Status bar
 	statusBar = new BStringView("StatusBar", "Row: 0, Col: 0");
@@ -35,13 +45,15 @@ MainWindow::MainWindow(void)
 
 	// Layout
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(menuBar)
-		.Add(toolbar)
-		.Add(textView, 1)
-		.AddGroup(B_HORIZONTAL)
-			.Add(statusBar)
+		.Add(menuBar, 0)
+		.Add(toolbar, 0)
+		.SetInsets(2)
+		.AddGroup(B_HORIZONTAL, 0)
+			.Add(sidebar, 0)
+			.Add(textView, 1)
 			.SetInsets(5, 5, 5, 5)
-		.End();
+		.End()
+		.Add(statusBar, 0);
 
 	BMessage settings;
 	_LoadSettings(settings);
@@ -96,7 +108,7 @@ MainWindow::MessageReceived(BMessage *msg)
 			ConvertToROT13(textView);
 			break;
 		case M_TRANSFORM_WIP:
-			(new BAlert("Not implemented", "Sorry, this functionality has not been implemented"
+			(new BAlert("Not implemented", "Sorry, this functionality has not been implemented "
 						"yet, but it is planned for the near future.", "OK"))->Go();
 		default:
 			BWindow::MessageReceived(msg);

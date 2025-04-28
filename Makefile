@@ -32,7 +32,8 @@ APP_MIME_SIG =
 SRCS =  App.cpp \
  MainWindow.cpp \
  TextUtils.cpp  \
- Toolbar.cpp
+ Toolbar.cpp	\
+ Sidebar.cpp
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
