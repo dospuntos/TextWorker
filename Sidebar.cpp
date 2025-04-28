@@ -19,14 +19,27 @@ Sidebar::Sidebar()
 	// Tab: Line operations
 	BGroupView* lineOperationsView = new BGroupView(B_VERTICAL, 5);
 
+	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
+	prependInput = new BTextControl("PrependInput", "Prepend:", "", nullptr);
+	appendInput = new BTextControl("AppendInput", "Append:", "", nullptr);
+	maxWidthInput = new BTextControl("MaxWidth", "Characters:", "", nullptr);
+	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
+	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", "Break on:", "", nullptr);
+
 	// Add settings
 	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 5)
 		.Add(new BStringView("RemoveLineBreaks", "Remove Line Breaks"))
-		.Add(new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr))
+		.Add(replaceLineBreaksInput)
 		.Add(new BButton("RemoveLineBreaksButton", "Apply", new BMessage(M_REMOVE_LINE_BREAKS)))
 		.Add(new BStringView("AddLineBreaksLabel", "Add Line Breaks After X Characters"))
-		.Add(new BTextControl("AddLineBreaksInput", "Characters:", "", nullptr))
-		.Add(new BButton("AddLineBreaksButton", "Apply", new BMessage(M_TRANSFORM_WIP)))
+		.Add(maxWidthInput)
+		.Add(splitOnWordsCheckbox)
+		.Add(new BButton("AddLineBreaksButton", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
+		.Add(new BStringView("BreakOnDelimiter", "Break on delimiter:"))
+		.Add(lineBreakDelimiterInput)
+		.Add(new BButton("BreakOnDelimiterButton", "Apply", new BMessage(M_BREAK_LINES_ON_DELIMITER)))
+		.Add(new BButton("TrimLinesButton", "Trim", new BMessage(M_TRIM_LINES)))
+		.Add(new BButton("TrimEmptyLinesButton", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES)))
 		.AddGlue()
 		.SetInsets(10, 10, 10, 10);
 
@@ -40,9 +53,9 @@ Sidebar::Sidebar()
 
 	BLayoutBuilder::Group<>(appendPrependView, B_VERTICAL, 5)
 		.Add(new BStringView("PrependLabel", "Prepend/append to each line"))
-		.Add(new BTextControl("PrependInput", "Prepend:", "", nullptr))
-		.Add(new BTextControl("AppendInput", "Append:", "", nullptr))
-		.Add(new BButton("appendPrependButton", "Apply", new BMessage(M_TRANSFORM_WIP)))
+		.Add(prependInput)
+		.Add(appendInput)
+		.Add(new BButton("appendPrependButton", "Apply", new BMessage(M_TRANSFORM_PREPEND_APPEND)))
 		.AddGlue()
 		.SetInsets(10, 10, 10, 10);
 
@@ -51,4 +64,3 @@ Sidebar::Sidebar()
 	AddTab(appendPrependView, appendPrependTab);
 	appendPrependTab->SetLabel("Add");
 }
-

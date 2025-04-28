@@ -11,11 +11,10 @@
 #include <MenuItem.h>
 #include <Button.h>
 #include <View.h>
+#include <Font.h>
 #include <cctype>
 
 #include "TextUtils.h"
-#include "Toolbar.h"
-#include "Sidebar.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -29,15 +28,18 @@ MainWindow::MainWindow(void)
 	textView->MakeEditable(true);
 	textView->SetText("Paste your text here...");
 
+	BFont font(be_fixed_font);
+	textView->SetFontAndColor(&font);
+
 	// Scroll view for textView - not working
 	//BScrollView* scrollView = new BScrollView(
 		//"ScrollView", textView, B_FOLLOW_ALL, 1, true, true);
 
 	// Toolbar
-	Toolbar* toolbar = new Toolbar();
+	toolbar = new Toolbar();
 
 	// Sidebar
-	Sidebar* sidebar = new Sidebar();
+	sidebar = new Sidebar();
 
 	// Status bar
 	statusBar = new BStringView("StatusBar", "Row: 0, Col: 0");
@@ -98,14 +100,38 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TRANSFORM_TITLE_CASE:
 			ConvertToTitlecase(textView);
 			break;
+		case M_TRANSFORM_RANDOM_CASE:
+			ConvertToRandomCase(textView);
+			break;
 		case M_TRANSFORM_ALTERNATING_CASE:
 			ConvertToAlternatingCase(textView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			RemoveLineBreaks(textView);
+			RemoveLineBreaks(textView, sidebar->GetReplaceLineBreaksValue());
+			break;
+		case M_INSERT_LINE_BREAKS:
+			InsertLineBreaks(textView, sidebar->GetLineBreaksMaxWidth(), sidebar->GetBreakOnWords());
+			break;
+		case M_BREAK_LINES_ON_DELIMITER:
+			BreakLinesOnDelimiter(textView, sidebar->GetLineBreakDelimiter());
+			break;
+		case M_TRIM_LINES:
+			TrimLines(textView);
+			break;
+		case M_TRIM_EMPTY_LINES:
+			TrimEmptyLines(textView);
+		case M_TRANSFORM_PREPEND_APPEND:
+			AddStringsToEachLine(textView, sidebar->GetPrependInput(), sidebar->GetAppendInput());
 			break;
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(textView);
+			break;
+		case M_INSERT_EXAMPLE_TEXT:
+			textView->SetText("Haiku is an open-source operating system.\n"
+				"It is fast, simple and elegant.\n"
+				"Developers love its clean architecture.\n"
+				"Users enjoy its intuitive interface.\n"
+				"Start exploring the power of Haiku today.");
 			break;
 		case M_TRANSFORM_WIP:
 			(new BAlert("Not implemented", "Sorry, this functionality has not been implemented "
@@ -146,6 +172,14 @@ MainWindow::_BuildMenu()
 	menu->AddItem(item);
 
 	item = new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q');
+	menu->AddItem(item);
+
+	menuBar->AddItem(menu);
+
+	// 'Edit' menu
+	menu = new BMenu("Edit");
+
+	item = new BMenuItem("Insert example text", new BMessage(M_INSERT_EXAMPLE_TEXT), 'E');
 	menu->AddItem(item);
 
 	menuBar->AddItem(menu);
