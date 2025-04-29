@@ -5,6 +5,7 @@
 #include <Bitmap.h>
 #include <File.h>
 #include <FindDirectory.h>
+#include <NodeInfo.h>
 #include <Path.h>
 #include <LayoutBuilder.h>
 #include <Menu.h>
@@ -16,13 +17,15 @@
 #include <cctype>
 #include <Resources.h>
 #include <IconUtils.h>
+#include <TranslationUtils.h>
 
 #include "TextUtils.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
+static const char* kApplicationName = "TextWorker";
 
 MainWindow::MainWindow(void)
-	:	BWindow(BRect(100,100,900,800),"TextWorker",B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+	:	BWindow(BRect(100,100,900,800),kApplicationName,B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -32,10 +35,6 @@ MainWindow::MainWindow(void)
 
 	BFont font(be_fixed_font);
 	textView->SetFontAndColor(&font);
-
-	// Scroll view for textView - not working
-	//BScrollView* scrollView = new BScrollView(
-		//"ScrollView", textView, B_FOLLOW_ALL, 1, true, true);
 
 	// Toolbar
 	toolbar = new BToolBar(B_HORIZONTAL);
@@ -72,6 +71,10 @@ MainWindow::MainWindow(void)
 	BMessage settings;
 	_LoadSettings(settings);
 
+	BMessenger messenger(this);
+	fOpenPanel = new BFilePanel(B_OPEN_PANEL, &messenger, NULL, B_FILE_NODE, false);
+	fSavePanel = new BFilePanel(B_SAVE_PANEL, &messenger, NULL, B_FILE_NODE, false);
+
 	BRect frame;
 	if (settings.FindRect("main_window_rect", &frame) == B_OK) {
 		MoveTo(frame.LeftTop());
@@ -88,6 +91,8 @@ MainWindow::MainWindow(void)
 MainWindow::~MainWindow()
 {
 	_SaveSettings();
+	delete fOpenPanel;
+	delete fSavePanel;
 }
 
 
@@ -96,6 +101,43 @@ MainWindow::MessageReceived(BMessage *msg)
 {
 	switch (msg->what)
 	{
+		case M_FILE_NEW:
+			textView->SetText("");
+			fFilePath = "";
+			break;
+		case B_SIMPLE_DATA:
+		case B_REFS_RECEIVED:
+		{
+			entry_ref ref;
+			if (msg->FindRef("refs", &ref) != B_OK)
+				break;
+			OpenFile(ref);
+		} break;
+		case B_SAVE_REQUESTED:
+		{
+			entry_ref dir;
+			BString name;
+			if (msg->FindRef("directory", &dir) == B_OK &&
+					msg->FindString("name", &name) == B_OK)
+			{
+				BPath path(&dir);
+				path.Append(name);
+				SaveFile(path.Path());
+			}
+			break;
+		}
+		case M_FILE_OPEN:
+			fOpenPanel->Show();
+			break;
+		case M_FILE_SAVE:
+			if (fFilePath.CountChars() < 1)
+				fSavePanel->Show();
+			else
+				SaveFile(fFilePath.String());
+			break;
+		case M_FILE_SAVE_AS:
+			fSavePanel->Show();
+			break;
 		case M_UPDATE_STATUSBAR:
 			UpdateStatusBar();
 			break;
@@ -173,7 +215,18 @@ MainWindow::_BuildMenu()
 	// 'File' menu
 	menu = new BMenu("File");
 
-	item = new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(M_TRANSFORM_WIP), 'O');
+	item = new BMenuItem("New" B_UTF8_ELLIPSIS, new BMessage(M_FILE_NEW), 'N');
+	menu->AddItem(item);
+
+	item = new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(M_FILE_OPEN), 'O');
+	menu->AddItem(item);
+
+	menu->AddSeparatorItem();
+
+	item = new BMenuItem("Save", new BMessage(M_FILE_SAVE), 'S');
+	menu->AddItem(item);
+
+	item = new BMenuItem("Save as...", new BMessage(M_FILE_SAVE_AS));
 	menu->AddItem(item);
 
 	menu->AddSeparatorItem();
@@ -353,4 +406,44 @@ BBitmap* MainWindow::ResVectorToBitmap(const char* resName)
 		break; // stop after the first image
 	}
 	return nullptr;
+}
+
+
+void
+MainWindow::OpenFile(const entry_ref &ref)
+{
+	BEntry entry(&ref, true);
+	entry_ref realRef;
+	entry.GetRef(&realRef);
+
+	BFile file(&realRef, B_READ_ONLY);
+	if (file.InitCheck() != B_OK)
+		return;
+
+	if (BTranslationUtils::GetStyledText(&file, textView) == B_OK)
+	{
+		BPath path(&realRef);
+		fFilePath = path.Path();
+		BString windowTitle(kApplicationName);
+		windowTitle << " - " << path.Leaf();
+		SetTitle(windowTitle.String());
+	}
+}
+
+
+void
+MainWindow::SaveFile(const char *path)
+{
+	BFile file;
+	if (file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE)
+		!= B_OK)
+		return;
+
+	if (BTranslationUtils::PutStyledText(textView, &file) == B_OK)
+	{
+		fFilePath = path;
+
+		BNodeInfo nodeInfo(&file);
+		nodeInfo.SetType("text/plain");
+	}
 }

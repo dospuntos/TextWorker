@@ -7,6 +7,7 @@
 #include <TextView.h>
 #include <Window.h>
 #include <MenuBar.h>
+#include <FilePanel.h>
 #include <MessageRunner.h>
 #include <Bitmap.h>
 #include "Sidebar.h"
@@ -31,7 +32,11 @@ enum {
 	B_TEXT_CHANGED,
 	B_CURSOR_MOVED,
 	M_INSERT_EXAMPLE_TEXT,
-	M_UPDATE_STATUSBAR
+	M_UPDATE_STATUSBAR,
+	M_FILE_NEW,
+	M_FILE_OPEN,
+	M_FILE_SAVE,
+	M_FILE_SAVE_AS
 };
 
 class MainWindow : public BWindow
@@ -45,6 +50,9 @@ public:
 
 			bool		QuitRequested(void);
 
+			void 		OpenFile(const entry_ref &ref);
+			void		SaveFile(const char *path);
+
 private:
 			BMenuBar*	_BuildMenu();
 			BToolBar*	toolbar;
@@ -57,6 +65,11 @@ private:
 			BTextView*  textView;
 			BStringView* statusBar;
 			BMessageRunner* statusUpdater;
+
+			BMenuItem*		fSaveMenuItem;
+			BFilePanel*		fOpenPanel;
+			BFilePanel*		fSavePanel;
+			BString			fFilePath;
 };
 
 #endif
