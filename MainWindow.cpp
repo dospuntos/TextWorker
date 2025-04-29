@@ -2,6 +2,7 @@
 
 #include <Alert.h>
 #include <Application.h>
+#include <Bitmap.h>
 #include <File.h>
 #include <FindDirectory.h>
 #include <Path.h>
@@ -13,14 +14,15 @@
 #include <View.h>
 #include <Font.h>
 #include <cctype>
+#include <Resources.h>
+#include <IconUtils.h>
 
 #include "TextUtils.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
-
 MainWindow::MainWindow(void)
-	:	BWindow(BRect(100,100,500,400),"TextWorker",B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+	:	BWindow(BRect(100,100,900,800),"TextWorker",B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -36,13 +38,23 @@ MainWindow::MainWindow(void)
 		//"ScrollView", textView, B_FOLLOW_ALL, 1, true, true);
 
 	// Toolbar
-	toolbar = new Toolbar();
+	toolbar = new BToolBar(B_HORIZONTAL);
+
+	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("OPEN_ICON"), "Open file (Alt-O)","",false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("SAVE_ICON"), "Save file (Alt-S)","",false);
+	toolbar->GroupLayout()->AddItem(BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddSeparator();
+	toolbar->GroupLayout()->AddItem(BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddAction(new BMessage(M_TRANSFORM_UPPERCASE), this, ResVectorToBitmap("UPPERCASE_ICON"),"UPPERCASE (Alt-U)","",false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), this, ResVectorToBitmap("LOWERCASE_ICON"),"lowercase (Alt-L)","",false);
+
+	toolbar->AddGlue();
 
 	// Sidebar
 	sidebar = new Sidebar();
 
 	// Status bar
-	statusBar = new BStringView("StatusBar", "Row: 0, Col: 0");
+	statusBar = new BStringView("StatusBar", "");
 	statusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
 
 	// Layout
@@ -82,7 +94,6 @@ MainWindow::~MainWindow()
 void
 MainWindow::MessageReceived(BMessage *msg)
 {
-	UpdateStatusBar();
 	switch (msg->what)
 	{
 		case M_UPDATE_STATUSBAR:
@@ -319,4 +330,27 @@ MainWindow::UpdateStatusBar()
 	BString statusText;
 	statusText.SetToFormat("%d:%d | Chars: %d | Words: %d", row, col, charCount, wordCount);
 	statusBar->SetText(statusText.String());
+}
+
+
+BBitmap* MainWindow::ResVectorToBitmap(const char* resName)
+{
+	image_info info;
+	int32 cookie = 0;
+	while (get_next_image_info(0, &cookie, &info) == B_OK) {
+		BFile file(info.name, B_READ_ONLY);
+		if (file.InitCheck() == B_OK) {
+			BResources res(&file);
+			size_t size;
+			const void* data = res.LoadResource(B_VECTOR_ICON_TYPE, resName, &size);
+			if (data) {
+				BBitmap* icon = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32);
+				if (BIconUtils::GetVectorIcon((const uint8*)data, size, icon) == B_OK)
+					return icon;
+				delete icon;
+			}
+		}
+		break; // stop after the first image
+	}
+	return nullptr;
 }

@@ -1,14 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <Application.h>//
 #include <StringView.h>
 #include <TextControl.h>
 #include <TextView.h>
 #include <Window.h>
 #include <MenuBar.h>
 #include <MessageRunner.h>
-#include "Toolbar.h"
+#include <Bitmap.h>
 #include "Sidebar.h"
+#include <private/shared/ToolBar.h>
+#include <SupportDefs.h>
 
 enum {
 	M_TRANSFORM_UPPERCASE = 'UPCS',
@@ -38,11 +41,13 @@ public:
 			virtual		~MainWindow();
 
 			void		MessageReceived(BMessage *msg);
+			BBitmap		*ResVectorToBitmap(const char *resName);
+
 			bool		QuitRequested(void);
 
 private:
 			BMenuBar*	_BuildMenu();
-			Toolbar*	toolbar;
+			BToolBar*	toolbar;
 			Sidebar* 	sidebar;
 			void UpdateStatusBar();
 
