@@ -26,6 +26,16 @@ public:
 		return splitOnWordsCheckbox ? splitOnWordsCheckbox->Value() == B_CONTROL_ON : false;
 	}
 	BString GetLineBreakDelimiter() const { return BString(lineBreakDelimiterInput->Text()); }
+	BString GetReplaceSearchString() const { return BString(replaceSearchString->Text()); }
+	BString GetReplaceWithString() const { return BString(replaceWithString->Text()); }
+	bool GetReplaceCaseSensitive() const
+	{
+		return replaceCaseSensitiveCheckbox ? replaceCaseSensitiveCheckbox->Value() == B_CONTROL_ON : false;
+	}
+	bool GetReplaceFullWords() const
+	{
+		return replaceFullWordsCheckbox ? replaceFullWordsCheckbox->Value() == B_CONTROL_ON : false;
+	}
 
 private:
 	BTextControl* replaceLineBreaksInput;
@@ -34,7 +44,10 @@ private:
 	BTextControl* maxWidthInput;
 	BCheckBox* splitOnWordsCheckbox;
 	BTextControl* lineBreakDelimiterInput;
+	BTextControl* replaceSearchString;
+	BTextControl* replaceWithString;
+	BCheckBox* replaceCaseSensitiveCheckbox;
+	BCheckBox* replaceFullWordsCheckbox;
 };
-
 
 #endif // SIDEBAR_H

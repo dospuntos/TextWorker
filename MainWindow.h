@@ -29,6 +29,7 @@ enum {
 	M_TRANSFORM_ROT13,
 	M_TRANSFORM_WIP,
 	M_TRANSFORM_PREPEND_APPEND,
+	M_TRANSFORM_REPLACE,
 	B_TEXT_CHANGED,
 	B_CURSOR_MOVED,
 	M_INSERT_EXAMPLE_TEXT,
@@ -36,7 +37,8 @@ enum {
 	M_FILE_NEW,
 	M_FILE_OPEN,
 	M_FILE_SAVE,
-	M_FILE_SAVE_AS
+	M_FILE_SAVE_AS,
+	M_TOGGLE_WORD_WRAP
 };
 
 class MainWindow : public BWindow
@@ -63,6 +65,7 @@ public:
 			status_t	_SaveSettings();
 
 			BTextView*  textView;
+			BScrollView* scrollView;
 			BStringView* statusBar;
 			BMessageRunner* statusUpdater;
 

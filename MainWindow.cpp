@@ -15,6 +15,7 @@
 #include <Path.h>
 #include <Resources.h>
 #include <ScrollView.h>
+#include <TranslatorRoster.h>
 #include <TranslationUtils.h>
 #include <View.h>
 #include <cctype>
@@ -35,6 +36,10 @@ MainWindow::MainWindow(void)
 	textView = new BTextView("TextView");
 	textView->MakeEditable(true);
 	textView->SetText("Paste your text here...");
+	textView->SetWordWrap(false);
+
+	scrollView = new BScrollView(
+		"TextViewScroll", textView, B_WILL_DRAW | B_FRAME_EVENTS, true, true, B_PLAIN_BORDER);
 
 	BFont font(be_fixed_font);
 	textView->SetFontAndColor(&font);
@@ -46,6 +51,13 @@ MainWindow::MainWindow(void)
 		"Open file (Alt-O)", "", false);
 	toolbar->AddAction(new BMessage(M_FILE_SAVE), this, ResVectorToBitmap("SAVE_ICON"),
 		"Save file (Alt-S)", "", false);
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddSeparator();
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), this, ResVectorToBitmap("LINE_WRAP_ICON"),
+		"Word wrap", "", true);
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddSeparator();
@@ -72,7 +84,7 @@ MainWindow::MainWindow(void)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
 		.Add(sidebar, 0)
-		.Add(textView, 1)
+		.Add(scrollView, 1)
 		.SetInsets(5, 5, 5, 5)
 		.End()
 		.Add(statusBar, 0);
@@ -179,6 +191,10 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TRIM_LINES:
 			TrimLines(textView);
 			break;
+		case M_TRANSFORM_REPLACE:
+			ReplaceAll(textView, sidebar->GetReplaceSearchString(), sidebar->GetReplaceWithString(),
+				sidebar->GetReplaceCaseSensitive(), sidebar->GetReplaceFullWords());
+			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(textView);
 		case M_TRANSFORM_PREPEND_APPEND:
@@ -200,6 +216,10 @@ MainWindow::MessageReceived(BMessage *msg)
 				 "yet, but it is planned for the near future.",
 				 "OK"))
 				->Go();
+			break;
+		case M_TOGGLE_WORD_WRAP:
+			textView->SetWordWrap(!textView->DoesWordWrap());
+			break;
 		default:
 			BWindow::MessageReceived(msg);
 			break;
@@ -411,12 +431,51 @@ MainWindow::OpenFile(const entry_ref& ref)
 	BFile file(&realRef, B_READ_ONLY);
 	if (file.InitCheck() != B_OK)
 		return;
+
+	// Check MIME type
+	BNode node(&realRef);
+	BNodeInfo nodeInfo(&node);
+	char mimeType[B_MIME_TYPE_LENGTH];
+	bool isText = false;
+
+	if (nodeInfo.GetType(mimeType) == B_OK && strncmp(mimeType, "text/", 5) == 0)
+		isText = true;
+
+	if (!isText) {
+		file.Seek(0, SEEK_SET);
+		const off_t kMaxCheckSize = 1024;
+		off_t fileSize;
+		if (file.GetSize(&fileSize) == B_OK) {
+			uint8 buffer[kMaxCheckSize];
+			ssize_t bytesRead = file.ReadAt(0, buffer, std::min(fileSize, kMaxCheckSize));
+			if (bytesRead > 0) {
+
+				// Count non-printable characters
+				int nonPrintable = 0;
+				for (ssize_t i = 0; i < bytesRead; ++i) {
+					char c = buffer[i];
+					if ((c < 32 || c > 126) && c != '\n' && c != '\r' && c != '\t') {
+						if (++nonPrintable > 10) break;
+					}
+				}
+				if (nonPrintable <= 10)
+					isText = true;
+			}
+		}
+	}
+
+
+	if (!isText) {
+		(new BAlert("Error", "The selected file is not a recognized text file.", "OK"))->Go();
+		return;
+	}
+
 	textView->SetText("");
 	if (BTranslationUtils::GetStyledText(&file, textView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
 		BString windowTitle(kApplicationName);
-		windowTitle << " - " << path.Leaf();
+		windowTitle << ": " << path.Leaf();
 		SetTitle(windowTitle.String());
 	}
 }
@@ -432,8 +491,12 @@ MainWindow::SaveFile(const char* path)
 	if (BTranslationUtils::PutStyledText(textView, &file) == B_OK) {
 		fFilePath = path;
 
+		BPath p(path);
+		BString windowTitle(kApplicationName);
+		windowTitle << ": " << p.Leaf();
+		SetTitle(windowTitle.String());
+
 		BNodeInfo nodeInfo(&file);
 		nodeInfo.SetType("text/plain");
 	}
 }
- 

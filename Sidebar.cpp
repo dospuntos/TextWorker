@@ -29,6 +29,11 @@ Sidebar::Sidebar()
 	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
 	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", "Break on:", "", nullptr);
 
+	replaceSearchString = new BTextControl("ReplaceSearchString", "Find", "", nullptr);
+	replaceWithString = new BTextControl("ReplaceWithString", "Replace", "", nullptr);
+	replaceCaseSensitiveCheckbox = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
+	replaceFullWordsCheckbox = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
+
 	// Add settings
 	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 5)
 		.Add(new BStringView("RemoveLineBreaks", "Remove Line Breaks"))
@@ -45,6 +50,12 @@ Sidebar::Sidebar()
 		.Add(new BButton("TrimLinesButton", "Trim", new BMessage(M_TRIM_LINES)))
 		.Add(new BButton("TrimEmptyLinesButton", "Remove empty lines",
 			new BMessage(M_TRIM_EMPTY_LINES)))
+		.Add(new BStringView("SearchReplace", "Search/replace"))
+		.Add(replaceSearchString)
+		.Add(replaceWithString)
+		.Add(replaceCaseSensitiveCheckbox)
+		.Add(replaceFullWordsCheckbox)
+		.Add(new BButton("SearchReplaceButton", "Replace", new BMessage(M_TRANSFORM_REPLACE)))
 		.AddGlue()
 		.SetInsets(10, 10, 10, 10);
 

@@ -7,6 +7,7 @@
 #include "TextUtils.h"
 #include <String.h>
 #include <TextControl.h>
+#include <File.h>
 #include <cctype>
 
 int32 startSelection, endSelection; // For cursor position
@@ -382,4 +383,46 @@ TrimEmptyLines(BTextView* textView)
 	textView->SetText(updatedText.String());
 	RestoreCursorPosition(textView);
 }
- 
+
+
+bool
+IsFullWord(const BString& text, int32 pos, int32 length)
+{
+	bool startOk = (pos == 0) || !isalnum(text.ByteAt(pos - 1));
+	bool endOk = (pos + length >= text.Length() || !isalnum(text.ByteAt(pos + length)));
+	return startOk && endOk;
+}
+
+
+void
+ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
+	bool fullWordsOnly)
+{
+	BString text(GetTextFromTextView(textView));
+	if (text.IsEmpty() || find.IsEmpty())
+		return;
+
+	int32 pos = 0;
+	int32 findLength = find.Length();
+
+	while (true) {
+		pos = caseSensitive
+			? text.FindFirst(find.String(), pos)
+			: text.IFindFirst(find.String(), pos);
+
+		if (pos < 0)
+			break;
+
+		if (fullWordsOnly && !IsFullWord(text, pos, findLength)) {
+			pos += findLength;
+			continue;
+		}
+
+		text.Remove(pos, findLength);
+		text.Insert(replaceWith, pos);
+		pos += replaceWith.Length();
+	}
+
+	textView->SetText(text.String());
+	RestoreCursorPosition(textView);
+}

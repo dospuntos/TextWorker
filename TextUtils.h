@@ -23,9 +23,13 @@ BString ProcessLineWithBreaks(const BString& line, int32 maxLength, bool KeepWor
 void BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter);
 void TrimLines(BTextView* textView);
 void TrimEmptyLines(BTextView* textView);
+void ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
+	bool fullWordsOnly);
 
 void ConvertToROT13(BTextView* textView);
 void AddStringsToEachLine(BTextView* textView, const BString& startString,
 	const BString& endString);
+
+bool IsProbablyText(BFile& file);
 
 #endif // TEXT_UTILS_H

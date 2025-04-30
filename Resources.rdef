@@ -19,3 +19,4 @@ resource(2, "OPEN_ICON") #'VICN' import "icons/open-file-folder.hvif";
 resource(3, "SAVE_ICON") #'VICN' import "icons/save.hvif";
 resource(4, "UPPERCASE_ICON") #'VICN' import "icons/uppercase.hvif";
 resource(5, "LOWERCASE_ICON") #'VICN' import "icons/lowercase.hvif";
+resource(6, "LINE_WRAP_ICON") #'VICN' import "icons/text-wrap.hvif";
