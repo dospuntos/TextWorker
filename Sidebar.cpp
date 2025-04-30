@@ -6,20 +6,23 @@
 
 #include "Sidebar.h"
 #include "MainWindow.h"
-#include <TabView.h>
-#include <GroupView.h>
-#include <StringView.h>
-#include <LayoutBuilder.h>
-#include <TextControl.h>
 #include <Button.h>
+#include <GroupView.h>
+#include <LayoutBuilder.h>
+#include <StringView.h>
+#include <TabView.h>
+#include <TextControl.h>
+
 
 Sidebar::Sidebar()
-	: BTabView("Sidebar")
+	:
+	BTabView("Sidebar")
 {
 	// Tab: Line operations
 	BGroupView* lineOperationsView = new BGroupView(B_VERTICAL, 5);
 
-	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
+	replaceLineBreaksInput
+		= new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
 	prependInput = new BTextControl("PrependInput", "Prepend:", "", nullptr);
 	appendInput = new BTextControl("AppendInput", "Append:", "", nullptr);
 	maxWidthInput = new BTextControl("MaxWidth", "Characters:", "", nullptr);
@@ -37,9 +40,11 @@ Sidebar::Sidebar()
 		.Add(new BButton("AddLineBreaksButton", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
 		.Add(new BStringView("BreakOnDelimiter", "Break on delimiter:"))
 		.Add(lineBreakDelimiterInput)
-		.Add(new BButton("BreakOnDelimiterButton", "Apply", new BMessage(M_BREAK_LINES_ON_DELIMITER)))
+		.Add(new BButton("BreakOnDelimiterButton", "Apply",
+			new BMessage(M_BREAK_LINES_ON_DELIMITER)))
 		.Add(new BButton("TrimLinesButton", "Trim", new BMessage(M_TRIM_LINES)))
-		.Add(new BButton("TrimEmptyLinesButton", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES)))
+		.Add(new BButton("TrimEmptyLinesButton", "Remove empty lines",
+			new BMessage(M_TRIM_EMPTY_LINES)))
 		.AddGlue()
 		.SetInsets(10, 10, 10, 10);
 

@@ -32,7 +32,8 @@ APP_MIME_SIG = application/x-vnd.jpw-TextWorker
 SRCS =  App.cpp \
  MainWindow.cpp \
  TextUtils.cpp  \
- Sidebar.cpp
+ Sidebar.cpp	\
+ Constants.cpp
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.

@@ -25,6 +25,7 @@ void TrimLines(BTextView* textView);
 void TrimEmptyLines(BTextView* textView);
 
 void ConvertToROT13(BTextView* textView);
-void AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString);
+void AddStringsToEachLine(BTextView* textView, const BString& startString,
+	const BString& endString);
 
 #endif // TEXT_UTILS_H

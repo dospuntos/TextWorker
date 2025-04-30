@@ -11,11 +11,13 @@
 
 int32 startSelection, endSelection; // For cursor position
 
+
 BString
 GetTextFromTextView(BTextView* textView)
 {
 	// Check if invalid or empty
-	if (textView == nullptr) return BString("");
+	if (textView == nullptr)
+		return BString("");
 	int32 textLength = textView->TextLength();
 	if (textLength == 0) return BString("");
 
@@ -125,7 +127,6 @@ ConvertToRandomCase(BTextView* textView)
 
 			text.SetByteAt(i, currentChar);
 		}
-
 	}
 
 	textView->SetText(text.String());
@@ -197,10 +198,11 @@ ConvertToROT13(BTextView* textView)
 
 
 void
-AddStringsToEachLine(BTextView* textView, const BString& startString, const BString&endString)
+AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	BString updatedText;
 
@@ -225,12 +227,12 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 }
 
 
-
 void
 InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 {
 	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	BString updatedText;
 
@@ -238,16 +240,15 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 	while (start < text.Length()) {
 		int32 segmentEnd = start + maxLength;
 
-		if (segmentEnd >= text.Length())  {
+		if (segmentEnd >= text.Length()) {
 			updatedText.Append(text.String() + start, text.Length() - start);
 			break;
 		}
 
 		if (KeepWordsIntact) {
 			int32 nearestSpace = text.FindLast(' ', segmentEnd);
-			if (nearestSpace >= start) {
+			if (nearestSpace >= start)
 				segmentEnd = nearestSpace;
-			}
 		}
 
 		// Append the segment and add line break
@@ -280,18 +281,17 @@ ProcessLineWithBreaks(const BString& line, int32 maxLength, bool KeepWordsIntact
 			break;
 		}
 
-	if (KeepWordsIntact) {
-		currentPos = line.FindLast(' ', start + maxLength);
-		if (currentPos < start) {
+		if (KeepWordsIntact) {
+			currentPos = line.FindLast(' ', start + maxLength);
+			if (currentPos < start)
+				currentPos = start + maxLength;
+		} else {
 			currentPos = start + maxLength;
 		}
-	} else {
-		currentPos = start + maxLength;
-	}
 
-	processedLine.Append(line.String() + start, currentPos - start);
-	processedLine << '\n';
-	start = currentPos + (KeepWordsIntact ? 1 : 0);
+		processedLine.Append(line.String() + start, currentPos - start);
+		processedLine << '\n';
+		start = currentPos + (KeepWordsIntact ? 1 : 0);
 	}
 	return processedLine;
 }
@@ -301,7 +301,8 @@ void
 BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter)
 {
 	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	BString updatedText;
 
@@ -314,9 +315,8 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter)
 		start = delimiterPosition + delimiter.Length();
 	}
 
-	if (start < text.Length()) {
+	if (start < text.Length())
 		updatedText.Append(text.String() + start, text.Length() - start);
-	}
 
 	textView->SetText(updatedText.String());
 	RestoreCursorPosition(textView);
@@ -327,7 +327,8 @@ void
 TrimLines(BTextView* textView)
 {
 	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	BString updatedText;
 	int32 start = 0;
@@ -355,7 +356,8 @@ void
 TrimEmptyLines(BTextView* textView)
 {
 	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	int32 start = 0;
 	int32 end;
@@ -380,3 +382,4 @@ TrimEmptyLines(BTextView* textView)
 	textView->SetText(updatedText.String());
 	RestoreCursorPosition(textView);
 }
+ 

@@ -1,18 +1,18 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <Application.h>//
+#include "Sidebar.h"
+#include <Application.h>
+#include <Bitmap.h>
+#include <FilePanel.h>
+#include <MenuBar.h>
+#include <MessageRunner.h>
 #include <StringView.h>
+#include <SupportDefs.h>
 #include <TextControl.h>
 #include <TextView.h>
 #include <Window.h>
-#include <MenuBar.h>
-#include <FilePanel.h>
-#include <MessageRunner.h>
-#include <Bitmap.h>
-#include "Sidebar.h"
 #include <private/shared/ToolBar.h>
-#include <SupportDefs.h>
 
 enum {
 	M_TRANSFORM_UPPERCASE = 'UPCS',
@@ -46,17 +46,17 @@ public:
 			virtual		~MainWindow();
 
 			void		MessageReceived(BMessage *msg);
-			BBitmap		*ResVectorToBitmap(const char *resName);
+			BBitmap* ResVectorToBitmap(const char* resName);
 
 			bool		QuitRequested(void);
 
-			void 		OpenFile(const entry_ref &ref);
-			void		SaveFile(const char *path);
+			void OpenFile(const entry_ref& ref);
+			void SaveFile(const char* path);
 
-private:
+		private:
 			BMenuBar*	_BuildMenu();
-			BToolBar*	toolbar;
-			Sidebar* 	sidebar;
+			BToolBar* toolbar;
+			Sidebar* sidebar;
 			void UpdateStatusBar();
 
 			status_t	_LoadSettings(BMessage& settings);
@@ -66,10 +66,10 @@ private:
 			BStringView* statusBar;
 			BMessageRunner* statusUpdater;
 
-			BMenuItem*		fSaveMenuItem;
-			BFilePanel*		fOpenPanel;
-			BFilePanel*		fSavePanel;
-			BString			fFilePath;
+			BMenuItem* fSaveMenuItem;
+			BFilePanel* fOpenPanel;
+			BFilePanel* fSavePanel;
+			BString fFilePath;
 };
 
 #endif

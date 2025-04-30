@@ -3,29 +3,32 @@
 #include <Alert.h>
 #include <Application.h>
 #include <Bitmap.h>
+#include <Button.h>
 #include <File.h>
 #include <FindDirectory.h>
-#include <NodeInfo.h>
-#include <Path.h>
+#include <Font.h>
+#include <IconUtils.h>
 #include <LayoutBuilder.h>
 #include <Menu.h>
-#include <ScrollView.h>
 #include <MenuItem.h>
-#include <Button.h>
-#include <View.h>
-#include <Font.h>
-#include <cctype>
+#include <NodeInfo.h>
+#include <Path.h>
 #include <Resources.h>
-#include <IconUtils.h>
+#include <ScrollView.h>
 #include <TranslationUtils.h>
+#include <View.h>
+#include <cctype>
 
+#include "Constants.h"
 #include "TextUtils.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
-static const char* kApplicationName = "TextWorker";
+
 
 MainWindow::MainWindow(void)
-	:	BWindow(BRect(100,100,900,800),kApplicationName,B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+	:
+	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_TITLED_WINDOW,
+		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -39,13 +42,19 @@ MainWindow::MainWindow(void)
 	// Toolbar
 	toolbar = new BToolBar(B_HORIZONTAL);
 
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("OPEN_ICON"), "Open file (Alt-O)","",false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("SAVE_ICON"), "Save file (Alt-S)","",false);
-	toolbar->GroupLayout()->AddItem(BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddAction(new BMessage(M_FILE_OPEN), this, ResVectorToBitmap("OPEN_ICON"),
+		"Open file (Alt-O)", "", false);
+	toolbar->AddAction(new BMessage(M_FILE_SAVE), this, ResVectorToBitmap("SAVE_ICON"),
+		"Save file (Alt-S)", "", false);
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddSeparator();
-	toolbar->GroupLayout()->AddItem(BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddAction(new BMessage(M_TRANSFORM_UPPERCASE), this, ResVectorToBitmap("UPPERCASE_ICON"),"UPPERCASE (Alt-U)","",false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), this, ResVectorToBitmap("LOWERCASE_ICON"),"lowercase (Alt-L)","",false);
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddAction(new BMessage(M_TRANSFORM_UPPERCASE), this,
+		ResVectorToBitmap("UPPERCASE_ICON"), "UPPERCASE (Alt-U)", "", false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), this,
+		ResVectorToBitmap("LOWERCASE_ICON"), "lowercase (Alt-L)", "", false);
 
 	toolbar->AddGlue();
 
@@ -62,9 +71,9 @@ MainWindow::MainWindow(void)
 		.Add(toolbar, 0)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
-			.Add(sidebar, 0)
-			.Add(textView, 1)
-			.SetInsets(5, 5, 5, 5)
+		.Add(sidebar, 0)
+		.Add(textView, 1)
+		.SetInsets(5, 5, 5, 5)
 		.End()
 		.Add(statusBar, 0);
 
@@ -117,9 +126,7 @@ MainWindow::MessageReceived(BMessage *msg)
 		{
 			entry_ref dir;
 			BString name;
-			if (msg->FindRef("directory", &dir) == B_OK &&
-					msg->FindString("name", &name) == B_OK)
-			{
+			if (msg->FindRef("directory", &dir) == B_OK && msg->FindString("name", &name) == B_OK) {
 				BPath path(&dir);
 				path.Append(name);
 				SaveFile(path.Path());
@@ -163,7 +170,8 @@ MainWindow::MessageReceived(BMessage *msg)
 			RemoveLineBreaks(textView, sidebar->GetReplaceLineBreaksValue());
 			break;
 		case M_INSERT_LINE_BREAKS:
-			InsertLineBreaks(textView, sidebar->GetLineBreaksMaxWidth(), sidebar->GetBreakOnWords());
+			InsertLineBreaks(textView, sidebar->GetLineBreaksMaxWidth(),
+				sidebar->GetBreakOnWords());
 			break;
 		case M_BREAK_LINES_ON_DELIMITER:
 			BreakLinesOnDelimiter(textView, sidebar->GetLineBreakDelimiter());
@@ -181,14 +189,17 @@ MainWindow::MessageReceived(BMessage *msg)
 			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			textView->SetText("Haiku is an open-source operating system.\n"
-				"It is fast, simple and elegant.\n"
-				"Developers love its clean architecture.\n"
-				"Users enjoy its intuitive interface.\n"
-				"Start exploring the power of Haiku today.");
+							  "It is fast, simple and elegant.\n"
+							  "Developers love its clean architecture.\n"
+							  "Users enjoy its intuitive interface.\n"
+							  "Start exploring the power of Haiku today.");
 			break;
 		case M_TRANSFORM_WIP:
-			(new BAlert("Not implemented", "Sorry, this functionality has not been implemented "
-						"yet, but it is planned for the near future.", "OK"))->Go();
+			(new BAlert("Not implemented",
+				 "Sorry, this functionality has not been implemented "
+				 "yet, but it is planned for the near future.",
+				 "OK"))
+				->Go();
 		default:
 			BWindow::MessageReceived(msg);
 			break;
@@ -215,36 +226,32 @@ MainWindow::_BuildMenu()
 	// 'File' menu
 	menu = new BMenu("File");
 
-	item = new BMenuItem("New" B_UTF8_ELLIPSIS, new BMessage(M_FILE_NEW), 'N');
-	menu->AddItem(item);
-
-	item = new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(M_FILE_OPEN), 'O');
-	menu->AddItem(item);
-
+	menu->AddItem(new BMenuItem("New" B_UTF8_ELLIPSIS, new BMessage(M_FILE_NEW), 'N'));
+	menu->AddItem(new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(M_FILE_OPEN), 'O'));
 	menu->AddSeparatorItem();
 
-	item = new BMenuItem("Save", new BMessage(M_FILE_SAVE), 'S');
-	menu->AddItem(item);
-
-	item = new BMenuItem("Save as...", new BMessage(M_FILE_SAVE_AS));
-	menu->AddItem(item);
-
+	menu->AddItem(new BMenuItem("Save", new BMessage(M_FILE_SAVE), 'S'));
+	menu->AddItem(new BMenuItem("Save as...", new BMessage(M_FILE_SAVE_AS)));
 	menu->AddSeparatorItem();
 
-	item = new BMenuItem("About" B_UTF8_ELLIPSIS, new BMessage(B_ABOUT_REQUESTED));
-	item->SetTarget(be_app);
-	menu->AddItem(item);
-
-	item = new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q');
-	menu->AddItem(item);
+	menu->AddItem(new BMenuItem("About" B_UTF8_ELLIPSIS, new BMessage(B_ABOUT_REQUESTED)));
+	menu->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
 
 	menuBar->AddItem(menu);
 
 	// 'Edit' menu
 	menu = new BMenu("Edit");
 
-	item = new BMenuItem("Insert example text", new BMessage(M_INSERT_EXAMPLE_TEXT), 'E');
-	menu->AddItem(item);
+	menu->AddItem(new BMenuItem("Undo", new BMessage(B_UNDO), 'Z'));
+	menu->AddItem(new BMenuItem("Redo", new BMessage(B_REDO), 'Y'));
+	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem("Cut", new BMessage(B_CUT), 'X'));
+	menu->AddItem(new BMenuItem("Copy", new BMessage(B_COPY), 'C'));
+	menu->AddItem(new BMenuItem("Paste", new BMessage(B_PASTE), 'V'));
+	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem("Select all", new BMessage(B_SELECT_ALL), 'A'));
+	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem("Insert example text", new BMessage(M_INSERT_EXAMPLE_TEXT), 'E'));
 
 	menuBar->AddItem(menu);
 
@@ -254,42 +261,26 @@ MainWindow::_BuildMenu()
 	// ' Case' submenu
 	subMenu = new BMenu("Text case");
 
-	item = new BMenuItem("UPPERCASE", new BMessage(M_TRANSFORM_UPPERCASE), 'U');
-	subMenu->AddItem(item);
-
-	item = new BMenuItem("lowercase", new BMessage(M_TRANSFORM_LOWERCASE), 'L');
-	subMenu->AddItem(item);
-
-	item = new BMenuItem("Capitalize", new BMessage(M_TRANSFORM_CAPITALIZE), 'C');
-	subMenu->AddItem(item);
-
-	item = new BMenuItem("Title Case", new BMessage(M_TRANSFORM_TITLE_CASE), 'T');
-	subMenu->AddItem(item);
-
-	item = new BMenuItem("RaNDoM caSE", new BMessage(M_TRANSFORM_RANDOM_CASE), 'R');
-	subMenu->AddItem(item);
-
-	item = new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE));
-	subMenu->AddItem(item);
+	subMenu->AddItem(new BMenuItem("UPPERCASE", new BMessage(M_TRANSFORM_UPPERCASE)));
+	subMenu->AddItem(new BMenuItem("lowercase", new BMessage(M_TRANSFORM_LOWERCASE)));
+	subMenu->AddItem(new BMenuItem("Capitalize", new BMessage(M_TRANSFORM_CAPITALIZE)));
+	subMenu->AddItem(new BMenuItem("Title Case", new BMessage(M_TRANSFORM_TITLE_CASE)));
+	subMenu->AddItem(new BMenuItem("RaNDoM caSE", new BMessage(M_TRANSFORM_RANDOM_CASE)));
+	subMenu->AddItem(new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE)));
 
 	menu->AddItem(subMenu);
 
 	// 'Encode/Decode' submenu
 	subMenu = new BMenu("Encode/decode");
 
-	item = new BMenuItem("ROT-13 encode", new BMessage(M_TRANSFORM_ROT13));
-	subMenu->AddItem(item);
-
-	item = new BMenuItem("ROT-13 decode", new BMessage(M_TRANSFORM_ROT13));
-	subMenu->AddItem(item);
+	subMenu->AddItem(new BMenuItem("ROT-13 encode/decode", new BMessage(M_TRANSFORM_ROT13)));
 
 	menu->AddItem(subMenu);
 
 	// 'Line break' submenu
 	subMenu = new BMenu("Line breaks");
 
-	item = new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS));
-	subMenu->AddItem(item);
+	subMenu->AddItem(new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS)));
 
 	menu->AddItem(subMenu);
 
@@ -386,7 +377,8 @@ MainWindow::UpdateStatusBar()
 }
 
 
-BBitmap* MainWindow::ResVectorToBitmap(const char* resName)
+BBitmap*
+MainWindow::ResVectorToBitmap(const char* resName)
 {
 	image_info info;
 	int32 cookie = 0;
@@ -410,7 +402,7 @@ BBitmap* MainWindow::ResVectorToBitmap(const char* resName)
 
 
 void
-MainWindow::OpenFile(const entry_ref &ref)
+MainWindow::OpenFile(const entry_ref& ref)
 {
 	BEntry entry(&ref, true);
 	entry_ref realRef;
@@ -419,9 +411,8 @@ MainWindow::OpenFile(const entry_ref &ref)
 	BFile file(&realRef, B_READ_ONLY);
 	if (file.InitCheck() != B_OK)
 		return;
-
-	if (BTranslationUtils::GetStyledText(&file, textView) == B_OK)
-	{
+	textView->SetText("");
+	if (BTranslationUtils::GetStyledText(&file, textView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
 		BString windowTitle(kApplicationName);
@@ -432,18 +423,17 @@ MainWindow::OpenFile(const entry_ref &ref)
 
 
 void
-MainWindow::SaveFile(const char *path)
+MainWindow::SaveFile(const char* path)
 {
 	BFile file;
-	if (file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE)
-		!= B_OK)
+	if (file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE) != B_OK)
 		return;
 
-	if (BTranslationUtils::PutStyledText(textView, &file) == B_OK)
-	{
+	if (BTranslationUtils::PutStyledText(textView, &file) == B_OK) {
 		fFilePath = path;
 
 		BNodeInfo nodeInfo(&file);
 		nodeInfo.SetType("text/plain");
 	}
 }
+ 

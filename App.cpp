@@ -1,10 +1,8 @@
 #include "App.h"
+#include "Constants.h"
 #include "MainWindow.h"
 
 #include <AboutWindow.h>
-
-const char* kApplicationSignature = "application/x-vnd.jpw-TextWorker";
-const char* kApplicationName = "TextWorker";
 
 
 App::App(void)
