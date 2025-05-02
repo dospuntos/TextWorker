@@ -21,7 +21,6 @@ Coding:
 - HEX encode/decode
 - Base64 encode
 - Tabs <> space
-- ROT_x
 
 Lines:
 - Sort lines by length

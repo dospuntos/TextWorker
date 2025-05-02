@@ -15,8 +15,11 @@ resource app_version {
 	long_info = "Transform your text with easy using this versatile formatting tool. From uppercase conversion to line break removal and simple text encoding."
 };
 
+resource(1, "NEW_ICON") #'VICN' import "icons/new.hvif";
 resource(2, "OPEN_ICON") #'VICN' import "icons/open-file-folder.hvif";
 resource(3, "SAVE_ICON") #'VICN' import "icons/save.hvif";
 resource(4, "UPPERCASE_ICON") #'VICN' import "icons/uppercase.hvif";
 resource(5, "LOWERCASE_ICON") #'VICN' import "icons/lowercase.hvif";
 resource(6, "LINE_WRAP_ICON") #'VICN' import "icons/text-wrap.hvif";
+resource(7, "SETTINGS_ICON") #'VICN' import "icons/settings.hvif";
+resource(8, "HELP_ICON") #'VICN' import "icons/help.hvif";

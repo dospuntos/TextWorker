@@ -47,6 +47,8 @@ MainWindow::MainWindow(void)
 	// Toolbar
 	toolbar = new BToolBar(B_HORIZONTAL);
 
+	toolbar->AddAction(new BMessage(M_FILE_NEW), this, ResVectorToBitmap("NEW_ICON"),
+		"New file (Alt-N)", "", false);
 	toolbar->AddAction(new BMessage(M_FILE_OPEN), this, ResVectorToBitmap("OPEN_ICON"),
 		"Open file (Alt-O)", "", false);
 	toolbar->AddAction(new BMessage(M_FILE_SAVE), this, ResVectorToBitmap("SAVE_ICON"),
@@ -67,8 +69,16 @@ MainWindow::MainWindow(void)
 		ResVectorToBitmap("UPPERCASE_ICON"), "UPPERCASE (Alt-U)", "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), this,
 		ResVectorToBitmap("LOWERCASE_ICON"), "lowercase (Alt-L)", "", false);
-
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddSeparator();
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddGlue();
+	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("SETTINGS_ICON"),
+		"Settings" B_UTF8_ELLIPSIS, "", false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("HELP_ICON"),
+		"Help" B_UTF8_ELLIPSIS, "", false);
 
 	// Sidebar
 	sidebar = new Sidebar();
