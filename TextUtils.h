@@ -16,6 +16,7 @@ void ConvertToTitlecase(BTextView* textView);
 void ConvertToAlternatingCase(BTextView* textView);
 void ConvertToRandomCase(BTextView* textView);
 void Capitalize(BTextView* textView);
+void ToggleCase(BTextView* textView);
 
 void RemoveLineBreaks(BTextView* textView, BString replacement = "");
 void InsertLineBreaks(BTextView* textView, int32 maxWidth, bool breakOnWords = false);

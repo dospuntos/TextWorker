@@ -47,18 +47,18 @@ MainWindow::MainWindow(void)
 	// Toolbar
 	toolbar = new BToolBar(B_HORIZONTAL);
 
-	toolbar->AddAction(new BMessage(M_FILE_NEW), this, ResVectorToBitmap("NEW_ICON"),
+	toolbar->AddAction(new BMessage(M_FILE_NEW), this, ResourceToBitmap("NEW_ICON"),
 		"New file (Alt-N)", "", false);
-	toolbar->AddAction(new BMessage(M_FILE_OPEN), this, ResVectorToBitmap("OPEN_ICON"),
+	toolbar->AddAction(new BMessage(M_FILE_OPEN), this, ResourceToBitmap("OPEN_ICON"),
 		"Open file (Alt-O)", "", false);
-	toolbar->AddAction(new BMessage(M_FILE_SAVE), this, ResVectorToBitmap("SAVE_ICON"),
+	toolbar->AddAction(new BMessage(M_FILE_SAVE), this, ResourceToBitmap("SAVE_ICON"),
 		"Save file (Alt-S)", "", false);
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddSeparator();
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), this, ResVectorToBitmap("LINE_WRAP_ICON"),
+	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), this, ResourceToBitmap("LINE_WRAP_ICON"),
 		"Word wrap", "", true);
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -66,18 +66,20 @@ MainWindow::MainWindow(void)
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddAction(new BMessage(M_TRANSFORM_UPPERCASE), this,
-		ResVectorToBitmap("UPPERCASE_ICON"), "UPPERCASE (Alt-U)", "", false);
+		ResourceToBitmap("UPPERCASE_ICON"), "UPPERCASE (Alt-U)", "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), this,
-		ResVectorToBitmap("LOWERCASE_ICON"), "lowercase (Alt-L)", "", false);
+		ResourceToBitmap("LOWERCASE_ICON"), "lowercase (Alt-L)", "", false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_TOGGLE_CASE), this, ResourceToBitmap("TOGGLE_ICON"),
+		"Toggle case", "", false);
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddSeparator();
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 	toolbar->AddGlue();
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("SETTINGS_ICON"),
+	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("SETTINGS_ICON"),
 		"Settings" B_UTF8_ELLIPSIS, "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResVectorToBitmap("HELP_ICON"),
+	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("HELP_ICON"),
 		"Help" B_UTF8_ELLIPSIS, "", false);
 
 	// Sidebar
@@ -188,6 +190,9 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TRANSFORM_ALTERNATING_CASE:
 			ConvertToAlternatingCase(textView);
 			break;
+		case M_TRANSFORM_TOGGLE_CASE:
+			ToggleCase(textView);
+			break;
 		case M_REMOVE_LINE_BREAKS:
 			RemoveLineBreaks(textView, sidebar->GetReplaceLineBreaksValue());
 			break;
@@ -229,6 +234,9 @@ MainWindow::MessageReceived(BMessage *msg)
 			break;
 		case M_TOGGLE_WORD_WRAP:
 			textView->SetWordWrap(!textView->DoesWordWrap());
+			break;
+		case B_ABOUT_REQUESTED:
+			be_app->AboutRequested();
 			break;
 		default:
 			BWindow::MessageReceived(msg);
@@ -285,36 +293,79 @@ MainWindow::_BuildMenu()
 
 	menuBar->AddItem(menu);
 
-	// 'Transform' menu
-	menu = new BMenu("Transform");
+	// ====== Transform Menu Structure ======
+	BMenu* transformMenu = new BMenu("Transform");
 
-	// ' Case' submenu
-	subMenu = new BMenu("Text case");
+	// === TEXT CASE MENU ===
+	BMenu* textCaseMenu = new BMenu("Text Case");
 
-	subMenu->AddItem(new BMenuItem("UPPERCASE", new BMessage(M_TRANSFORM_UPPERCASE)));
-	subMenu->AddItem(new BMenuItem("lowercase", new BMessage(M_TRANSFORM_LOWERCASE)));
-	subMenu->AddItem(new BMenuItem("Capitalize", new BMessage(M_TRANSFORM_CAPITALIZE)));
-	subMenu->AddItem(new BMenuItem("Title Case", new BMessage(M_TRANSFORM_TITLE_CASE)));
-	subMenu->AddItem(new BMenuItem("RaNDoM caSE", new BMessage(M_TRANSFORM_RANDOM_CASE)));
-	subMenu->AddItem(new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE)));
+	BMenuItem* uppercaseItem = new BMenuItem("UPPERCASE", new BMessage(M_TRANSFORM_UPPERCASE));
+	uppercaseItem->SetShortcut('u', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(uppercaseItem);
 
-	menu->AddItem(subMenu);
+	BMenuItem* lowercaseItem = new BMenuItem("lowercase", new BMessage(M_TRANSFORM_LOWERCASE));
+	lowercaseItem->SetShortcut('l', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(lowercaseItem);
 
-	// 'Encode/Decode' submenu
-	subMenu = new BMenu("Encode/decode");
+	BMenuItem* capitalizeItem = new BMenuItem("Capitalize", new BMessage(M_TRANSFORM_CAPITALIZE));
+	capitalizeItem->SetShortcut('c', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(capitalizeItem);
 
-	subMenu->AddItem(new BMenuItem("ROT-13 encode/decode", new BMessage(M_TRANSFORM_ROT13)));
+	BMenuItem* titleCaseItem = new BMenuItem("Title Case", new BMessage(M_TRANSFORM_TITLE_CASE));
+	titleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(titleCaseItem);
 
-	menu->AddItem(subMenu);
+	BMenuItem* randomCaseItem = new BMenuItem("RaNDoM caSE", new BMessage(M_TRANSFORM_RANDOM_CASE));
+	randomCaseItem->SetShortcut('r', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(randomCaseItem);
 
-	// 'Line break' submenu
-	subMenu = new BMenu("Line breaks");
+	BMenuItem* alternatingCaseItem = new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE));
+	alternatingCaseItem->SetShortcut('a', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(alternatingCaseItem);
 
-	subMenu->AddItem(new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS)));
+	BMenuItem* toggleCaseItem = new BMenuItem("Toggle case", new BMessage(M_TRANSFORM_TOGGLE_CASE));
+	toggleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY | B_SHIFT_KEY);
+	textCaseMenu->AddItem(toggleCaseItem);
 
-	menu->AddItem(subMenu);
+	transformMenu->AddItem(textCaseMenu);
 
-	menuBar->AddItem(menu);
+	// === ENCODE/DECODE MENU ===
+	BMenu* encodeMenu = new BMenu("Encode/Decode");
+
+	BMenuItem* rot13Item = new BMenuItem("ROT-13 encode/decode", new BMessage(M_TRANSFORM_ROT13));
+	rot13Item->SetShortcut('m', B_COMMAND_KEY | B_OPTION_KEY); // "m" for mystery or mask
+	encodeMenu->AddItem(rot13Item);
+
+	transformMenu->AddItem(encodeMenu);
+
+	// === LINE TOOLS MENU ===
+	BMenu* lineMenu = new BMenu("Line Tools");
+
+	BMenuItem* removeLineBreaksItem = new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS));
+	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY); // "b" for breaks
+	lineMenu->AddItem(removeLineBreaksItem);
+
+	BMenuItem* insertLineBreaksItem = new BMenuItem("Insert line breaks (width)", new BMessage(M_INSERT_LINE_BREAKS));
+	insertLineBreaksItem->SetShortcut('i', B_COMMAND_KEY | B_OPTION_KEY);
+	lineMenu->AddItem(insertLineBreaksItem);
+
+	BMenuItem* breakOnDelimiterItem = new BMenuItem("Break lines on delimiter", new BMessage(M_BREAK_LINES_ON_DELIMITER));
+	breakOnDelimiterItem->SetShortcut('d', B_COMMAND_KEY | B_OPTION_KEY);
+	lineMenu->AddItem(breakOnDelimiterItem);
+
+	BMenuItem* trimItem = new BMenuItem("Trim whitespace", new BMessage(M_TRIM_LINES));
+	trimItem->SetShortcut('w', B_COMMAND_KEY | B_OPTION_KEY);
+	lineMenu->AddItem(trimItem);
+
+	BMenuItem* removeEmptyLinesItem = new BMenuItem("Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
+	removeEmptyLinesItem->SetShortcut('e', B_COMMAND_KEY | B_OPTION_KEY);
+	lineMenu->AddItem(removeEmptyLinesItem);
+
+	transformMenu->AddItem(lineMenu);
+
+	// Add the whole Transform menu to the menu bar
+	menuBar->AddItem(transformMenu);
+
 
 	return menuBar;
 }
@@ -408,7 +459,7 @@ MainWindow::UpdateStatusBar()
 
 
 BBitmap*
-MainWindow::ResVectorToBitmap(const char* resName)
+MainWindow::ResourceToBitmap(const char* resName)
 {
 	image_info info;
 	int32 cookie = 0;

@@ -5,6 +5,8 @@
 
 
 #include "TextUtils.h"
+#include <Alert.h>
+#include <LayoutBuilder.h>
 #include <String.h>
 #include <TextControl.h>
 #include <File.h>
@@ -161,6 +163,27 @@ ConvertToAlternatingCase(BTextView* textView)
 
 
 void
+ToggleCase(BTextView* textView)
+{
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty())
+		return;
+
+	for (int32 i = 0; i < text.Length(); ++i) {
+		char currentChar = text.ByteAt(i);
+		if (std::isupper(currentChar))
+			currentChar = std::tolower(currentChar);
+		else if (std::islower(currentChar))
+			currentChar = std::toupper(currentChar);
+		text.SetByteAt(i, currentChar);
+	}
+
+	textView->SetText(text.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
 RemoveLineBreaks(BTextView* textView, BString replacement)
 {
 	BString text = GetTextFromTextView(textView);
@@ -232,7 +255,7 @@ void
 InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 {
 	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
+	if (text.IsEmpty() || maxLength <= 0)
 		return;
 
 	BString updatedText;
@@ -302,7 +325,7 @@ void
 BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter)
 {
 	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
+	if (text.IsEmpty() || delimiter.Length() <= 0)
 		return;
 
 	BString updatedText;

@@ -14,7 +14,7 @@ X Scroll bar in text editor
 Add text transformation tools:
 
 Case:
-- Toggle case
+X Toggle case
 
 Coding:
 - URL encode/decode

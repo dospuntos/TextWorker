@@ -21,6 +21,7 @@ enum {
 	M_TRANSFORM_TITLE_CASE,
 	M_TRANSFORM_RANDOM_CASE,
 	M_TRANSFORM_ALTERNATING_CASE,
+	M_TRANSFORM_TOGGLE_CASE,
 	M_REMOVE_LINE_BREAKS,
 	M_INSERT_LINE_BREAKS,
 	M_BREAK_LINES_ON_DELIMITER,
@@ -48,7 +49,7 @@ public:
 			virtual		~MainWindow();
 
 			void		MessageReceived(BMessage *msg);
-			BBitmap* ResVectorToBitmap(const char* resName);
+			BBitmap* ResourceToBitmap(const char* resName);
 
 			bool		QuitRequested(void);
 

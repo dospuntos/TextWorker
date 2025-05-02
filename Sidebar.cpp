@@ -37,7 +37,7 @@ Sidebar::Sidebar()
 
 	// === Remove Line Breaks Box ===
 	BBox* removeBreaksBox = new BBox("RemoveLineBreaksBox");
-	removeBreaksBox->SetLabel("Remove Line Breaks");
+	removeBreaksBox->SetLabel("Remove line breaks");
 	BGroupView* removeGroup = new BGroupView(B_HORIZONTAL, 5);
 	removeBreaksBox->AddChild(removeGroup);
 

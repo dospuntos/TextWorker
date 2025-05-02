@@ -4,7 +4,7 @@ resource app_flags B_SINGLE_LAUNCH;
 
 resource app_version {
 	major = 0,
-	middle = 2,
+	middle = 3,
 	minor = 0,
 
 	variety = 1,
@@ -20,6 +20,7 @@ resource(2, "OPEN_ICON") #'VICN' import "icons/open-file-folder.hvif";
 resource(3, "SAVE_ICON") #'VICN' import "icons/save.hvif";
 resource(4, "UPPERCASE_ICON") #'VICN' import "icons/uppercase.hvif";
 resource(5, "LOWERCASE_ICON") #'VICN' import "icons/lowercase.hvif";
-resource(6, "LINE_WRAP_ICON") #'VICN' import "icons/text-wrap.hvif";
-resource(7, "SETTINGS_ICON") #'VICN' import "icons/settings.hvif";
-resource(8, "HELP_ICON") #'VICN' import "icons/help.hvif";
+resource(6, "TOGGLE_ICON") #'VICN' import "icons/toggle.hvif";
+resource(7, "LINE_WRAP_ICON") #'VICN' import "icons/text-wrap.hvif";
+resource(8, "SETTINGS_ICON") #'VICN' import "icons/settings.hvif";
+resource(9, "HELP_ICON") #'VICN' import "icons/help.hvif";
