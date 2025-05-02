@@ -11,6 +11,7 @@
 #include <TextControl.h>
 #include <File.h>
 #include <cctype>
+#include <sstream>
 
 int32 startSelection, endSelection; // For cursor position
 
@@ -217,6 +218,75 @@ ConvertToROT13(BTextView* textView)
 	}
 
 	textView->SetText(text.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
+URLEncode(BTextView* textView)
+{
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty()) return;
+
+	BString encoded;
+	for (int32 i = 0; i < text.Length(); ++i) {
+		char currentChar = text.ByteAt(i);
+
+		// Check if the character is URL-safe (alphanumeric or special characters)
+		if (std::isalnum(currentChar) || currentChar == '-' || currentChar == '_' ||
+			currentChar == '.' || currentChar == '~') {
+			encoded += currentChar;
+		} else {
+			// Encode the non-safe characters
+			encoded += '%';
+			std::stringstream ss;
+			ss << std::uppercase << std::hex << (int)(unsigned char)currentChar; // Convert char to hex
+			std::string hexStr = ss.str();
+
+			// Ensure the hex string is two characters long
+			if (hexStr.length() == 1) {
+				encoded += '0'; // Add leading zero if needed
+			}
+			encoded += BString(hexStr.c_str()); // Convert std::string to BString and append
+		}
+	}
+
+	textView->SetText(encoded.String());
+	RestoreCursorPosition(textView);
+}
+
+
+
+void
+URLDecode(BTextView* textView)
+{
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty()) return;
+
+	BString decoded;
+	for (int32 i = 0; i < text.Length(); ++i) {
+		char currentChar = text.ByteAt(i);
+
+		if (currentChar == '%') {
+			// Check if there are enough characters for a valid hex code
+			if (i + 2 < text.Length()) {
+				char hex[3] = { text.ByteAt(i + 1), text.ByteAt(i + 2), '\0' };
+				int decodedChar = 0;
+				std::stringstream ss;
+				ss << std::hex << hex;
+				ss >> decodedChar;
+
+				// Append the decoded character
+				decoded += static_cast<char>(decodedChar);
+				i += 2; // Skip the next two characters (hex code)
+			}
+		} else {
+			// Regular character, append to decoded string
+			decoded += currentChar;
+		}
+	}
+
+	textView->SetText(decoded.String());
 	RestoreCursorPosition(textView);
 }
 

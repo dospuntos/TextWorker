@@ -1,7 +1,4 @@
-X Scroll bar in text editor
 - Save settings
-- Re-organize sidebar
-- Add buttons to tool bar
 - Re-organize menu
 - Enable save menu if file changed
 - General settings:
@@ -17,7 +14,6 @@ Case:
 X Toggle case
 
 Coding:
-- URL encode/decode
 - HEX encode/decode
 - Base64 encode
 - Tabs <> space
@@ -28,7 +24,6 @@ Lines:
 - Remove duplicates
 
 Other:
-X Search/replace
 - Regex
 - Word count by occurence
 

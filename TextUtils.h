@@ -27,6 +27,8 @@ void TrimEmptyLines(BTextView* textView);
 void ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
 	bool fullWordsOnly);
 
+void URLEncode(BTextView* textView);
+void URLDecode(BTextView* textView);
 void ConvertToROT13(BTextView* textView);
 void AddStringsToEachLine(BTextView* textView, const BString& startString,
 	const BString& endString);

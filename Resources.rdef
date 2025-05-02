@@ -24,3 +24,6 @@ resource(6, "TOGGLE_ICON") #'VICN' import "icons/toggle.hvif";
 resource(7, "LINE_WRAP_ICON") #'VICN' import "icons/text-wrap.hvif";
 resource(8, "SETTINGS_ICON") #'VICN' import "icons/settings.hvif";
 resource(9, "HELP_ICON") #'VICN' import "icons/help.hvif";
+resource(10, "URL_ENCODE_ICON") #'VICN' import "icons/link.hvif";
+resource(11, "URL_DECODE_ICON") #'VICN' import "icons/unlink.hvif";
+resource(12, "PUZZLE_ICON") #'VICN' import "icons/puzzle.hvif";

@@ -76,6 +76,12 @@ MainWindow::MainWindow(void)
 	toolbar->AddSeparator();
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddAction(new BMessage(M_TRANSFORM_ENCODE_URL), this, ResourceToBitmap("URL_ENCODE_ICON"),
+		"URL encode", "", false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_DECODE_URL), this, ResourceToBitmap("URL_DECODE_ICON"),
+		"URL decode", "", false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_ROT13), this, ResourceToBitmap("PUZZLE_ICON"),
+		"ROT13 encode/decode", "", false);
 	toolbar->AddGlue();
 	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("SETTINGS_ICON"),
 		"Settings" B_UTF8_ELLIPSIS, "", false);
@@ -218,6 +224,12 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(textView);
 			break;
+		case M_TRANSFORM_ENCODE_URL:
+			URLEncode(textView);
+			break;
+		case M_TRANSFORM_DECODE_URL:
+			URLDecode(textView);
+			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			textView->SetText("Haiku is an open-source operating system.\n"
 							  "It is fast, simple and elegant.\n"
@@ -332,8 +344,14 @@ MainWindow::_BuildMenu()
 	// === ENCODE/DECODE MENU ===
 	BMenu* encodeMenu = new BMenu("Encode/Decode");
 
+	BMenuItem* urlEncodeItem = new BMenuItem("URL encode", new BMessage(M_TRANSFORM_ENCODE_URL));
+	encodeMenu->AddItem(urlEncodeItem);
+
+	BMenuItem* urlDecodeItem = new BMenuItem("URL decode", new BMessage(M_TRANSFORM_DECODE_URL));
+	encodeMenu->AddItem(urlDecodeItem);
+
 	BMenuItem* rot13Item = new BMenuItem("ROT-13 encode/decode", new BMessage(M_TRANSFORM_ROT13));
-	rot13Item->SetShortcut('m', B_COMMAND_KEY | B_OPTION_KEY); // "m" for mystery or mask
+	rot13Item->SetShortcut('m', B_COMMAND_KEY | B_OPTION_KEY);
 	encodeMenu->AddItem(rot13Item);
 
 	transformMenu->AddItem(encodeMenu);
@@ -342,7 +360,7 @@ MainWindow::_BuildMenu()
 	BMenu* lineMenu = new BMenu("Line Tools");
 
 	BMenuItem* removeLineBreaksItem = new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS));
-	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY); // "b" for breaks
+	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(removeLineBreaksItem);
 
 	BMenuItem* insertLineBreaksItem = new BMenuItem("Insert line breaks (width)", new BMessage(M_INSERT_LINE_BREAKS));
