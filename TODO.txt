@@ -1,4 +1,4 @@
-- Scroll bar in text editor
+X Scroll bar in text editor
 - Save settings
 - Re-organize sidebar
 - Add buttons to tool bar
@@ -29,7 +29,7 @@ Lines:
 - Remove duplicates
 
 Other:
-Search/replace
-Regex 
-Word count by occurence
+X Search/replace
+- Regex
+- Word count by occurence
 

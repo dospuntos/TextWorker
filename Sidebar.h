@@ -18,8 +18,8 @@ public:
 
 	// Getters
 	BString GetReplaceLineBreaksValue() const { return BString(replaceLineBreaksInput->Text()); }
-	BString GetPrependInput() const { return BString(prependInput->Text()); }
-	BString GetAppendInput() const { return BString(appendInput->Text()); }
+	BString GetPrependInput() const { return BString(prefixInput->Text()); }
+	BString GetAppendInput() const { return BString(suffixInput->Text()); }
 	int32 GetLineBreaksMaxWidth() const { return atoi(maxWidthInput->Text()); }
 	bool GetBreakOnWords() const
 	{
@@ -39,8 +39,8 @@ public:
 
 private:
 	BTextControl* replaceLineBreaksInput;
-	BTextControl* prependInput;
-	BTextControl* appendInput;
+	BTextControl* prefixInput;
+	BTextControl* suffixInput;
 	BTextControl* maxWidthInput;
 	BCheckBox* splitOnWordsCheckbox;
 	BTextControl* lineBreakDelimiterInput;

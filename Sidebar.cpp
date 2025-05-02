@@ -6,6 +6,7 @@
 
 #include "Sidebar.h"
 #include "MainWindow.h"
+#include <Box.h>
 #include <Button.h>
 #include <GroupView.h>
 #include <LayoutBuilder.h>
@@ -21,10 +22,10 @@ Sidebar::Sidebar()
 	// Tab: Line operations
 	BGroupView* lineOperationsView = new BGroupView(B_VERTICAL, 5);
 
-	replaceLineBreaksInput
-		= new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
-	prependInput = new BTextControl("PrependInput", "Prepend:", "", nullptr);
-	appendInput = new BTextControl("AppendInput", "Append:", "", nullptr);
+	// === Widgets ===
+	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
+	prefixInput = new BTextControl("PrependInput", "Prepend:", "", nullptr);
+	suffixInput = new BTextControl("AppendInput", "Append:", "", nullptr);
 	maxWidthInput = new BTextControl("MaxWidth", "Characters:", "", nullptr);
 	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
 	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", "Break on:", "", nullptr);
@@ -34,49 +35,77 @@ Sidebar::Sidebar()
 	replaceCaseSensitiveCheckbox = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
 	replaceFullWordsCheckbox = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
 
-	// Add settings
-	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 5)
-		.Add(new BStringView("RemoveLineBreaks", "Remove Line Breaks"))
+	// === Remove Line Breaks Box ===
+	BBox* removeBreaksBox = new BBox("RemoveLineBreaksBox");
+	removeBreaksBox->SetLabel("Remove Line Breaks");
+	BGroupView* removeGroup = new BGroupView(B_HORIZONTAL, 5);
+	removeBreaksBox->AddChild(removeGroup);
+
+	BLayoutBuilder::Group<>(removeGroup)
 		.Add(replaceLineBreaksInput)
-		.Add(new BButton("RemoveLineBreaksButton", "Apply", new BMessage(M_REMOVE_LINE_BREAKS)))
-		.Add(new BStringView("AddLineBreaksLabel", "Add Line Breaks After X Characters"))
-		.Add(maxWidthInput)
-		.Add(splitOnWordsCheckbox)
-		.Add(new BButton("AddLineBreaksButton", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
-		.Add(new BStringView("BreakOnDelimiter", "Break on delimiter:"))
-		.Add(lineBreakDelimiterInput)
-		.Add(new BButton("BreakOnDelimiterButton", "Apply",
-			new BMessage(M_BREAK_LINES_ON_DELIMITER)))
-		.Add(new BButton("TrimLinesButton", "Trim", new BMessage(M_TRIM_LINES)))
-		.Add(new BButton("TrimEmptyLinesButton", "Remove empty lines",
-			new BMessage(M_TRIM_EMPTY_LINES)))
-		.Add(new BStringView("SearchReplace", "Search/replace"))
+		.Add(new BButton("RemoveLineBreaksBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS)))
+		.SetInsets(10, 12, 10, 10);
+
+	// === Add Line Breaks Box ===
+	BBox* addBreaksBox = new BBox("AddLineBreaksBox");
+	addBreaksBox->SetLabel("Add line breaks");
+	BGroupView* addGroup = new BGroupView(B_VERTICAL, 5);
+	addBreaksBox->AddChild(addGroup);
+
+	// Layout for Add Line Breaks Box
+	BLayoutBuilder::Group<>(addGroup)
+		.AddGroup(B_HORIZONTAL) // maxWidthInput and Apply button on the same line
+			.Add(maxWidthInput)
+			.Add(new BButton("AddLineBreaksBtn", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
+		.End()
+		.Add(splitOnWordsCheckbox) // Split on words checkbox on a separate line
+		.AddGroup(B_HORIZONTAL) // lineBreakDelimiterInput and Apply button on the same line
+			.Add(lineBreakDelimiterInput)
+			.Add(new BButton("BreakOnDelimiterBtn", "Apply", new BMessage(M_BREAK_LINES_ON_DELIMITER)))
+		.End()
+		.Add(new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES)))
+		.Add(new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES)))
+		.SetInsets(10, 12, 10, 10);
+
+	// === Search/Replace Box ===
+	BBox* searchReplaceBox = new BBox("SearchReplaceBox");
+	searchReplaceBox->SetLabel("Search and replace");
+	BGroupView* searchGroup = new BGroupView(B_VERTICAL, 5);
+	searchReplaceBox->AddChild(searchGroup);
+
+	BLayoutBuilder::Group<>(searchGroup)
 		.Add(replaceSearchString)
 		.Add(replaceWithString)
-		.Add(replaceCaseSensitiveCheckbox)
-		.Add(replaceFullWordsCheckbox)
-		.Add(new BButton("SearchReplaceButton", "Replace", new BMessage(M_TRANSFORM_REPLACE)))
+		.AddGroup(B_HORIZONTAL)
+			.Add(replaceCaseSensitiveCheckbox)
+			.Add(replaceFullWordsCheckbox)
+		.End()
+		.Add(new BButton("SearchReplaceBtn", "Replace", new BMessage(M_TRANSFORM_REPLACE)))
+		.SetInsets(10, 12, 10, 10);
+
+	// === Line Operations Tab ===
+	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 10)
+		.Add(removeBreaksBox)
+		.Add(addBreaksBox)
+		.Add(searchReplaceBox)
 		.AddGlue()
 		.SetInsets(10, 10, 10, 10);
 
-	// Add line operations tab
 	BTab* lineOperationsTab = new BTab();
 	AddTab(lineOperationsView, lineOperationsTab);
 	lineOperationsTab->SetLabel("Lines");
 
-	// Tab: Append/prepend
-	BGroupView* appendPrependView = new BGroupView(B_VERTICAL, 5);
-
-	BLayoutBuilder::Group<>(appendPrependView, B_VERTICAL, 5)
-		.Add(new BStringView("PrependLabel", "Prepend/append to each line"))
-		.Add(prependInput)
-		.Add(appendInput)
-		.Add(new BButton("appendPrependButton", "Apply", new BMessage(M_TRANSFORM_PREPEND_APPEND)))
+	// === Prefix/Suffix Tab ===
+	BGroupView* prefixSuffixView = new BGroupView(B_VERTICAL, 5);
+	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 5)
+		.Add(new BStringView("PrependLabel", "Prefix/suffix each line"))
+		.Add(prefixInput)
+		.Add(suffixInput)
+		.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
 		.AddGlue()
 		.SetInsets(10, 10, 10, 10);
 
-	// Add line operations tab
-	BTab* appendPrependTab = new BTab();
-	AddTab(appendPrependView, appendPrependTab);
-	appendPrependTab->SetLabel("Add");
+	BTab* prefixSuffixTab = new BTab();
+	AddTab(prefixSuffixView, prefixSuffixTab);
+	prefixSuffixTab->SetLabel("Prefix/suffix");
 }

@@ -197,7 +197,7 @@ MainWindow::MessageReceived(BMessage *msg)
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(textView);
-		case M_TRANSFORM_PREPEND_APPEND:
+		case M_TRANSFORM_PREFIX_SUFFIX:
 			AddStringsToEachLine(textView, sidebar->GetPrependInput(), sidebar->GetAppendInput());
 			break;
 		case M_TRANSFORM_ROT13:
