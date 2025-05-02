@@ -24,8 +24,8 @@ Sidebar::Sidebar()
 
 	// === Widgets ===
 	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
-	prefixInput = new BTextControl("PrependInput", "Prepend:", "", nullptr);
-	suffixInput = new BTextControl("AppendInput", "Append:", "", nullptr);
+	prefixInput = new BTextControl("PrefixInput", "Prefix:", "", nullptr);
+	suffixInput = new BTextControl("SuffixInput", "Suffix:", "", nullptr);
 	maxWidthInput = new BTextControl("MaxWidth", "Characters:", "", nullptr);
 	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
 	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", "Break on:", "", nullptr);

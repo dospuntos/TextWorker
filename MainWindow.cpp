@@ -109,6 +109,7 @@ MainWindow::MainWindow(void)
 
 	BMessage settings;
 	_LoadSettings(settings);
+	_RestoreValues(settings);
 
 	BMessenger messenger(this);
 	fOpenPanel = new BFilePanel(B_OPEN_PANEL, &messenger, NULL, B_FILE_NODE, false);
@@ -200,26 +201,26 @@ MainWindow::MessageReceived(BMessage *msg)
 			ToggleCase(textView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			RemoveLineBreaks(textView, sidebar->GetReplaceLineBreaksValue());
+			RemoveLineBreaks(textView, sidebar->ReplaceLineBreaksText());
 			break;
 		case M_INSERT_LINE_BREAKS:
-			InsertLineBreaks(textView, sidebar->GetLineBreaksMaxWidth(),
-				sidebar->GetBreakOnWords());
+			InsertLineBreaks(textView, sidebar->MaxWidthText(),
+				sidebar->SplitOnWordsEnabled());
 			break;
 		case M_BREAK_LINES_ON_DELIMITER:
-			BreakLinesOnDelimiter(textView, sidebar->GetLineBreakDelimiter());
+			BreakLinesOnDelimiter(textView, sidebar->LineBreakDelimiterText());
 			break;
 		case M_TRIM_LINES:
 			TrimLines(textView);
 			break;
 		case M_TRANSFORM_REPLACE:
-			ReplaceAll(textView, sidebar->GetReplaceSearchString(), sidebar->GetReplaceWithString(),
-				sidebar->GetReplaceCaseSensitive(), sidebar->GetReplaceFullWords());
+			ReplaceAll(textView, sidebar->ReplaceSearchText(), sidebar->ReplaceWithText(),
+				sidebar->ReplaceCaseSensitive(), sidebar->ReplaceFullWordsOnly());
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(textView);
 		case M_TRANSFORM_PREFIX_SUFFIX:
-			AddStringsToEachLine(textView, sidebar->GetPrependInput(), sidebar->GetAppendInput());
+			AddStringsToEachLine(textView, sidebar->PrefixText(), sidebar->SuffixText());
 			break;
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(textView);
@@ -431,11 +432,76 @@ MainWindow::_SaveSettings()
 	BMessage settings;
 	status = settings.AddRect("main_window_rect", Frame());
 
+	// Save settings and textView (optional setting in the future)
+	if (textView)
+		settings.AddString("textViewContent", textView->Text());
+
+	// Save sidebar text inputs
+	if (sidebar) {
+		settings.AddString("replaceLineBreaksInput", sidebar->ReplaceLineBreaksText());
+		settings.AddString("prefixInput", sidebar->PrefixText());
+		settings.AddString("suffixInput", sidebar->SuffixText());
+
+		settings.AddInt32("maxWidthInput", sidebar->MaxWidthText());
+		settings.AddBool("splitOnWords", sidebar->SplitOnWordsEnabled());
+		settings.AddString("lineBreakDelimiter", sidebar->LineBreakDelimiterText());
+
+		settings.AddString("replaceSearchString", sidebar->ReplaceSearchText());
+		settings.AddString("replaceWithString", sidebar->ReplaceWithText());
+		settings.AddBool("replaceCaseSensitive", sidebar->ReplaceCaseSensitive());
+		settings.AddBool("replaceFullWords", sidebar->ReplaceFullWordsOnly());
+	}
+
 	if (status == B_OK)
 		status = settings.Flatten(&file);
 
 	return status;
 }
+
+
+void
+MainWindow::_RestoreValues(BMessage& settings)
+{
+	BString text;
+	int32 number;
+	bool flag;
+
+	if (settings.FindString("textViewContent", &text) == B_OK)
+		textView->SetText(text);
+
+	if (sidebar) {
+		if (settings.FindString("replaceLineBreaksInput", &text) == B_OK)
+			sidebar->SetReplaceLineBreaksText(text);
+
+		if (settings.FindString("prefixInput", &text) == B_OK)
+			sidebar->SetPrefixText(text);
+
+		if (settings.FindString("suffixInput", &text) == B_OK)
+			sidebar->SetSuffixText(text);
+
+		if (settings.FindInt32("maxWidthInput", &number) == B_OK)
+			sidebar->SetMaxWidthText(number);
+
+		if (settings.FindBool("splitOnWords", &flag) == B_OK)
+			sidebar->SetSplitOnWordsEnabled(flag);
+
+		if (settings.FindString("lineBreakDelimiter", &text) == B_OK)
+			sidebar->SetLineBreakDelimiterText(text);
+
+		if (settings.FindString("replaceSearchString", &text) == B_OK)
+			sidebar->SetReplaceSearchText(text);
+
+		if (settings.FindString("replaceWithString", &text) == B_OK)
+			sidebar->SetReplaceWithText(text);
+
+		if (settings.FindBool("replaceCaseSensitive", &flag) == B_OK)
+			sidebar->SetReplaceCaseSensitive(flag);
+
+		if (settings.FindBool("replaceFullWords", &flag) == B_OK)
+			sidebar->SetReplaceFullWordsOnly(flag);
+	}
+}
+
 
 
 void

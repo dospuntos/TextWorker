@@ -1,4 +1,3 @@
-- Save settings
 - Re-organize menu
 - Enable save menu if file changed
 - General settings:
@@ -9,9 +8,6 @@
 - App icon
 
 Add text transformation tools:
-
-Case:
-X Toggle case
 
 Coding:
 - HEX encode/decode
