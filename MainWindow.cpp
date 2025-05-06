@@ -554,13 +554,34 @@ MainWindow::ResourceToBitmap(const char* resName)
 			size_t size;
 			const void* data = res.LoadResource(B_VECTOR_ICON_TYPE, resName, &size);
 			if (data) {
-				BBitmap* icon = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32);
-				if (BIconUtils::GetVectorIcon((const uint8*)data, size, icon) == B_OK)
-					return icon;
-				delete icon;
+				// Step 1: Calculate target scale size so 11x11 becomes 24x24
+				const float scale = 24.0f / 11.0f;
+				const int32 renderSize = (int32)ceil(16 * scale); // ~35
+
+				// Step 2: Render large enough
+				BBitmap* large = new BBitmap(BRect(0, 0, renderSize - 1, renderSize - 1), B_RGBA32, true);
+				if (BIconUtils::GetVectorIcon((const uint8*)data, size, large) != B_OK) {
+					delete large;
+					break;
+				}
+
+				// Step 3: Crop top-left 24x24 without further scaling
+				BBitmap* final = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32, true);
+				BView* view = new BView(final->Bounds(), "cropper", B_FOLLOW_NONE, B_WILL_DRAW);
+				final->AddChild(view);
+
+				final->Lock();
+				view->SetDrawingMode(B_OP_ALPHA);
+				view->SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_COMPOSITE);
+				view->DrawBitmap(large, BRect(0, 0, 23, 23), final->Bounds());
+				view->Sync();
+				final->Unlock();
+
+				delete large;
+				return final;
 			}
 		}
-		break; // stop after the first image
+		break;
 	}
 	return nullptr;
 }
