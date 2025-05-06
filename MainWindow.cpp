@@ -4,6 +4,7 @@
 #include <Application.h>
 #include <Bitmap.h>
 #include <Button.h>
+#include <Clipboard.h>
 #include <File.h>
 #include <FindDirectory.h>
 #include <Font.h>
@@ -35,8 +36,6 @@ MainWindow::MainWindow(void)
 
 	textView = new BTextView("TextView");
 	textView->MakeEditable(true);
-	textView->SetText("Paste your text here...");
-	textView->SetWordWrap(false);
 
 	scrollView = new BScrollView(
 		"TextViewScroll", textView, B_WILL_DRAW | B_FRAME_EVENTS, true, true, B_PLAIN_BORDER);
@@ -125,6 +124,24 @@ MainWindow::MainWindow(void)
 	// Use MessageRunner as temporary solution for status bar
 	BMessage* updateMessage = new BMessage(M_UPDATE_STATUSBAR);
 	statusUpdater = new BMessageRunner(this, updateMessage, 100000);
+
+	// Get data from clipboard
+	BMessage* clipboard;
+	if (be_clipboard->Lock()) {
+		clipboard = be_clipboard->Data();
+		if (clipboard != nullptr) {
+			const char* text = nullptr;
+			ssize_t textLen;
+			if (clipboard->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen) == B_OK && text != nullptr) {
+				// Only insert if the text is not empty
+				if (textLen > 0) {
+					textView->SetText(text, textLen);  // Replace default text with clipboard contents
+				}
+			}
+		}
+		be_clipboard->Unlock();
+	}
+
 }
 
 
