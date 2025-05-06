@@ -33,7 +33,8 @@ SRCS =  App.cpp \
  MainWindow.cpp \
  TextUtils.cpp  \
  Sidebar.cpp	\
- Constants.cpp
+ Constants.cpp	\
+ SettingsWindow.cpp
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.

@@ -21,10 +21,8 @@
 #include <cctype>
 
 #include "Constants.h"
+#include "SettingsWindow.h"
 #include "TextUtils.h"
-
-static const char* kSettingsFile = "TextWorker_settings";
-
 
 MainWindow::MainWindow(void)
 	:
@@ -83,7 +81,7 @@ MainWindow::MainWindow(void)
 	toolbar->AddAction(new BMessage(M_TRANSFORM_ROT13), this, ResourceToBitmap("PUZZLE_ICON"),
 		"ROT13 encode/decode", "", false);
 	toolbar->AddGlue();
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("SETTINGS_ICON"),
+	toolbar->AddAction(new BMessage(M_SHOW_SETTINGS), this, ResourceToBitmap("SETTINGS_ICON"),
 		"Settings" B_UTF8_ELLIPSIS, "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("HELP_ICON"),
 		"Help" B_UTF8_ELLIPSIS, "", false);
@@ -176,6 +174,12 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_FILE_SAVE_AS:
 			fSavePanel->Show();
 			break;
+		case M_SHOW_SETTINGS: {
+			fSettingsWindow = new SettingsWindow(BRect(200, 200, 500, 400));
+			fSettingsWindow->CenterIn(Frame());
+			fSettingsWindow->Show();
+			break;
+		}
 		case M_UPDATE_STATUSBAR:
 			UpdateStatusBar();
 			break;

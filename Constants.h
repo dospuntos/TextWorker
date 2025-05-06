@@ -7,5 +7,6 @@
 
 extern const char* kApplicationSignature;
 extern const char* kApplicationName;
+extern const char* kSettingsFile;
 
 #endif // CONSTANTS_H
