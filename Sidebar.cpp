@@ -30,42 +30,10 @@ Sidebar::Sidebar()
 	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
 	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", "Break on:", "", nullptr);
 
-	replaceSearchString = new BTextControl("ReplaceSearchString", "Find", "", nullptr);
-	replaceWithString = new BTextControl("ReplaceWithString", "Replace", "", nullptr);
+	replaceSearchString = new BTextControl("ReplaceSearchString", "Find:", "", nullptr);
+	replaceWithString = new BTextControl("ReplaceWithString", "Replace:", "", nullptr);
 	replaceCaseSensitiveCheckbox = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
 	replaceFullWordsCheckbox = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
-
-	// === Remove Line Breaks Box ===
-	BBox* removeBreaksBox = new BBox("RemoveLineBreaksBox");
-	removeBreaksBox->SetLabel("Remove line breaks");
-	BGroupView* removeGroup = new BGroupView(B_HORIZONTAL, 5);
-	removeBreaksBox->AddChild(removeGroup);
-
-	BLayoutBuilder::Group<>(removeGroup)
-		.Add(replaceLineBreaksInput)
-		.Add(new BButton("RemoveLineBreaksBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS)))
-		.SetInsets(10, 12, 10, 10);
-
-	// === Add Line Breaks Box ===
-	BBox* addBreaksBox = new BBox("AddLineBreaksBox");
-	addBreaksBox->SetLabel("Add line breaks");
-	BGroupView* addGroup = new BGroupView(B_VERTICAL, 5);
-	addBreaksBox->AddChild(addGroup);
-
-	// Layout for Add Line Breaks Box
-	BLayoutBuilder::Group<>(addGroup)
-		.AddGroup(B_HORIZONTAL) // maxWidthInput and Apply button on the same line
-			.Add(maxWidthInput)
-			.Add(new BButton("AddLineBreaksBtn", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
-		.End()
-		.Add(splitOnWordsCheckbox) // Split on words checkbox on a separate line
-		.AddGroup(B_HORIZONTAL) // lineBreakDelimiterInput and Apply button on the same line
-			.Add(lineBreakDelimiterInput)
-			.Add(new BButton("BreakOnDelimiterBtn", "Apply", new BMessage(M_BREAK_LINES_ON_DELIMITER)))
-		.End()
-		.Add(new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES)))
-		.Add(new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES)))
-		.SetInsets(10, 12, 10, 10);
 
 	// === Search/Replace Box ===
 	BBox* searchReplaceBox = new BBox("SearchReplaceBox");
@@ -80,30 +48,104 @@ Sidebar::Sidebar()
 			.Add(replaceCaseSensitiveCheckbox)
 			.Add(replaceFullWordsCheckbox)
 		.End()
-		.Add(new BButton("SearchReplaceBtn", "Replace", new BMessage(M_TRANSFORM_REPLACE)))
+		.AddGroup(B_HORIZONTAL)
+			.AddGlue()
+			.Add(new BButton("SearchReplaceBtn", "Replace", new BMessage(M_TRANSFORM_REPLACE)))
+		.End()
+		.SetInsets(10, 12, 10, 10);
+
+	// === Remove Line Breaks Box ===
+	BBox* removeBreaksBox = new BBox("RemoveLineBreaksBox");
+	removeBreaksBox->SetLabel("Remove line breaks");
+
+	BGroupView* removeGroup = new BGroupView(B_VERTICAL, 5);
+	removeBreaksBox->AddChild(removeGroup);
+
+	BButton* removeBtn = new BButton("RemoveLineBreaksBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS));
+
+	BLayoutBuilder::Group<>(removeGroup)
+		.Add(replaceLineBreaksInput)
+		.AddGroup(B_HORIZONTAL)
+			.AddGlue()
+			.Add(removeBtn)
+		.End()
+		.SetInsets(10, 12, 10, 10);
+
+	// === Add Line Breaks Box ===
+	BBox* addBreaksBox = new BBox("AddLineBreaksBox");
+	addBreaksBox->SetLabel("Add line breaks");
+	BGroupView* addGroup = new BGroupView(B_VERTICAL, 5);
+	addBreaksBox->AddChild(addGroup);
+
+	// Layout for Add Line Breaks Box
+	BLayoutBuilder::Group<>(addGroup)
+		.AddGroup(B_HORIZONTAL)
+			.Add(maxWidthInput)
+			.Add(new BButton("AddLineBreaksBtn", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
+		.End()
+		.Add(splitOnWordsCheckbox)
+		.AddGroup(B_HORIZONTAL)
+			.Add(lineBreakDelimiterInput)
+			.Add(new BButton("BreakOnDelimiterBtn", "Apply", new BMessage(M_BREAK_LINES_ON_DELIMITER)))
+		.End()
+		.SetInsets(10, 12, 10, 10);
+
+	// === Cleanup Box ===
+	BBox* cleanupBox = new BBox("CleanupBox");
+	cleanupBox->SetLabel("Cleanup");
+	BGroupView* cleanGroup = new BGroupView(B_VERTICAL, 5);
+	cleanupBox->AddChild(cleanGroup);
+
+	// Layout for Cleanup Box
+	BButton* trimLinesBtn = new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES));
+	BButton* trimEmptyLinesBtn = new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
+
+	// Make both buttons expand to fill width
+	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	trimEmptyLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+
+	BLayoutBuilder::Group<>(cleanGroup)
+		.Add(trimLinesBtn)
+		.Add(trimEmptyLinesBtn)
 		.SetInsets(10, 12, 10, 10);
 
 	// === Line Operations Tab ===
 	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 10)
+		.Add(searchReplaceBox)
 		.Add(removeBreaksBox)
 		.Add(addBreaksBox)
-		.Add(searchReplaceBox)
+		.Add(cleanupBox)
 		.AddGlue()
-		.SetInsets(10, 10, 10, 10);
+		.SetInsets(10, 12, 10, 10);
 
 	BTab* lineOperationsTab = new BTab();
 	AddTab(lineOperationsView, lineOperationsTab);
 	lineOperationsTab->SetLabel("Lines");
 
 	// === Prefix/Suffix Tab ===
+	// Tab: Line operations
 	BGroupView* prefixSuffixView = new BGroupView(B_VERTICAL, 5);
-	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 5)
-		.Add(new BStringView("PrependLabel", "Prefix/suffix each line"))
+
+	// === Prefix/suffix Box ===
+	BBox* prefixSuffixBox = new BBox("PrefixSuffixBox");
+	prefixSuffixBox->SetLabel("Prefix/suffix each line");
+	BGroupView* prefixSuffixGroup = new BGroupView(B_VERTICAL, 5);
+	prefixSuffixBox->AddChild(prefixSuffixGroup);
+
+	BLayoutBuilder::Group<>(prefixSuffixGroup)
 		.Add(prefixInput)
 		.Add(suffixInput)
-		.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
+		.AddGroup(B_HORIZONTAL)
+			.AddGlue()
+			.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
+		.End()
+		.SetInsets(10, 12, 10, 10);
+
+	// === Prefix/suffix Tab ===
+	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 10)
+		.Add(prefixSuffixBox)
 		.AddGlue()
-		.SetInsets(10, 10, 10, 10);
+		.SetInsets(10, 12, 10, 10);
 
 	BTab* prefixSuffixTab = new BTab();
 	AddTab(prefixSuffixView, prefixSuffixTab);
