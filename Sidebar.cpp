@@ -10,6 +10,7 @@
 #include <Button.h>
 #include <GroupView.h>
 #include <LayoutBuilder.h>
+#include <RadioButton.h>
 #include <StringView.h>
 #include <TabView.h>
 #include <TextControl.h>
@@ -54,41 +55,63 @@ Sidebar::Sidebar()
 		.End()
 		.SetInsets(10, 12, 10, 10);
 
-	// === Remove Line Breaks Box ===
-	BBox* removeBreaksBox = new BBox("RemoveLineBreaksBox");
-	removeBreaksBox->SetLabel("Remove line breaks");
+	// === Line Breaks Options Box ===
+	BBox* lineBreaksBox = new BBox("LineBreaksBox");
+	lineBreaksBox->SetLabel("Line break options");
 
-	BGroupView* removeGroup = new BGroupView(B_VERTICAL, 5);
-	removeBreaksBox->AddChild(removeGroup);
+	BGroupView* lineBreaksGroup = new BGroupView(B_VERTICAL, 10);
+	lineBreaksBox->AddChild(lineBreaksGroup);
 
-	BButton* removeBtn = new BButton("RemoveLineBreaksBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS));
+	// Input fields with labels hidden
+	replaceLineBreaksInput->SetLabel(nullptr);
+	lineBreakDelimiterInput->SetLabel(nullptr);
+	maxWidthInput->SetLabel(nullptr);
 
-	BLayoutBuilder::Group<>(removeGroup)
-		.Add(replaceLineBreaksInput)
+	// Radio buttons
+	BRadioButton* replaceMode = new BRadioButton("ReplaceMode", "Replace with:", nullptr);
+	BRadioButton* breakOnMode = new BRadioButton("BreakOnMode", "Break on:", nullptr);
+	BRadioButton* charactersMode = new BRadioButton("CharactersMode", "Characters:", nullptr);
+	/*
+	// Group them in one container to enforce exclusivity
+	BGroupView* radioGroup = new BGroupView(B_VERTICAL, 5);
+
+	// Add each radio row (radio button + field) as a horizontal group
+	BGroupView* replaceRow = new BGroupView(B_HORIZONTAL, 5);
+	replaceRow->AddChild(replaceMode);
+	replaceRow->AddChild(replaceLineBreaksInput);
+
+	BGroupView* breakRow = new BGroupView(B_HORIZONTAL, 5);
+	breakRow->AddChild(breakOnMode);
+	breakRow->AddChild(lineBreakDelimiterInput);
+
+	BGroupView* charRow = new BGroupView(B_HORIZONTAL, 5);
+	charRow->AddChild(charactersMode);
+	charRow->AddChild(maxWidthInput);
+
+	// Add rows to the radio group
+	radioGroup->AddChild(replaceMode);
+	radioGroup->AddChild(breakOnMode);
+	radioGroup->AddChild(charactersMode);
+	*/
+	// Apply button
+	BButton* applyBtn = new BButton("ApplyLineBreaksBtn", "Apply", new BMessage(M_INSERT_LINE_BREAKS));
+
+	// Build final layout
+	BLayoutBuilder::Group<>(lineBreaksGroup)
+		.AddGroup(B_HORIZONTAL)
+			.Add(replaceMode)
+			.Add(breakOnMode)
+			.Add(charactersMode)
+		.End()
 		.AddGroup(B_HORIZONTAL)
 			.AddGlue()
-			.Add(removeBtn)
+			.Add(applyBtn)
 		.End()
 		.SetInsets(10, 12, 10, 10);
 
-	// === Add Line Breaks Box ===
-	BBox* addBreaksBox = new BBox("AddLineBreaksBox");
-	addBreaksBox->SetLabel("Add line breaks");
-	BGroupView* addGroup = new BGroupView(B_VERTICAL, 5);
-	addBreaksBox->AddChild(addGroup);
+	// Set initial selection
+	replaceMode->SetValue(B_CONTROL_ON);
 
-	// Layout for Add Line Breaks Box
-	BLayoutBuilder::Group<>(addGroup)
-		.AddGroup(B_HORIZONTAL)
-			.Add(maxWidthInput)
-			.Add(new BButton("AddLineBreaksBtn", "Apply", new BMessage(M_INSERT_LINE_BREAKS)))
-		.End()
-		.Add(splitOnWordsCheckbox)
-		.AddGroup(B_HORIZONTAL)
-			.Add(lineBreakDelimiterInput)
-			.Add(new BButton("BreakOnDelimiterBtn", "Apply", new BMessage(M_BREAK_LINES_ON_DELIMITER)))
-		.End()
-		.SetInsets(10, 12, 10, 10);
 
 	// === Cleanup Box ===
 	BBox* cleanupBox = new BBox("CleanupBox");
@@ -112,8 +135,7 @@ Sidebar::Sidebar()
 	// === Line Operations Tab ===
 	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 10)
 		.Add(searchReplaceBox)
-		.Add(removeBreaksBox)
-		.Add(addBreaksBox)
+		.Add(lineBreaksBox)
 		.Add(cleanupBox)
 		.AddGlue()
 		.SetInsets(10, 12, 10, 10);

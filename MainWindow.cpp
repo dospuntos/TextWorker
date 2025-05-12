@@ -23,6 +23,7 @@
 
 #include "Constants.h"
 #include "TextUtils.h"
+#include "Toolbar.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -44,52 +45,7 @@ MainWindow::MainWindow(void)
 	textView->SetFontAndColor(&font);
 
 	// Toolbar
-	toolbar = new BToolBar(B_HORIZONTAL);
-
-	toolbar->AddAction(new BMessage(M_FILE_NEW), this, ResourceToBitmap("NEW_ICON"),
-		"New file (Alt-N)", "", false);
-	toolbar->AddAction(new BMessage(M_FILE_OPEN), this, ResourceToBitmap("OPEN_ICON"),
-		"Open file (Alt-O)", "", false);
-	toolbar->AddAction(new BMessage(M_FILE_SAVE), this, ResourceToBitmap("SAVE_ICON"),
-		"Save file (Alt-S)", "", false);
-	toolbar->GroupLayout()->AddItem(
-		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddSeparator();
-	toolbar->GroupLayout()->AddItem(
-		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), this, ResourceToBitmap("LINE_WRAP_ICON"),
-		"Word wrap", "", true);
-	toolbar->GroupLayout()->AddItem(
-		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddSeparator();
-	toolbar->GroupLayout()->AddItem(
-		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddAction(new BMessage(M_TRANSFORM_UPPERCASE), this,
-		ResourceToBitmap("UPPERCASE_ICON"), "UPPERCASE", "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), this,
-		ResourceToBitmap("LOWERCASE_ICON"), "lowercase", "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_TITLE_CASE), this,
-		ResourceToBitmap("TITLECASE_ICON"), "Title Case", "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_CAPITALIZE), this,
-		ResourceToBitmap("CAPITALIZE_ICON"), "Capitalize", "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_TOGGLE_CASE), this, ResourceToBitmap("TOGGLE_ICON"),
-		"Toggle case", "", false);
-	toolbar->GroupLayout()->AddItem(
-		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddSeparator();
-	toolbar->GroupLayout()->AddItem(
-		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
-	toolbar->AddAction(new BMessage(M_TRANSFORM_ENCODE_URL), this, ResourceToBitmap("URL_ENCODE_ICON"),
-		"URL encode", "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_DECODE_URL), this, ResourceToBitmap("URL_DECODE_ICON"),
-		"URL decode", "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_ROT13), this, ResourceToBitmap("PUZZLE_ICON"),
-		"ROT13 encode/decode", "", false);
-	toolbar->AddGlue();
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("SETTINGS_ICON"),
-		"Settings" B_UTF8_ELLIPSIS, "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), this, ResourceToBitmap("HELP_ICON"),
-		"Help" B_UTF8_ELLIPSIS, "", false);
+	toolbar = CreateToolbar(this);
 
 	// Sidebar
 	sidebar = new Sidebar();
@@ -237,11 +193,15 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TRANSFORM_REPLACE:
 			ReplaceAll(textView, sidebar->ReplaceSearchText(), sidebar->ReplaceWithText(),
 				sidebar->ReplaceCaseSensitive(), sidebar->ReplaceFullWordsOnly());
+			sidebar->SetReplaceSearchText("");
+			sidebar->SetReplaceWithText("");
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(textView);
 		case M_TRANSFORM_PREFIX_SUFFIX:
 			AddStringsToEachLine(textView, sidebar->PrefixText(), sidebar->SuffixText());
+			sidebar->SetPrefixText("");
+			sidebar->SetSuffixText("");
 			break;
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(textView);
@@ -563,28 +523,7 @@ MainWindow::UpdateStatusBar()
 }
 
 
-BBitmap*
- MainWindow::ResourceToBitmap(const char* resName)
- {
- 	image_info info;
- 	int32 cookie = 0;
- 	while (get_next_image_info(0, &cookie, &info) == B_OK) {
- 		BFile file(info.name, B_READ_ONLY);
- 		if (file.InitCheck() == B_OK) {
- 			BResources res(&file);
- 			size_t size;
- 			const void* data = res.LoadResource(B_VECTOR_ICON_TYPE, resName, &size);
- 			if (data) {
- 				BBitmap* icon = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32);
- 				if (BIconUtils::GetVectorIcon((const uint8*)data, size, icon) == B_OK)
- 					return icon;
- 				delete icon;
- 			}
- 		}
- 		break; // stop after the first image
- 	}
- 	return nullptr;
- }
+
 
 
 void
@@ -666,3 +605,27 @@ MainWindow::SaveFile(const char* path)
 		nodeInfo.SetType("text/plain");
 	}
 }
+
+
+BBitmap*
+MainWindow::ResourceToBitmap(const char* resName)
+ {
+ 	image_info info;
+ 	int32 cookie = 0;
+ 	while (get_next_image_info(0, &cookie, &info) == B_OK) {
+ 		BFile file(info.name, B_READ_ONLY);
+ 		if (file.InitCheck() == B_OK) {
+ 			BResources res(&file);
+ 			size_t size;
+ 			const void* data = res.LoadResource(B_VECTOR_ICON_TYPE, resName, &size);
+ 			if (data) {
+ 				BBitmap* icon = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32);
+ 				if (BIconUtils::GetVectorIcon((const uint8*)data, size, icon) == B_OK)
+ 					return icon;
+ 				delete icon;
+ 			}
+ 		}
+ 		break; // stop after the first image
+ 	}
+ 	return nullptr;
+ }
