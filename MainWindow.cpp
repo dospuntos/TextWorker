@@ -101,7 +101,6 @@ MainWindow::MainWindow(void)
 		}
 		be_clipboard->Unlock();
 	}
-
 }
 
 
@@ -229,6 +228,11 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TOGGLE_WORD_WRAP:
 			textView->SetWordWrap(!textView->DoesWordWrap());
 			break;
+		case M_MODE_REPLACE:
+		case M_MODE_BREAK:
+		case M_MODE_CHARACTERS:
+			sidebar->MessageReceived(msg);
+			break;
 		case B_ABOUT_REQUESTED:
 			be_app->AboutRequested();
 			break;
@@ -236,6 +240,8 @@ MainWindow::MessageReceived(BMessage *msg)
 			BWindow::MessageReceived(msg);
 			break;
 	}
+	sidebar->InvalidateLayout();
+	sidebar->Invalidate();
 }
 
 

@@ -5,15 +5,19 @@
 
 
 #include "Sidebar.h"
-#include "MainWindow.h"
+#include "Constants.h"
+
+#include <Alert.h>
 #include <Box.h>
 #include <Button.h>
+#include <GridLayoutBuilder.h>
 #include <GroupView.h>
 #include <LayoutBuilder.h>
 #include <RadioButton.h>
 #include <StringView.h>
 #include <TabView.h>
 #include <TextControl.h>
+#include <Window.h>
 
 
 Sidebar::Sidebar()
@@ -24,93 +28,111 @@ Sidebar::Sidebar()
 	BGroupView* lineOperationsView = new BGroupView(B_VERTICAL, 5);
 
 	// === Widgets ===
-	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", "Replacement:", "", nullptr);
+	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", nullptr, "", nullptr);
 	prefixInput = new BTextControl("PrefixInput", "Prefix:", "", nullptr);
 	suffixInput = new BTextControl("SuffixInput", "Suffix:", "", nullptr);
-	maxWidthInput = new BTextControl("MaxWidth", "Characters:", "", nullptr);
+	maxWidthInput = new BTextControl("MaxWidthInput", nullptr, "", nullptr);
 	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
-	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", "Break on:", "", nullptr);
+	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", nullptr, "", nullptr);
 
-	replaceSearchString = new BTextControl("ReplaceSearchString", "Find:", "", nullptr);
-	replaceWithString = new BTextControl("ReplaceWithString", "Replace:", "", nullptr);
+	replaceSearchString = new BTextControl("ReplaceSearchString", nullptr, "", nullptr);
+	replaceWithString = new BTextControl("ReplaceWithString", nullptr, "", nullptr);
 	replaceCaseSensitiveCheckbox = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
 	replaceFullWordsCheckbox = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
+
+	float maxLabelWidth = 0;
+
+	// List of your BTextControls
+	BTextControl* fields[] = {
+		replaceLineBreaksInput, prefixInput, suffixInput, maxWidthInput, lineBreakDelimiterInput,
+		replaceSearchString, replaceWithString,
+		nullptr // Sentinel
+	};
+
+	// Step 1–2: Find max label width
+	for (int i = 0; fields[i]; ++i) {
+		float width = be_plain_font->StringWidth(fields[i]->Label());
+		maxLabelWidth = MAX(width, maxLabelWidth);
+	}
+
+	maxLabelWidth += 20;
 
 	// === Search/Replace Box ===
 	BBox* searchReplaceBox = new BBox("SearchReplaceBox");
 	searchReplaceBox->SetLabel("Search and replace");
-	BGroupView* searchGroup = new BGroupView(B_VERTICAL, 5);
-	searchReplaceBox->AddChild(searchGroup);
 
-	BLayoutBuilder::Group<>(searchGroup)
-		.Add(replaceSearchString)
-		.Add(replaceWithString)
-		.AddGroup(B_HORIZONTAL)
-			.Add(replaceCaseSensitiveCheckbox)
-			.Add(replaceFullWordsCheckbox)
-		.End()
-		.AddGroup(B_HORIZONTAL)
-			.AddGlue()
-			.Add(new BButton("SearchReplaceBtn", "Replace", new BMessage(M_TRANSFORM_REPLACE)))
-		.End()
-		.SetInsets(10, 12, 10, 10);
+	// Controls
+	BButton* searchReplaceBtn
+		= new BButton("SearchReplaceBtn", "Replace", new BMessage(M_TRANSFORM_REPLACE));
+	searchReplaceBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+
+	// Set consistent minimum widths for text fields
+	replaceSearchString->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	replaceWithString->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+
+	// Grid layout
+	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
+	// clang-format off
+	grid1.Add(new BStringView(NULL, "Find:"),         0, 0)
+		.Add(replaceSearchString,                     1, 0)
+
+		.Add(new BStringView(NULL, "Replace with:"),  0, 1)
+		.Add(replaceWithString,                       1, 1)
+
+		.Add(replaceCaseSensitiveCheckbox,            0, 2)
+		.Add(replaceFullWordsCheckbox,                1, 2)
+
+		.Add(searchReplaceBtn,                        0, 3, 2);
+	// clang-format on
+	grid1.GridLayout()->SetMinColumnWidth(0, maxLabelWidth);
+	// Wrap in a group and add to the box
+	BGroupView* searchGroup = new BGroupView(B_VERTICAL, 0);
+	searchReplaceBox->AddChild(searchGroup);
+	searchGroup->GroupLayout()->AddView(grid1.View());
+	searchGroup->GroupLayout()->SetInsets(10, 12, 10, 10);
 
 	// === Line Breaks Options Box ===
-	BBox* lineBreaksBox = new BBox("LineBreaksBox");
-	lineBreaksBox->SetLabel("Line break options");
+	// Create the container box
+	BBox* breakBox = new BBox("LineBreakOptionsBox");
+	breakBox->SetLabel("Line break options");
 
-	BGroupView* lineBreaksGroup = new BGroupView(B_VERTICAL, 10);
-	lineBreaksBox->AddChild(lineBreaksGroup);
+	// Views and controls
+	BRadioButton* replaceRadio
+		= new BRadioButton("ReplaceRadio", "Replace with:", new BMessage(M_MODE_REPLACE));
+	BRadioButton* breakRadio
+		= new BRadioButton("BreakRadio", "Break on:", new BMessage(M_MODE_BREAK));
+	BRadioButton* charRadio
+		= new BRadioButton("CharRadio", "Characters:", new BMessage(M_MODE_CHARACTERS));
+	replaceRadio->SetValue(B_CONTROL_ON);
+	BCheckBox* splitWords = new BCheckBox("SplitWords", "Split on words", NULL);
 
-	// Input fields with labels hidden
-	replaceLineBreaksInput->SetLabel(nullptr);
-	lineBreakDelimiterInput->SetLabel(nullptr);
-	maxWidthInput->SetLabel(nullptr);
+	replaceLineBreaksInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	lineBreakDelimiterInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	maxWidthInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	BButton* applyBtn = new BButton("ApplyBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS));
+	applyBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
-	// Radio buttons
-	BRadioButton* replaceMode = new BRadioButton("ReplaceMode", "Replace with:", nullptr);
-	BRadioButton* breakOnMode = new BRadioButton("BreakOnMode", "Break on:", nullptr);
-	BRadioButton* charactersMode = new BRadioButton("CharactersMode", "Characters:", nullptr);
-	/*
-	// Group them in one container to enforce exclusivity
-	BGroupView* radioGroup = new BGroupView(B_VERTICAL, 5);
+	// Layout grid
+	BGridLayoutBuilder grid(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
+	// clang-format off
+	grid.Add(replaceRadio,              0, 0)
+		.Add(replaceLineBreaksInput,    1, 0)
 
-	// Add each radio row (radio button + field) as a horizontal group
-	BGroupView* replaceRow = new BGroupView(B_HORIZONTAL, 5);
-	replaceRow->AddChild(replaceMode);
-	replaceRow->AddChild(replaceLineBreaksInput);
+		.Add(breakRadio,                0, 1)
+		.Add(lineBreakDelimiterInput,   1, 1)
 
-	BGroupView* breakRow = new BGroupView(B_HORIZONTAL, 5);
-	breakRow->AddChild(breakOnMode);
-	breakRow->AddChild(lineBreakDelimiterInput);
+		.Add(charRadio,                 0, 2)
+		.Add(maxWidthInput,             1, 2)
+		.Add(splitWords,                1, 3)
 
-	BGroupView* charRow = new BGroupView(B_HORIZONTAL, 5);
-	charRow->AddChild(charactersMode);
-	charRow->AddChild(maxWidthInput);
+		.Add(applyBtn,                  0, 4, 2);
+	// clang-format on
+	grid.GridLayout()->SetMinColumnWidth(0, maxLabelWidth);
 
-	// Add rows to the radio group
-	radioGroup->AddChild(replaceMode);
-	radioGroup->AddChild(breakOnMode);
-	radioGroup->AddChild(charactersMode);
-	*/
-	// Apply button
-	BButton* applyBtn = new BButton("ApplyLineBreaksBtn", "Apply", new BMessage(M_INSERT_LINE_BREAKS));
-
-	// Build final layout
-	BLayoutBuilder::Group<>(lineBreaksGroup)
-		.AddGroup(B_HORIZONTAL)
-			.Add(replaceMode)
-			.Add(breakOnMode)
-			.Add(charactersMode)
-		.End()
-		.AddGroup(B_HORIZONTAL)
-			.AddGlue()
-			.Add(applyBtn)
-		.End()
-		.SetInsets(10, 12, 10, 10);
-
-	// Set initial selection
-	replaceMode->SetValue(B_CONTROL_ON);
+	BGroupView* breakGroup = new BGroupView(B_VERTICAL, 0);
+	breakBox->AddChild(breakGroup);
+	breakGroup->GroupLayout()->AddView(grid.View());
+	breakGroup->GroupLayout()->SetInsets(10, 12, 10, 10);
 
 
 	// === Cleanup Box ===
@@ -120,8 +142,10 @@ Sidebar::Sidebar()
 	cleanupBox->AddChild(cleanGroup);
 
 	// Layout for Cleanup Box
-	BButton* trimLinesBtn = new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES));
-	BButton* trimEmptyLinesBtn = new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
+	BButton* trimLinesBtn
+		= new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES));
+	BButton* trimEmptyLinesBtn
+		= new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
 
 	// Make both buttons expand to fill width
 	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
@@ -135,7 +159,7 @@ Sidebar::Sidebar()
 	// === Line Operations Tab ===
 	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 10)
 		.Add(searchReplaceBox)
-		.Add(lineBreaksBox)
+		.Add(breakBox)
 		.Add(cleanupBox)
 		.AddGlue()
 		.SetInsets(10, 12, 10, 10);
@@ -154,6 +178,7 @@ Sidebar::Sidebar()
 	BGroupView* prefixSuffixGroup = new BGroupView(B_VERTICAL, 5);
 	prefixSuffixBox->AddChild(prefixSuffixGroup);
 
+	// clang-format off
 	BLayoutBuilder::Group<>(prefixSuffixGroup)
 		.Add(prefixInput)
 		.Add(suffixInput)
@@ -162,7 +187,7 @@ Sidebar::Sidebar()
 			.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
 		.End()
 		.SetInsets(10, 12, 10, 10);
-
+	// clang-format on
 	// === Prefix/suffix Tab ===
 	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 10)
 		.Add(prefixSuffixBox)
@@ -172,4 +197,22 @@ Sidebar::Sidebar()
 	BTab* prefixSuffixTab = new BTab();
 	AddTab(prefixSuffixView, prefixSuffixTab);
 	prefixSuffixTab->SetLabel("Prefix/suffix");
+}
+
+
+void
+Sidebar::MessageReceived(BMessage* msg)
+{
+	switch (msg->what) {
+		case M_MODE_REPLACE:
+		case M_MODE_BREAK:
+			splitOnWordsCheckbox->Hide();
+			break;
+		case M_MODE_CHARACTERS:
+			splitOnWordsCheckbox->Show();
+			break;
+		default:
+			BView::MessageReceived(msg);
+			break;
+	}
 }

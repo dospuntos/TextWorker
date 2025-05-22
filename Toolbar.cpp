@@ -4,16 +4,17 @@
  */
 
 #include "Toolbar.h"
-#include "MainWindow.h"
+#include "Constants.h"
 #include <Bitmap.h>
 #include <File.h>
 #include <IconUtils.h>
+#include <InterfaceDefs.h>
+#include <LayoutBuilder.h>
 #include <Message.h>
 #include <Resources.h>
 #include <SpaceLayoutItem.h>
 #include <View.h>
-#include <InterfaceDefs.h>
-#include <LayoutBuilder.h>
+
 
 BToolBar* CreateToolbar(BHandler* target)
 {

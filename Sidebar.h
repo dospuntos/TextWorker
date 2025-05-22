@@ -15,6 +15,7 @@
 class Sidebar : public BTabView {
 public:
 	Sidebar();
+	void MessageReceived(BMessage* msg);
 
 	// Replace Line Breaks
 	BString ReplaceLineBreaksText() const { return replaceLineBreaksInput->Text(); }
