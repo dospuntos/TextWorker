@@ -42,11 +42,11 @@ Sidebar::Sidebar()
 
 	float maxLabelWidth = 0;
 
-	// List of your BTextControls
+	// List of BTextControls
 	BTextControl* fields[] = {
 		replaceLineBreaksInput, prefixInput, suffixInput, maxWidthInput, lineBreakDelimiterInput,
 		replaceSearchString, replaceWithString,
-		nullptr // Sentinel
+		nullptr
 	};
 
 	// Step 1–2: Find max label width
@@ -97,12 +97,9 @@ Sidebar::Sidebar()
 	breakBox->SetLabel("Line break options");
 
 	// Views and controls
-	BRadioButton* replaceRadio
-		= new BRadioButton("ReplaceRadio", "Replace with:", new BMessage(M_MODE_REPLACE));
-	BRadioButton* breakRadio
-		= new BRadioButton("BreakRadio", "Break on:", new BMessage(M_MODE_BREAK));
-	BRadioButton* charRadio
-		= new BRadioButton("CharRadio", "Characters:", new BMessage(M_MODE_CHARACTERS));
+	replaceRadio = new BRadioButton("ReplaceRadio", "Replace with:", new BMessage(M_MODE_REPLACE));
+	breakRadio = new BRadioButton("BreakRadio", "Break on:", new BMessage(M_MODE_BREAK));
+	charRadio = new BRadioButton("CharRadio", "Characters:", new BMessage(M_MODE_CHARACTERS));
 	replaceRadio->SetValue(B_CONTROL_ON);
 	BCheckBox* splitWords = new BCheckBox("SplitWords", "Split on words", NULL);
 

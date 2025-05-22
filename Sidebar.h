@@ -8,6 +8,7 @@
 
 #include <CheckBox.h>
 #include <GroupView.h>
+#include <RadioButton.h>
 #include <TabView.h>
 #include <TextControl.h>
 
@@ -28,6 +29,11 @@ public:
 	// Suffix
 	BString SuffixText() const { return suffixInput->Text(); }
 	void SetSuffixText(const BString& text) { suffixInput->SetText(text); }
+
+	//Line Break Mode
+	bool replaceRadioEnabled() const { return replaceRadio->Value() == B_CONTROL_ON; }
+	bool breakRadioEnabled() const { return breakRadio->Value() == B_CONTROL_ON; }
+	bool charRadioEnabled() const { return charRadio->Value() == B_CONTROL_ON; }
 
 	// Max Width
 	int32 MaxWidthText() const { return atoi(maxWidthInput->Text()); }
@@ -69,6 +75,11 @@ private:
 	BTextControl* replaceWithString;
 	BCheckBox* replaceCaseSensitiveCheckbox;
 	BCheckBox* replaceFullWordsCheckbox;
+
+	BRadioButton* replaceRadio;
+	BRadioButton* breakRadio;
+	BRadioButton* charRadio;
+
 };
 
 #endif // SIDEBAR_H

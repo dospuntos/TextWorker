@@ -177,14 +177,13 @@ MainWindow::MessageReceived(BMessage *msg)
 			ToggleCase(textView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			RemoveLineBreaks(textView, sidebar->ReplaceLineBreaksText());
-			break;
-		case M_INSERT_LINE_BREAKS:
-			InsertLineBreaks(textView, sidebar->MaxWidthText(),
-				sidebar->SplitOnWordsEnabled());
-			break;
-		case M_BREAK_LINES_ON_DELIMITER:
-			BreakLinesOnDelimiter(textView, sidebar->LineBreakDelimiterText());
+			if (sidebar->replaceRadioEnabled())
+				RemoveLineBreaks(textView, sidebar->ReplaceLineBreaksText());
+			else if (sidebar->breakRadioEnabled())
+				BreakLinesOnDelimiter(textView, sidebar->LineBreakDelimiterText());
+			else
+				InsertLineBreaks(textView, sidebar->MaxWidthText(),
+					sidebar->SplitOnWordsEnabled());
 			break;
 		case M_TRIM_LINES:
 			TrimLines(textView);
