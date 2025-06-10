@@ -28,28 +28,26 @@ Sidebar::Sidebar()
 	BGroupView* lineOperationsView = new BGroupView(B_VERTICAL, 5);
 
 	// === Widgets ===
-	replaceLineBreaksInput = new BTextControl("ReplaceLineBreaksInput", nullptr, "", nullptr);
-	prefixInput = new BTextControl("PrefixInput", "Prefix:", "", nullptr);
-	suffixInput = new BTextControl("SuffixInput", "Suffix:", "", nullptr);
-	maxWidthInput = new BTextControl("MaxWidthInput", nullptr, "", nullptr);
-	splitOnWordsCheckbox = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
-	lineBreakDelimiterInput = new BTextControl("LineBreakDelimiter", nullptr, "", nullptr);
+	fLineBreakInput = new BTextControl("ReplaceLineBreaksInput", nullptr, "", nullptr);
+	fPrefixInput = new BTextControl("PrefixInput", "Prefix:", "", nullptr);
+	fSuffixInput = new BTextControl("SuffixInput", "Suffix:", "", nullptr);
+	fBreakInput = new BTextControl("MaxWidthInput", nullptr, "", nullptr);
+	fWordWrapCheck = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
+	fDelimiterInput = new BTextControl("LineBreakDelimiter", nullptr, "", nullptr);
 
-	replaceSearchString = new BTextControl("ReplaceSearchString", nullptr, "", nullptr);
-	replaceWithString = new BTextControl("ReplaceWithString", nullptr, "", nullptr);
-	replaceCaseSensitiveCheckbox = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
-	replaceFullWordsCheckbox = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
+	fSearchInput = new BTextControl("ReplaceSearchString", nullptr, "", nullptr);
+	fReplaceInput = new BTextControl("ReplaceWithString", nullptr, "", nullptr);
+	fCaseCheck = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
+	fWholeWordCheck = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
 
 	float maxLabelWidth = 0;
 
-	// List of BTextControls
 	BTextControl* fields[] = {
-		replaceLineBreaksInput, prefixInput, suffixInput, maxWidthInput, lineBreakDelimiterInput,
-		replaceSearchString, replaceWithString,
+		fLineBreakInput, fPrefixInput, fSuffixInput, fBreakInput, fDelimiterInput,
+		fSearchInput, fReplaceInput,
 		nullptr
 	};
 
-	// Step 1–2: Find max label width
 	for (int i = 0; fields[i]; ++i) {
 		float width = be_plain_font->StringWidth(fields[i]->Label());
 		maxLabelWidth = MAX(width, maxLabelWidth);
@@ -67,20 +65,20 @@ Sidebar::Sidebar()
 	searchReplaceBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
 	// Set consistent minimum widths for text fields
-	replaceSearchString->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
-	replaceWithString->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	fSearchInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	fReplaceInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
 
 	// Grid layout
 	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
 	grid1.Add(new BStringView(NULL, "Find:"),         0, 0)
-		.Add(replaceSearchString,                     1, 0)
+		.Add(fSearchInput,                     1, 0)
 
 		.Add(new BStringView(NULL, "Replace with:"),  0, 1)
-		.Add(replaceWithString,                       1, 1)
+		.Add(fReplaceInput,                       1, 1)
 
-		.Add(replaceCaseSensitiveCheckbox,            0, 2)
-		.Add(replaceFullWordsCheckbox,                1, 2)
+		.Add(fCaseCheck,            0, 2)
+		.Add(fWholeWordCheck,                1, 2)
 
 		.Add(searchReplaceBtn,                        0, 3, 2);
 	// clang-format on
@@ -96,33 +94,34 @@ Sidebar::Sidebar()
 	BBox* breakBox = new BBox("LineBreakOptionsBox");
 	breakBox->SetLabel("Line break options");
 
-	// Views and controls
-	replaceRadio = new BRadioButton("ReplaceRadio", "Replace with:", new BMessage(M_MODE_REPLACE));
-	breakRadio = new BRadioButton("BreakRadio", "Break on:", new BMessage(M_MODE_BREAK));
-	charRadio = new BRadioButton("CharRadio", "Characters:", new BMessage(M_MODE_CHARACTERS));
-	replaceRadio->SetValue(B_CONTROL_ON);
-	BCheckBox* splitWords = new BCheckBox("SplitWords", "Split on words", NULL);
+	fBreakMenu = new BMenu("linebreaks");
+	fBreakMenu->AddItem(
+		new BMenuItem("Remove all", new BMessage(M_MODE_REMOVE_ALL)));
+	fBreakMenu->AddItem(new BMenuItem("Replace with" B_UTF8_ELLIPSIS, new BMessage(M_MODE_REPLACE_LINE_BREAKS)));
+	fBreakMenu->AddItem(new BMenuItem("Break on" B_UTF8_ELLIPSIS, new BMessage(M_MODE_BREAK_ON)));
+	fBreakMenu->AddItem(
+		new BMenuItem("Break after X characters", new BMessage(M_MODE_BREAK_AFTER_CHARS)));
 
-	replaceLineBreaksInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
-	lineBreakDelimiterInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
-	maxWidthInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	fBreakMenu->SetLabelFromMarked(true);
+	fBreakMenu->SetRadioMode(true);
+	fBreakMenu->ItemAt(0L)->SetMarked(true);
+	fBreakMenu->SetTargetForItems(this);
+
+	BMenuField* breakField = new BMenuField("breakField", "", fBreakMenu);
+
+	fWordWrapCheck = new BCheckBox("SplitWords", "Split on words", NULL);
+	fWordWrapCheck->SetEnabled(false);
+	fBreakInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
 	BButton* applyBtn = new BButton("ApplyBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS));
 	applyBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
 	// Layout grid
 	BGridLayoutBuilder grid(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid.Add(replaceRadio,              0, 0)
-		.Add(replaceLineBreaksInput,    1, 0)
-
-		.Add(breakRadio,                0, 1)
-		.Add(lineBreakDelimiterInput,   1, 1)
-
-		.Add(charRadio,                 0, 2)
-		.Add(maxWidthInput,             1, 2)
-		.Add(splitWords,                1, 3)
-
-		.Add(applyBtn,                  0, 4, 2);
+	grid.Add(breakField,		0, 0)
+		.Add(fBreakInput,		0, 1)
+		.Add(fWordWrapCheck,    0, 2)
+		.Add(applyBtn,          0, 3);
 	// clang-format on
 	grid.GridLayout()->SetMinColumnWidth(0, maxLabelWidth);
 
@@ -143,8 +142,6 @@ Sidebar::Sidebar()
 		= new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES));
 	BButton* trimEmptyLinesBtn
 		= new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
-
-	// Make both buttons expand to fill width
 	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	trimEmptyLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
@@ -177,8 +174,8 @@ Sidebar::Sidebar()
 
 	// clang-format off
 	BLayoutBuilder::Group<>(prefixSuffixGroup)
-		.Add(prefixInput)
-		.Add(suffixInput)
+		.Add(fPrefixInput)
+		.Add(fSuffixInput)
 		.AddGroup(B_HORIZONTAL)
 			.AddGlue()
 			.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
@@ -201,12 +198,30 @@ void
 Sidebar::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
-		case M_MODE_REPLACE:
-		case M_MODE_BREAK:
-			splitOnWordsCheckbox->Hide();
+		case M_MODE_REMOVE_ALL:
+			fWordWrapCheck->SetEnabled(false);
+			fBreakInput->SetEnabled(false);
+			this->Invalidate();
+			fBreakMode = BREAK_REMOVE_ALL;
 			break;
-		case M_MODE_CHARACTERS:
-			splitOnWordsCheckbox->Show();
+		case M_MODE_BREAK_ON:
+			fWordWrapCheck->SetEnabled(false);
+			fBreakInput->SetEnabled(true);
+			this->Invalidate();
+			fBreakMode = BREAK_ON;
+			break;
+		case M_MODE_REPLACE_LINE_BREAKS:
+			fWordWrapCheck->SetEnabled(false);
+			fBreakInput->SetEnabled(true);
+			fBreakMode = BREAK_REPLACE;
+			this->Invalidate();
+			fBreakMode = BREAK_REPLACE;
+			break;
+		case M_MODE_BREAK_AFTER_CHARS:
+			fWordWrapCheck->SetEnabled(true);
+			fBreakInput->SetEnabled(true);
+			fBreakMode = BREAK_AFTER_CHARS;
+			this->Invalidate();
 			break;
 		default:
 			BView::MessageReceived(msg);

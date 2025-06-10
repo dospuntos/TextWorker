@@ -27,11 +27,9 @@
 
 static const char* kSettingsFile = "TextWorker_settings";
 
-
 MainWindow::MainWindow(void)
 	:
-	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_TITLED_WINDOW,
-		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -177,13 +175,22 @@ MainWindow::MessageReceived(BMessage *msg)
 			ToggleCase(textView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			if (sidebar->replaceRadioEnabled())
+			if (sidebar->BreakMode() == BREAK_REMOVE_ALL)
+				RemoveLineBreaks(textView);
+			else if (sidebar->BreakMode() == BREAK_ON)
+				BreakLinesOnDelimiter(textView, sidebar->getBreakModeInput());
+			else if (sidebar->BreakMode() == BREAK_REPLACE)
+				RemoveLineBreaks(textView, sidebar->getBreakModeInput());
+			else if (sidebar->BreakMode() == BREAK_AFTER_CHARS)
+				InsertLineBreaks(textView, atoi(sidebar->getBreakModeInput()), sidebar->SplitOnWordsEnabled());
+
+			/*if (sidebar->replaceRadioEnabled())
 				RemoveLineBreaks(textView, sidebar->ReplaceLineBreaksText());
 			else if (sidebar->breakRadioEnabled())
 				BreakLinesOnDelimiter(textView, sidebar->LineBreakDelimiterText());
 			else
 				InsertLineBreaks(textView, sidebar->MaxWidthText(),
-					sidebar->SplitOnWordsEnabled());
+					sidebar->SplitOnWordsEnabled());*/
 			break;
 		case M_TRIM_LINES:
 			TrimLines(textView);
@@ -210,6 +217,12 @@ MainWindow::MessageReceived(BMessage *msg)
 		case M_TRANSFORM_DECODE_URL:
 			URLDecode(textView);
 			break;
+		case M_MODE_REMOVE_ALL:
+		case M_MODE_BREAK_ON:
+		case M_MODE_REPLACE_LINE_BREAKS:
+		case M_MODE_BREAK_AFTER_CHARS:
+			sidebar->MessageReceived(msg);
+			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			textView->SetText("Haiku is an open-source operating system.\n"
 							  "It is fast, simple and elegant.\n"
@@ -226,11 +239,6 @@ MainWindow::MessageReceived(BMessage *msg)
 			break;
 		case M_TOGGLE_WORD_WRAP:
 			textView->SetWordWrap(!textView->DoesWordWrap());
-			break;
-		case M_MODE_REPLACE:
-		case M_MODE_BREAK:
-		case M_MODE_CHARACTERS:
-			sidebar->MessageReceived(msg);
 			break;
 		case B_ABOUT_REQUESTED:
 			be_app->AboutRequested();
@@ -424,13 +432,12 @@ MainWindow::_SaveSettings()
 
 	// Save sidebar text inputs
 	if (sidebar) {
-		settings.AddString("replaceLineBreaksInput", sidebar->ReplaceLineBreaksText());
+		settings.AddInt32("breakMode", sidebar->BreakMode());
+		settings.AddString("breakModeInput", sidebar->getBreakModeInput());
 		settings.AddString("prefixInput", sidebar->PrefixText());
 		settings.AddString("suffixInput", sidebar->SuffixText());
 
-		settings.AddInt32("maxWidthInput", sidebar->MaxWidthText());
 		settings.AddBool("splitOnWords", sidebar->SplitOnWordsEnabled());
-		settings.AddString("lineBreakDelimiter", sidebar->LineBreakDelimiterText());
 
 		settings.AddString("replaceSearchString", sidebar->ReplaceSearchText());
 		settings.AddString("replaceWithString", sidebar->ReplaceWithText());
@@ -456,8 +463,11 @@ MainWindow::_RestoreValues(BMessage& settings)
 		textView->SetText(text);
 
 	if (sidebar) {
-		if (settings.FindString("replaceLineBreaksInput", &text) == B_OK)
-			sidebar->SetReplaceLineBreaksText(text);
+		if (settings.FindInt32("breakMode", &number) == B_OK)
+			sidebar->setBreakMode(number);
+
+		if (settings.FindString("breakModeInput", &text) == B_OK)
+			sidebar->setBreakModeInput(text);
 
 		if (settings.FindString("prefixInput", &text) == B_OK)
 			sidebar->SetPrefixText(text);
@@ -465,14 +475,8 @@ MainWindow::_RestoreValues(BMessage& settings)
 		if (settings.FindString("suffixInput", &text) == B_OK)
 			sidebar->SetSuffixText(text);
 
-		if (settings.FindInt32("maxWidthInput", &number) == B_OK)
-			sidebar->SetMaxWidthText(number);
-
 		if (settings.FindBool("splitOnWords", &flag) == B_OK)
 			sidebar->SetSplitOnWordsEnabled(flag);
-
-		if (settings.FindString("lineBreakDelimiter", &text) == B_OK)
-			sidebar->SetLineBreakDelimiterText(text);
 
 		if (settings.FindString("replaceSearchString", &text) == B_OK)
 			sidebar->SetReplaceSearchText(text);

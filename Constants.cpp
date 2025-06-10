@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, Johan Wagenheim <johan@dospuntos.no>
+ * Copyright 2025, Johan Wagenheim <johan@dospuntos.no>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 

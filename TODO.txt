@@ -9,6 +9,9 @@
 
 Add text transformation tools:
 
+Text case:
+- Handle non-english characters
+
 Coding:
 - HEX encode/decode
 - Base64 encode
