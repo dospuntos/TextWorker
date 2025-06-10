@@ -42,11 +42,8 @@ Sidebar::Sidebar()
 
 	float maxLabelWidth = 0;
 
-	BTextControl* fields[] = {
-		fLineBreakInput, fPrefixInput, fSuffixInput, fBreakInput, fDelimiterInput,
-		fSearchInput, fReplaceInput,
-		nullptr
-	};
+	BTextControl* fields[] = {fLineBreakInput, fPrefixInput, fSuffixInput, fBreakInput,
+		fDelimiterInput, fSearchInput, fReplaceInput, nullptr};
 
 	for (int i = 0; fields[i]; ++i) {
 		float width = be_plain_font->StringWidth(fields[i]->Label());
@@ -71,14 +68,13 @@ Sidebar::Sidebar()
 	// Grid layout
 	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid1.Add(new BStringView(NULL, "Find:"),         0, 0)
-		.Add(fSearchInput,                     1, 0)
+	grid1.Add(new BStringView(NULL, "Find:"),			0, 0)
+		.Add(fSearchInput,								1, 0)
+		.Add(new BStringView(NULL, "Replace with:"),	0, 1)
+		.Add(fReplaceInput,                       		1, 1)
 
-		.Add(new BStringView(NULL, "Replace with:"),  0, 1)
-		.Add(fReplaceInput,                       1, 1)
-
-		.Add(fCaseCheck,            0, 2)
-		.Add(fWholeWordCheck,                1, 2)
+		.Add(fCaseCheck,            					0, 2)
+		.Add(fWholeWordCheck,                			1, 2)
 
 		.Add(searchReplaceBtn,                        0, 3, 2);
 	// clang-format on
@@ -95,9 +91,9 @@ Sidebar::Sidebar()
 	breakBox->SetLabel("Line break options");
 
 	fBreakMenu = new BMenu("linebreaks");
+	fBreakMenu->AddItem(new BMenuItem("Remove all", new BMessage(M_MODE_REMOVE_ALL)));
 	fBreakMenu->AddItem(
-		new BMenuItem("Remove all", new BMessage(M_MODE_REMOVE_ALL)));
-	fBreakMenu->AddItem(new BMenuItem("Replace with" B_UTF8_ELLIPSIS, new BMessage(M_MODE_REPLACE_LINE_BREAKS)));
+		new BMenuItem("Replace with" B_UTF8_ELLIPSIS, new BMessage(M_MODE_REPLACE_LINE_BREAKS)));
 	fBreakMenu->AddItem(new BMenuItem("Break on" B_UTF8_ELLIPSIS, new BMessage(M_MODE_BREAK_ON)));
 	fBreakMenu->AddItem(
 		new BMenuItem("Break after X characters", new BMessage(M_MODE_BREAK_AFTER_CHARS)));

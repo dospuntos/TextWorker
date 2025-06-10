@@ -6,10 +6,10 @@
 
 #include "TextUtils.h"
 #include <Alert.h>
+#include <File.h>
 #include <LayoutBuilder.h>
 #include <String.h>
 #include <TextControl.h>
-#include <File.h>
 #include <cctype>
 #include <sstream>
 
@@ -23,7 +23,8 @@ GetTextFromTextView(BTextView* textView)
 	if (textView == nullptr)
 		return BString("");
 	int32 textLength = textView->TextLength();
-	if (textLength == 0) return BString("");
+	if (textLength == 0)
+		return BString("");
 
 	// Get text from BTextView
 	char* buffer = new char[textLength + 1];
@@ -56,7 +57,8 @@ void
 ConvertToUppercase(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return; // Nothing to convert
+	if (text.IsEmpty())
+		return; // Nothing to convert
 
 	text.ToUpper();
 	textView->SetText(text.String());
@@ -69,7 +71,8 @@ void
 ConvertToLowercase(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return; // Nothing to convert
+	if (text.IsEmpty())
+		return; // Nothing to convert
 
 	text.ToLower();
 	textView->SetText(text.String());
@@ -81,7 +84,8 @@ void
 ConvertToTitlecase(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return; // Nothing to convert
+	if (text.IsEmpty())
+		return; // Nothing to convert
 
 	text.CapitalizeEachWord();
 	textView->SetText(text.String());
@@ -93,7 +97,8 @@ void
 Capitalize(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return; // Nothing to convert
+	if (text.IsEmpty())
+		return; // Nothing to convert
 
 	bool capitalizeNext = true; // Keep track whether to capitalize next character
 
@@ -117,7 +122,8 @@ void
 ConvertToRandomCase(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	srand(time(nullptr)); // Seed random number generator
 
@@ -142,7 +148,8 @@ void
 ConvertToAlternatingCase(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	bool uppercase = !(std::isupper(text.ByteAt(0)));
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -188,7 +195,8 @@ void
 RemoveLineBreaks(BTextView* textView, BString replacement)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	text.ReplaceAll("\n", replacement); // Replace line breaks ('\n') with value
 
@@ -202,17 +210,17 @@ void
 ConvertToROT13(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	for (int32 i = 0; i < text.Length(); ++i) {
 		char currentChar = text.ByteAt(i);
 
 		if (std::isalpha(currentChar)) {
-			if (std::islower(currentChar)) {
+			if (std::islower(currentChar))
 				currentChar = 'a' + (currentChar - 'a' + 13) % 26;
-			} else {
+			else
 				currentChar = 'A' + (currentChar - 'A' + 13) % 26;
-			}
 		}
 		text.SetByteAt(i, currentChar);
 	}
@@ -226,27 +234,28 @@ void
 URLEncode(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	BString encoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
 		char currentChar = text.ByteAt(i);
 
 		// Check if the character is URL-safe (alphanumeric or special characters)
-		if (std::isalnum(currentChar) || currentChar == '-' || currentChar == '_' ||
-			currentChar == '.' || currentChar == '~') {
+		if (std::isalnum(currentChar) || currentChar == '-' || currentChar == '_'
+			|| currentChar == '.' || currentChar == '~') {
 			encoded += currentChar;
 		} else {
 			// Encode the non-safe characters
 			encoded += '%';
 			std::stringstream ss;
-			ss << std::uppercase << std::hex << (int)(unsigned char)currentChar; // Convert char to hex
+			ss << std::uppercase << std::hex
+			   << (int)(unsigned char)currentChar; // Convert char to hex
 			std::string hexStr = ss.str();
 
 			// Ensure the hex string is two characters long
-			if (hexStr.length() == 1) {
+			if (hexStr.length() == 1)
 				encoded += '0'; // Add leading zero if needed
-			}
 			encoded += BString(hexStr.c_str()); // Convert std::string to BString and append
 		}
 	}
@@ -256,12 +265,12 @@ URLEncode(BTextView* textView)
 }
 
 
-
 void
 URLDecode(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty()) return;
+	if (text.IsEmpty())
+		return;
 
 	BString decoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -270,7 +279,7 @@ URLDecode(BTextView* textView)
 		if (currentChar == '%') {
 			// Check if there are enough characters for a valid hex code
 			if (i + 2 < text.Length()) {
-				char hex[3] = { text.ByteAt(i + 1), text.ByteAt(i + 2), '\0' };
+				char hex[3] = {text.ByteAt(i + 1), text.ByteAt(i + 2), '\0'};
 				int decodedChar = 0;
 				std::stringstream ss;
 				ss << std::hex << hex;
@@ -499,9 +508,8 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 	int32 findLength = find.Length();
 
 	while (true) {
-		pos = caseSensitive
-			? text.FindFirst(find.String(), pos)
-			: text.IFindFirst(find.String(), pos);
+		pos = caseSensitive ? text.FindFirst(find.String(), pos)
+							: text.IFindFirst(find.String(), pos);
 
 		if (pos < 0)
 			break;

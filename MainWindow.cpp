@@ -16,8 +16,8 @@
 #include <Path.h>
 #include <Resources.h>
 #include <ScrollView.h>
-#include <TranslatorRoster.h>
 #include <TranslationUtils.h>
+#include <TranslatorRoster.h>
 #include <View.h>
 #include <cctype>
 
@@ -27,17 +27,19 @@
 
 static const char* kSettingsFile = "TextWorker_settings";
 
+
 MainWindow::MainWindow(void)
 	:
-	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_TITLED_WINDOW,
+		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
 	textView = new BTextView("TextView");
 	textView->MakeEditable(true);
 
-	scrollView = new BScrollView(
-		"TextViewScroll", textView, B_WILL_DRAW | B_FRAME_EVENTS, true, true, B_PLAIN_BORDER);
+	scrollView = new BScrollView("TextViewScroll", textView, B_WILL_DRAW | B_FRAME_EVENTS, true,
+		true, B_PLAIN_BORDER);
 
 	BFont font(be_fixed_font);
 	textView->SetFontAndColor(&font);
@@ -90,10 +92,13 @@ MainWindow::MainWindow(void)
 		if (clipboard != nullptr) {
 			const char* text = nullptr;
 			ssize_t textLen;
-			if (clipboard->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen) == B_OK && text != nullptr) {
+			if (clipboard->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen)
+					== B_OK
+				&& text != nullptr) {
 				// Only insert if the text is not empty
 				if (textLen > 0) {
-					textView->SetText(text, textLen);  // Replace default text with clipboard contents
+					textView->SetText(text,
+						textLen); // Replace default text with clipboard contents
 				}
 			}
 		}
@@ -111,10 +116,9 @@ MainWindow::~MainWindow()
 
 
 void
-MainWindow::MessageReceived(BMessage *msg)
+MainWindow::MessageReceived(BMessage* msg)
 {
-	switch (msg->what)
-	{
+	switch (msg->what) {
 		case M_FILE_NEW:
 			textView->SetText("");
 			fFilePath = "";
@@ -175,22 +179,16 @@ MainWindow::MessageReceived(BMessage *msg)
 			ToggleCase(textView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			if (sidebar->BreakMode() == BREAK_REMOVE_ALL)
+			if (sidebar->BreakMode() == BREAK_REMOVE_ALL) {
 				RemoveLineBreaks(textView);
-			else if (sidebar->BreakMode() == BREAK_ON)
+			} else if (sidebar->BreakMode() == BREAK_ON) {
 				BreakLinesOnDelimiter(textView, sidebar->getBreakModeInput());
-			else if (sidebar->BreakMode() == BREAK_REPLACE)
+			} else if (sidebar->BreakMode() == BREAK_REPLACE) {
 				RemoveLineBreaks(textView, sidebar->getBreakModeInput());
-			else if (sidebar->BreakMode() == BREAK_AFTER_CHARS)
-				InsertLineBreaks(textView, atoi(sidebar->getBreakModeInput()), sidebar->SplitOnWordsEnabled());
-
-			/*if (sidebar->replaceRadioEnabled())
-				RemoveLineBreaks(textView, sidebar->ReplaceLineBreaksText());
-			else if (sidebar->breakRadioEnabled())
-				BreakLinesOnDelimiter(textView, sidebar->LineBreakDelimiterText());
-			else
-				InsertLineBreaks(textView, sidebar->MaxWidthText(),
-					sidebar->SplitOnWordsEnabled());*/
+			} else if (sidebar->BreakMode() == BREAK_AFTER_CHARS) {
+				InsertLineBreaks(textView, atoi(sidebar->getBreakModeInput()),
+					sidebar->SplitOnWordsEnabled());
+			}
 			break;
 		case M_TRIM_LINES:
 			TrimLines(textView);
@@ -326,7 +324,8 @@ MainWindow::_BuildMenu()
 	randomCaseItem->SetShortcut('r', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(randomCaseItem);
 
-	BMenuItem* alternatingCaseItem = new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE));
+	BMenuItem* alternatingCaseItem
+		= new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE));
 	alternatingCaseItem->SetShortcut('a', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(alternatingCaseItem);
 
@@ -354,15 +353,18 @@ MainWindow::_BuildMenu()
 	// === LINE TOOLS MENU ===
 	BMenu* lineMenu = new BMenu("Line Tools");
 
-	BMenuItem* removeLineBreaksItem = new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS));
+	BMenuItem* removeLineBreaksItem
+		= new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS));
 	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(removeLineBreaksItem);
 
-	BMenuItem* insertLineBreaksItem = new BMenuItem("Insert line breaks (width)", new BMessage(M_INSERT_LINE_BREAKS));
+	BMenuItem* insertLineBreaksItem
+		= new BMenuItem("Insert line breaks (width)", new BMessage(M_INSERT_LINE_BREAKS));
 	insertLineBreaksItem->SetShortcut('i', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(insertLineBreaksItem);
 
-	BMenuItem* breakOnDelimiterItem = new BMenuItem("Break lines on delimiter", new BMessage(M_BREAK_LINES_ON_DELIMITER));
+	BMenuItem* breakOnDelimiterItem
+		= new BMenuItem("Break lines on delimiter", new BMessage(M_BREAK_LINES_ON_DELIMITER));
 	breakOnDelimiterItem->SetShortcut('d', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(breakOnDelimiterItem);
 
@@ -370,7 +372,8 @@ MainWindow::_BuildMenu()
 	trimItem->SetShortcut('w', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(trimItem);
 
-	BMenuItem* removeEmptyLinesItem = new BMenuItem("Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
+	BMenuItem* removeEmptyLinesItem
+		= new BMenuItem("Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
 	removeEmptyLinesItem->SetShortcut('e', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(removeEmptyLinesItem);
 
@@ -493,7 +496,6 @@ MainWindow::_RestoreValues(BMessage& settings)
 }
 
 
-
 void
 MainWindow::UpdateStatusBar()
 {
@@ -504,9 +506,8 @@ MainWindow::UpdateStatusBar()
 
 	int32 row = 1;
 	for (int32 i = 0; i < start; ++i) {
-		if (textBuffer[i] == '\n') {
+		if (textBuffer[i] == '\n')
 			row++;
-		}
 	}
 	int col = start - textBuffer.FindLast('\n', start);
 
@@ -530,9 +531,6 @@ MainWindow::UpdateStatusBar()
 	statusText.SetToFormat("%d:%d | Chars: %d | Words: %d", row, col, charCount, wordCount);
 	statusBar->SetText(statusText.String());
 }
-
-
-
 
 
 void
@@ -569,7 +567,8 @@ MainWindow::OpenFile(const entry_ref& ref)
 				for (ssize_t i = 0; i < bytesRead; ++i) {
 					char c = buffer[i];
 					if ((c < 32 || c > 126) && c != '\n' && c != '\r' && c != '\t') {
-						if (++nonPrintable > 10) break;
+						if (++nonPrintable > 10)
+							break;
 					}
 				}
 				if (nonPrintable <= 10)
@@ -618,23 +617,23 @@ MainWindow::SaveFile(const char* path)
 
 BBitmap*
 MainWindow::ResourceToBitmap(const char* resName)
- {
- 	image_info info;
- 	int32 cookie = 0;
- 	while (get_next_image_info(0, &cookie, &info) == B_OK) {
- 		BFile file(info.name, B_READ_ONLY);
- 		if (file.InitCheck() == B_OK) {
- 			BResources res(&file);
- 			size_t size;
- 			const void* data = res.LoadResource(B_VECTOR_ICON_TYPE, resName, &size);
- 			if (data) {
- 				BBitmap* icon = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32);
- 				if (BIconUtils::GetVectorIcon((const uint8*)data, size, icon) == B_OK)
- 					return icon;
- 				delete icon;
- 			}
- 		}
- 		break; // stop after the first image
- 	}
- 	return nullptr;
- }
+{
+	image_info info;
+	int32 cookie = 0;
+	while (get_next_image_info(0, &cookie, &info) == B_OK) {
+		BFile file(info.name, B_READ_ONLY);
+		if (file.InitCheck() == B_OK) {
+			BResources res(&file);
+			size_t size;
+			const void* data = res.LoadResource(B_VECTOR_ICON_TYPE, resName, &size);
+			if (data) {
+				BBitmap* icon = new BBitmap(BRect(0, 0, 23, 23), B_RGBA32);
+				if (BIconUtils::GetVectorIcon((const uint8*)data, size, icon) == B_OK)
+					return icon;
+				delete icon;
+			}
+		}
+		break; // stop after the first image
+	}
+	return nullptr;
+}

@@ -6,8 +6,8 @@
 #ifndef SIDEBAR_H
 #define SIDEBAR_H
 
-#include <CheckBox.h>
 #include "Constants.h"
+#include <CheckBox.h>
 #include <GroupView.h>
 #include <Menu.h>
 #include <MenuItem.h>
@@ -57,10 +57,7 @@ public:
 	void SetReplaceWithText(const BString& text) { fReplaceInput->SetText(text); }
 
 	// Case Sensitivity
-	bool ReplaceCaseSensitive() const
-	{
-		return fCaseCheck->Value() == B_CONTROL_ON;
-	}
+	bool ReplaceCaseSensitive() const { return fCaseCheck->Value() == B_CONTROL_ON; }
 	void SetReplaceCaseSensitive(bool enabled)
 	{
 		fCaseCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
@@ -88,7 +85,6 @@ private:
 
 	BMenu* fBreakMenu;
 	enum BreakMode fBreakMode;
-
 };
 
 #endif // SIDEBAR_H
