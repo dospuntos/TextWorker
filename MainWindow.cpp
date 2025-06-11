@@ -22,6 +22,7 @@
 #include <cctype>
 
 #include "Constants.h"
+#include "SettingsWindow.h"
 #include "TextUtils.h"
 #include "Toolbar.h"
 
@@ -85,24 +86,26 @@ MainWindow::MainWindow(void)
 	BMessage* updateMessage = new BMessage(M_UPDATE_STATUSBAR);
 	statusUpdater = new BMessageRunner(this, updateMessage, 100000);
 
-	// Get data from clipboard
-	BMessage* clipboard;
-	if (be_clipboard->Lock()) {
-		clipboard = be_clipboard->Data();
-		if (clipboard != nullptr) {
-			const char* text = nullptr;
-			ssize_t textLen;
-			if (clipboard->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen)
-					== B_OK
-				&& text != nullptr) {
-				// Only insert if the text is not empty
-				if (textLen > 0) {
-					textView->SetText(text,
-						textLen); // Replace default text with clipboard contents
+	if (!fSaveTextOnExit) {
+		// Get data from clipboard
+		BMessage* clipboard;
+		if (be_clipboard->Lock()) {
+			clipboard = be_clipboard->Data();
+			if (clipboard != nullptr) {
+				const char* text = nullptr;
+				ssize_t textLen;
+				if (clipboard->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen)
+						== B_OK
+					&& text != nullptr) {
+					// Only insert if the text is not empty
+					if (textLen > 0) {
+						textView->SetText(text,
+							textLen); // Replace default text with clipboard contents
+					}
 				}
 			}
+			be_clipboard->Unlock();
 		}
-		be_clipboard->Unlock();
 	}
 }
 
@@ -157,6 +160,25 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_UPDATE_STATUSBAR:
 			UpdateStatusBar();
 			break;
+		case M_SHOW_SETTINGS:
+		{
+			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveSettingsOnExit);
+			fSettingsWindow->CenterIn(Frame());
+			fSettingsWindow->Show();
+			break;
+		}
+		case M_SETTINGS_SAVETEXT:
+		{
+			if (msg->FindBool("saveText", &fSaveTextOnExit) != B_OK)
+				(new BAlert("Error", "Error saving setting", "OK"))->Go();
+			break;
+		}
+		case M_SETTINGS_SAVESETTINGS:
+		{
+			if (msg->FindBool("saveSettings", &fSaveSettingsOnExit) != B_OK)
+				(new BAlert("Error", "Error saving setting", "OK"))->Go();
+			break;
+		}
 		case M_TRANSFORM_UPPERCASE:
 			ConvertToUppercase(textView);
 			break;
@@ -428,13 +450,15 @@ MainWindow::_SaveSettings()
 
 	BMessage settings;
 	status = settings.AddRect("main_window_rect", Frame());
+	settings.AddBool("saveTextOnExit", fSaveTextOnExit);
+	settings.AddBool("saveSettingsOnExit", fSaveSettingsOnExit);
 
 	// Save settings and textView (optional setting in the future)
-	if (textView)
+	if (textView && fSaveTextOnExit)
 		settings.AddString("textViewContent", textView->Text());
 
 	// Save sidebar text inputs
-	if (sidebar) {
+	if (sidebar && fSaveSettingsOnExit) {
 		settings.AddInt32("breakMode", sidebar->BreakMode());
 		settings.AddString("breakModeInput", sidebar->getBreakModeInput());
 		settings.AddString("prefixInput", sidebar->PrefixText());
@@ -462,10 +486,17 @@ MainWindow::_RestoreValues(BMessage& settings)
 	int32 number;
 	bool flag;
 
-	if (settings.FindString("textViewContent", &text) == B_OK)
+	// General settings
+	if (settings.FindBool("saveTextOnExit", &flag) == B_OK)
+		fSaveTextOnExit = flag;
+
+	if (settings.FindBool("saveSettingsOnExit", &flag) == B_OK)
+		fSaveSettingsOnExit = flag;
+
+	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
 		textView->SetText(text);
 
-	if (sidebar) {
+	if (sidebar && fSaveSettingsOnExit) {
 		if (settings.FindInt32("breakMode", &number) == B_OK)
 			sidebar->setBreakMode(number);
 

@@ -11,7 +11,7 @@
 #include <SupportDefs.h>
 #include <TextControl.h>
 #include <TextView.h>
-#include <ToolBar.h>
+#include <private/shared/ToolBar.h>
 #include <Window.h>
 
 class MainWindow : public BWindow {
@@ -33,6 +33,8 @@ private:
 	Sidebar* sidebar;
 	void UpdateStatusBar();
 
+	bool fSaveTextOnExit;
+	bool fSaveSettingsOnExit;
 	status_t _LoadSettings(BMessage& settings);
 	status_t _SaveSettings();
 	void _RestoreValues(BMessage& settings);
@@ -46,6 +48,7 @@ private:
 	BFilePanel* fOpenPanel;
 	BFilePanel* fSavePanel;
 	BString fFilePath;
+	BWindow* fSettingsWindow;
 };
 
 #endif

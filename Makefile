@@ -34,7 +34,8 @@ SRCS =  App.cpp \
  TextUtils.cpp  \
  Sidebar.cpp	\
  Constants.cpp	\
- Toolbar.cpp
+ Toolbar.cpp	\
+ SettingsWindow.cpp
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
@@ -108,7 +109,7 @@ SYMBOLS :=
 
 #	Includes debug information, which allows the binary to be debugged easily.
 #	If set to "TRUE", debug info will be created.
-DEBUGGER :=
+DEBUGGER := TRUE
 
 #	Specify any additional compiler flags to be used.
 COMPILER_FLAGS =

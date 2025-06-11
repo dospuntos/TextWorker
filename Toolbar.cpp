@@ -69,7 +69,7 @@ CreateToolbar(BHandler* target)
 
 	toolbar->AddGlue();
 
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), target, ResourceToBitmap("SETTINGS_ICON"),
+	toolbar->AddAction(new BMessage(M_SHOW_SETTINGS), target, ResourceToBitmap("SETTINGS_ICON"),
 		"Settings" B_UTF8_ELLIPSIS, "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), target, ResourceToBitmap("HELP_ICON"),
 		"Help" B_UTF8_ELLIPSIS, "", false);
