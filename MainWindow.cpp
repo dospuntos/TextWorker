@@ -86,7 +86,7 @@ MainWindow::MainWindow(void)
 	BMessage* updateMessage = new BMessage(M_UPDATE_STATUSBAR);
 	statusUpdater = new BMessageRunner(this, updateMessage, 100000);
 
-	if (!fSaveTextOnExit) {
+	if (!fSaveTextOnExit && fInsertClipboard) {
 		// Get data from clipboard
 		BMessage* clipboard;
 		if (be_clipboard->Lock()) {
@@ -162,7 +162,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_SHOW_SETTINGS:
 		{
-			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveSettingsOnExit);
+			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveSettingsOnExit, fInsertClipboard);
 			fSettingsWindow->CenterIn(Frame());
 			fSettingsWindow->Show();
 			break;
@@ -176,6 +176,12 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_SETTINGS_SAVESETTINGS:
 		{
 			if (msg->FindBool("saveSettings", &fSaveSettingsOnExit) != B_OK)
+				(new BAlert("Error", "Error saving setting", "OK"))->Go();
+			break;
+		}
+		case M_SETTINGS_CLIPBOARD:
+		{
+			if (msg->FindBool("insertClipboard", &fInsertClipboard) != B_OK)
 				(new BAlert("Error", "Error saving setting", "OK"))->Go();
 			break;
 		}
@@ -223,6 +229,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(textView);
+			break;
 		case M_TRANSFORM_PREFIX_SUFFIX:
 			AddStringsToEachLine(textView, sidebar->PrefixText(), sidebar->SuffixText());
 			sidebar->SetPrefixText("");
@@ -452,6 +459,7 @@ MainWindow::_SaveSettings()
 	status = settings.AddRect("main_window_rect", Frame());
 	settings.AddBool("saveTextOnExit", fSaveTextOnExit);
 	settings.AddBool("saveSettingsOnExit", fSaveSettingsOnExit);
+	settings.AddBool("insertClipboard", fInsertClipboard);
 
 	// Save settings and textView (optional setting in the future)
 	if (textView && fSaveTextOnExit)
@@ -492,6 +500,9 @@ MainWindow::_RestoreValues(BMessage& settings)
 
 	if (settings.FindBool("saveSettingsOnExit", &flag) == B_OK)
 		fSaveSettingsOnExit = flag;
+
+	if (settings.FindBool("insertClipboard", &flag) == B_OK)
+		fInsertClipboard = flag;
 
 	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
 		textView->SetText(text);

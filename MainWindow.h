@@ -35,6 +35,7 @@ private:
 
 	bool fSaveTextOnExit;
 	bool fSaveSettingsOnExit;
+	bool fInsertClipboard;
 	status_t _LoadSettings(BMessage& settings);
 	status_t _SaveSettings();
 	void _RestoreValues(BMessage& settings);

@@ -40,6 +40,7 @@ enum {
 	M_SHOW_SETTINGS = 'stng',
 	M_SETTINGS_SAVETEXT = 'stxt',
 	M_SETTINGS_SAVESETTINGS = 'sset',
+	M_SETTINGS_CLIPBOARD = 'sclp',
 	M_TOGGLE_WORD_WRAP = 'tgww',
 	M_SET_LINEBREAK_MODE = 'mset',
 	M_MODE_REMOVE_ALL = 'mdra',

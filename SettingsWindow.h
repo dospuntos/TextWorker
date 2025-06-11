@@ -17,12 +17,13 @@
 
 class SettingsWindow : public BWindow {
 public:
-	SettingsWindow(bool saveText, bool saveSettings);
+	SettingsWindow(bool saveText, bool saveSettings, bool clipboard);
 	virtual void MessageReceived(BMessage* message);
 
 private:
 	BCheckBox* fSaveTextCheck;
 	BCheckBox* fSaveSettingsCheck;
+	BCheckBox* fInsertClipboard;
 	BMenuField* fFontFamilyField;
 	BSlider* fFontSizeSlider;
 	BButton* fApplyButton;

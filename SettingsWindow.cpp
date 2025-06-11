@@ -11,10 +11,10 @@
 #include <MenuItem.h>
 #include <StringView.h>
 
-enum { M_APPLY_SETTINGS = 'aply', M_SETTINGS_SAVETEXT = 'stxt', M_SETTINGS_SAVESETTINGS = 'sset' };
+enum { M_APPLY_SETTINGS = 'aply', M_SETTINGS_SAVETEXT = 'stxt', M_SETTINGS_SAVESETTINGS = 'sset', M_SETTINGS_CLIPBOARD = 'sclp' };
 
 
-SettingsWindow::SettingsWindow(bool saveText, bool saveSettings)
+SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard)
 	:
 	BWindow(BRect(200, 200, 500, 400), "Settings", B_FLOATING_WINDOW_LOOK, B_MODAL_APP_WINDOW_FEEL,
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS
@@ -26,6 +26,8 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings)
 	fSaveSettingsCheck = new BCheckBox("SaveSettings", "Save settings on exit",
 		new BMessage(M_SETTINGS_SAVESETTINGS));
 	fSaveSettingsCheck->SetValue(saveSettings ? B_CONTROL_ON : B_CONTROL_OFF);
+	fInsertClipboard = new BCheckBox("Clipboard", "Paste clipboard contents on open", new BMessage(M_SETTINGS_CLIPBOARD));
+	fInsertClipboard->SetValue(clipboard ? B_CONTROL_ON : B_CONTROL_OFF);
 
 	BPopUpMenu* fontMenu = new BPopUpMenu("FontFamily");
 	PopulateFontMenu(fontMenu);
@@ -41,6 +43,7 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings)
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.Add(fSaveTextCheck)
 		.Add(fSaveSettingsCheck)
+		.Add(fInsertClipboard)
 		.Add(fFontFamilyField)
 		.Add(fFontSizeSlider)
 		.AddGlue()
@@ -78,6 +81,13 @@ SettingsWindow::MessageReceived(BMessage* message)
 		{
 			BMessage applyMsg(M_SETTINGS_SAVESETTINGS);
 			applyMsg.AddBool("saveSettings", fSaveSettingsCheck->Value() == B_CONTROL_ON);
+			be_app->WindowAt(0)->PostMessage(&applyMsg);
+			break;
+		}
+		case M_SETTINGS_CLIPBOARD:
+		{
+			BMessage applyMsg(M_SETTINGS_CLIPBOARD);
+			applyMsg.AddBool("insertClipboard", fInsertClipboard->Value() == B_CONTROL_ON);
 			be_app->WindowAt(0)->PostMessage(&applyMsg);
 			break;
 		}
