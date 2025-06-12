@@ -7,3 +7,6 @@
 
 const char* kApplicationSignature = "application/x-vnd.jpw-TextWorker";
 const char* kApplicationName = "TextWorker";
+
+const int kDefaultFontSize = 12;
+const char* kDefaultFontFamily = "be_fixed_font";

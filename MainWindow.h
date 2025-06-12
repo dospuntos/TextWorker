@@ -29,21 +29,23 @@ public:
 
 private:
 	BMenuBar* _BuildMenu();
-	BToolBar* toolbar;
-	Sidebar* sidebar;
+	BToolBar* fToolbar;
+	Sidebar* fSidebar;
 	void UpdateStatusBar();
 
 	bool fSaveTextOnExit;
 	bool fSaveSettingsOnExit;
 	bool fInsertClipboard;
+	int32 fFontSize;
+	BString fFontFamily;
 	status_t _LoadSettings(BMessage& settings);
 	status_t _SaveSettings();
 	void _RestoreValues(BMessage& settings);
 
-	BTextView* textView;
-	BScrollView* scrollView;
-	BStringView* statusBar;
-	BMessageRunner* statusUpdater;
+	BTextView* fTextView;
+	BScrollView* fScrollView;
+	BStringView* fStatusBar;
+	BMessageRunner* fStatusUpdater;
 
 	BMenuItem* fSaveMenuItem;
 	BFilePanel* fOpenPanel;

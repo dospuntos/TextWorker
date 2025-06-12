@@ -36,36 +36,29 @@ MainWindow::MainWindow(void)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
-	textView = new BTextView("TextView");
-	textView->MakeEditable(true);
+	fTextView = new BTextView("TextView");
+	fTextView->MakeEditable(true);
 
-	scrollView = new BScrollView("TextViewScroll", textView, B_WILL_DRAW | B_FRAME_EVENTS, true,
+	fScrollView = new BScrollView("TextViewScroll", fTextView, B_WILL_DRAW | B_FRAME_EVENTS, true,
 		true, B_PLAIN_BORDER);
 
-	BFont font(be_fixed_font);
-	textView->SetFontAndColor(&font);
+	fToolbar = CreateToolbar(this);
+	fSidebar = new Sidebar();
 
-	// Toolbar
-	toolbar = CreateToolbar(this);
-
-	// Sidebar
-	sidebar = new Sidebar();
-
-	// Status bar
-	statusBar = new BStringView("StatusBar", "");
-	statusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
+	fStatusBar = new BStringView("StatusBar", "");
+	fStatusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
 
 	// Layout
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar, 0)
-		.Add(toolbar, 0)
+		.Add(fToolbar, 0)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
-		.Add(sidebar, 0)
-		.Add(scrollView, 1)
+		.Add(fSidebar, 0)
+		.Add(fScrollView, 1)
 		.SetInsets(5, 5, 5, 5)
 		.End()
-		.Add(statusBar, 0);
+		.Add(fStatusBar, 0);
 
 	BMessage settings;
 	_LoadSettings(settings);
@@ -84,7 +77,7 @@ MainWindow::MainWindow(void)
 
 	// Use MessageRunner as temporary solution for status bar
 	BMessage* updateMessage = new BMessage(M_UPDATE_STATUSBAR);
-	statusUpdater = new BMessageRunner(this, updateMessage, 100000);
+	fStatusUpdater = new BMessageRunner(this, updateMessage, 100000);
 
 	if (!fSaveTextOnExit && fInsertClipboard) {
 		// Get data from clipboard
@@ -99,7 +92,7 @@ MainWindow::MainWindow(void)
 					&& text != nullptr) {
 					// Only insert if the text is not empty
 					if (textLen > 0) {
-						textView->SetText(text,
+						fTextView->SetText(text,
 							textLen); // Replace default text with clipboard contents
 					}
 				}
@@ -123,7 +116,7 @@ MainWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 		case M_FILE_NEW:
-			textView->SetText("");
+			fTextView->SetText("");
 			fFilePath = "";
 			break;
 		case B_SIMPLE_DATA:
@@ -162,96 +155,107 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_SHOW_SETTINGS:
 		{
-			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveSettingsOnExit, fInsertClipboard);
+			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveSettingsOnExit,
+				fInsertClipboard, fFontSize, fFontFamily);
 			fSettingsWindow->CenterIn(Frame());
 			fSettingsWindow->Show();
 			break;
 		}
-		case M_SETTINGS_SAVETEXT:
+		case M_APPLY_SETTINGS:
 		{
-			if (msg->FindBool("saveText", &fSaveTextOnExit) != B_OK)
-				(new BAlert("Error", "Error saving setting", "OK"))->Go();
-			break;
-		}
-		case M_SETTINGS_SAVESETTINGS:
-		{
-			if (msg->FindBool("saveSettings", &fSaveSettingsOnExit) != B_OK)
-				(new BAlert("Error", "Error saving setting", "OK"))->Go();
-			break;
-		}
-		case M_SETTINGS_CLIPBOARD:
-		{
-			if (msg->FindBool("insertClipboard", &fInsertClipboard) != B_OK)
-				(new BAlert("Error", "Error saving setting", "OK"))->Go();
+			bool flag;
+			int32 number;
+			BString text;
+			if (msg->FindBool("saveText", &flag) == B_OK)
+				fSaveTextOnExit = flag;
+
+			if (msg->FindBool("saveSettings", &flag) == B_OK)
+				fSaveSettingsOnExit = flag;
+
+			if (msg->FindBool("insertClipboard", &flag) == B_OK)
+				fInsertClipboard = flag;
+
+			if (msg->FindInt32("fontSize", &number) == B_OK)
+				fFontSize = number;
+
+			if (msg->FindString("fontFamily", &text) == B_OK)
+				fFontFamily = text;
+
+			// Apply font to the textView
+			BFont newFont(be_fixed_font); // Default fallback
+			if (!fFontFamily.IsEmpty() || fFontFamily != "System default")
+				newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
+			newFont.SetSize(fFontSize);
+			fTextView->SetFontAndColor(&newFont);
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
-			ConvertToUppercase(textView);
+			ConvertToUppercase(fTextView);
 			break;
 		case M_TRANSFORM_LOWERCASE:
-			ConvertToLowercase(textView);
+			ConvertToLowercase(fTextView);
 			break;
 		case M_TRANSFORM_CAPITALIZE:
-			Capitalize(textView);
+			Capitalize(fTextView);
 			break;
 		case M_TRANSFORM_TITLE_CASE:
-			ConvertToTitlecase(textView);
+			ConvertToTitlecase(fTextView);
 			break;
 		case M_TRANSFORM_RANDOM_CASE:
-			ConvertToRandomCase(textView);
+			ConvertToRandomCase(fTextView);
 			break;
 		case M_TRANSFORM_ALTERNATING_CASE:
-			ConvertToAlternatingCase(textView);
+			ConvertToAlternatingCase(fTextView);
 			break;
 		case M_TRANSFORM_TOGGLE_CASE:
-			ToggleCase(textView);
+			ToggleCase(fTextView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			if (sidebar->BreakMode() == BREAK_REMOVE_ALL) {
-				RemoveLineBreaks(textView);
-			} else if (sidebar->BreakMode() == BREAK_ON) {
-				BreakLinesOnDelimiter(textView, sidebar->getBreakModeInput());
-			} else if (sidebar->BreakMode() == BREAK_REPLACE) {
-				RemoveLineBreaks(textView, sidebar->getBreakModeInput());
-			} else if (sidebar->BreakMode() == BREAK_AFTER_CHARS) {
-				InsertLineBreaks(textView, atoi(sidebar->getBreakModeInput()),
-					sidebar->SplitOnWordsEnabled());
+			if (fSidebar->BreakMode() == BREAK_REMOVE_ALL) {
+				RemoveLineBreaks(fTextView);
+			} else if (fSidebar->BreakMode() == BREAK_ON) {
+				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput());
+			} else if (fSidebar->BreakMode() == BREAK_REPLACE) {
+				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
+			} else if (fSidebar->BreakMode() == BREAK_AFTER_CHARS) {
+				InsertLineBreaks(fTextView, atoi(fSidebar->getBreakModeInput()),
+					fSidebar->SplitOnWordsEnabled());
 			}
 			break;
 		case M_TRIM_LINES:
-			TrimLines(textView);
+			TrimLines(fTextView);
 			break;
 		case M_TRANSFORM_REPLACE:
-			ReplaceAll(textView, sidebar->ReplaceSearchText(), sidebar->ReplaceWithText(),
-				sidebar->ReplaceCaseSensitive(), sidebar->ReplaceFullWordsOnly());
-			sidebar->SetReplaceSearchText("");
-			sidebar->SetReplaceWithText("");
+			ReplaceAll(fTextView, fSidebar->ReplaceSearchText(), fSidebar->ReplaceWithText(),
+				fSidebar->ReplaceCaseSensitive(), fSidebar->ReplaceFullWordsOnly());
+			fSidebar->SetReplaceSearchText("");
+			fSidebar->SetReplaceWithText("");
 			break;
 		case M_TRIM_EMPTY_LINES:
-			TrimEmptyLines(textView);
+			TrimEmptyLines(fTextView);
 			break;
 		case M_TRANSFORM_PREFIX_SUFFIX:
-			AddStringsToEachLine(textView, sidebar->PrefixText(), sidebar->SuffixText());
-			sidebar->SetPrefixText("");
-			sidebar->SetSuffixText("");
+			AddStringsToEachLine(fTextView, fSidebar->PrefixText(), fSidebar->SuffixText());
+			fSidebar->SetPrefixText("");
+			fSidebar->SetSuffixText("");
 			break;
 		case M_TRANSFORM_ROT13:
-			ConvertToROT13(textView);
+			ConvertToROT13(fTextView);
 			break;
 		case M_TRANSFORM_ENCODE_URL:
-			URLEncode(textView);
+			URLEncode(fTextView);
 			break;
 		case M_TRANSFORM_DECODE_URL:
-			URLDecode(textView);
+			URLDecode(fTextView);
 			break;
 		case M_MODE_REMOVE_ALL:
 		case M_MODE_BREAK_ON:
 		case M_MODE_REPLACE_LINE_BREAKS:
 		case M_MODE_BREAK_AFTER_CHARS:
-			sidebar->MessageReceived(msg);
+			fSidebar->MessageReceived(msg);
 			break;
 		case M_INSERT_EXAMPLE_TEXT:
-			textView->SetText("Haiku is an open-source operating system.\n"
+			fTextView->SetText("Haiku is an open-source operating system.\n"
 							  "It is fast, simple and elegant.\n"
 							  "Developers love its clean architecture.\n"
 							  "Users enjoy its intuitive interface.\n"
@@ -265,7 +269,7 @@ MainWindow::MessageReceived(BMessage* msg)
 				->Go();
 			break;
 		case M_TOGGLE_WORD_WRAP:
-			textView->SetWordWrap(!textView->DoesWordWrap());
+			fTextView->SetWordWrap(!fTextView->DoesWordWrap());
 			break;
 		case B_ABOUT_REQUESTED:
 			be_app->AboutRequested();
@@ -274,8 +278,8 @@ MainWindow::MessageReceived(BMessage* msg)
 			BWindow::MessageReceived(msg);
 			break;
 	}
-	sidebar->InvalidateLayout();
-	sidebar->Invalidate();
+	fSidebar->InvalidateLayout();
+	fSidebar->Invalidate();
 }
 
 
@@ -460,24 +464,26 @@ MainWindow::_SaveSettings()
 	settings.AddBool("saveTextOnExit", fSaveTextOnExit);
 	settings.AddBool("saveSettingsOnExit", fSaveSettingsOnExit);
 	settings.AddBool("insertClipboard", fInsertClipboard);
+	settings.AddInt32("fontSize", fFontSize);
+	settings.AddString("fontFamily", fFontFamily);
 
 	// Save settings and textView (optional setting in the future)
-	if (textView && fSaveTextOnExit)
-		settings.AddString("textViewContent", textView->Text());
+	if (fTextView && fSaveTextOnExit)
+		settings.AddString("textViewContent", fTextView->Text());
 
 	// Save sidebar text inputs
-	if (sidebar && fSaveSettingsOnExit) {
-		settings.AddInt32("breakMode", sidebar->BreakMode());
-		settings.AddString("breakModeInput", sidebar->getBreakModeInput());
-		settings.AddString("prefixInput", sidebar->PrefixText());
-		settings.AddString("suffixInput", sidebar->SuffixText());
+	if (fSidebar && fSaveSettingsOnExit) {
+		settings.AddInt32("breakMode", fSidebar->BreakMode());
+		settings.AddString("breakModeInput", fSidebar->getBreakModeInput());
+		settings.AddString("prefixInput", fSidebar->PrefixText());
+		settings.AddString("suffixInput", fSidebar->SuffixText());
 
-		settings.AddBool("splitOnWords", sidebar->SplitOnWordsEnabled());
+		settings.AddBool("splitOnWords", fSidebar->SplitOnWordsEnabled());
 
-		settings.AddString("replaceSearchString", sidebar->ReplaceSearchText());
-		settings.AddString("replaceWithString", sidebar->ReplaceWithText());
-		settings.AddBool("replaceCaseSensitive", sidebar->ReplaceCaseSensitive());
-		settings.AddBool("replaceFullWords", sidebar->ReplaceFullWordsOnly());
+		settings.AddString("replaceSearchString", fSidebar->ReplaceSearchText());
+		settings.AddString("replaceWithString", fSidebar->ReplaceWithText());
+		settings.AddBool("replaceCaseSensitive", fSidebar->ReplaceCaseSensitive());
+		settings.AddBool("replaceFullWords", fSidebar->ReplaceFullWordsOnly());
 	}
 
 	if (status == B_OK)
@@ -490,6 +496,13 @@ MainWindow::_SaveSettings()
 void
 MainWindow::_RestoreValues(BMessage& settings)
 {
+	// Set defaults
+	fFontSize = be_fixed_font->Size();
+	fFontFamily = "System default";
+	fSaveTextOnExit = false;
+	fSaveSettingsOnExit = false;
+	fInsertClipboard = true;
+
 	BString text;
 	int32 number;
 	bool flag;
@@ -504,36 +517,52 @@ MainWindow::_RestoreValues(BMessage& settings)
 	if (settings.FindBool("insertClipboard", &flag) == B_OK)
 		fInsertClipboard = flag;
 
-	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
-		textView->SetText(text);
+	if (settings.FindInt32("fontSize", &number) == B_OK)
+		fFontSize = number;
 
-	if (sidebar && fSaveSettingsOnExit) {
+	if (settings.FindString("fontFamily", &text) == B_OK)
+		fFontFamily = text;
+
+	// Apply the restored font settings to textView
+	BFont font;
+	if (fFontFamily == "System default")
+		font = *be_fixed_font;
+	else
+		font.SetFamilyAndStyle(fFontFamily.String(), NULL);
+
+	font.SetSize(fFontSize);
+	fTextView->SetFontAndColor(&font);
+
+	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
+		fTextView->SetText(text);
+
+	if (fSidebar && fSaveSettingsOnExit) {
 		if (settings.FindInt32("breakMode", &number) == B_OK)
-			sidebar->setBreakMode(number);
+			fSidebar->setBreakMode(number);
 
 		if (settings.FindString("breakModeInput", &text) == B_OK)
-			sidebar->setBreakModeInput(text);
+			fSidebar->setBreakModeInput(text);
 
 		if (settings.FindString("prefixInput", &text) == B_OK)
-			sidebar->SetPrefixText(text);
+			fSidebar->SetPrefixText(text);
 
 		if (settings.FindString("suffixInput", &text) == B_OK)
-			sidebar->SetSuffixText(text);
+			fSidebar->SetSuffixText(text);
 
 		if (settings.FindBool("splitOnWords", &flag) == B_OK)
-			sidebar->SetSplitOnWordsEnabled(flag);
+			fSidebar->SetSplitOnWordsEnabled(flag);
 
 		if (settings.FindString("replaceSearchString", &text) == B_OK)
-			sidebar->SetReplaceSearchText(text);
+			fSidebar->SetReplaceSearchText(text);
 
 		if (settings.FindString("replaceWithString", &text) == B_OK)
-			sidebar->SetReplaceWithText(text);
+			fSidebar->SetReplaceWithText(text);
 
 		if (settings.FindBool("replaceCaseSensitive", &flag) == B_OK)
-			sidebar->SetReplaceCaseSensitive(flag);
+			fSidebar->SetReplaceCaseSensitive(flag);
 
 		if (settings.FindBool("replaceFullWords", &flag) == B_OK)
-			sidebar->SetReplaceFullWordsOnly(flag);
+			fSidebar->SetReplaceFullWordsOnly(flag);
 	}
 }
 
@@ -543,8 +572,8 @@ MainWindow::UpdateStatusBar()
 {
 	// Calculate Row/column based on cursor position
 	int32 start, end;
-	textView->GetSelection(&start, &end);
-	BString textBuffer = textView->Text();
+	fTextView->GetSelection(&start, &end);
+	BString textBuffer = fTextView->Text();
 
 	int32 row = 1;
 	for (int32 i = 0; i < start; ++i) {
@@ -556,7 +585,7 @@ MainWindow::UpdateStatusBar()
 	// Calculate character count and word count
 	textBuffer.ReplaceAll('\n', ' ');
 	textBuffer.ReplaceAll('\t', ' ');
-	int32 charCount = textView->TextLength();
+	int32 charCount = fTextView->TextLength();
 	int32 wordCount = 0;
 	bool inWord = false;
 	for (int32 i = 0; i < charCount; ++i) {
@@ -571,7 +600,7 @@ MainWindow::UpdateStatusBar()
 	// Update the status bar text
 	BString statusText;
 	statusText.SetToFormat("%d:%d | Chars: %d | Words: %d", row, col, charCount, wordCount);
-	statusBar->SetText(statusText.String());
+	fStatusBar->SetText(statusText.String());
 }
 
 
@@ -625,8 +654,8 @@ MainWindow::OpenFile(const entry_ref& ref)
 		return;
 	}
 
-	textView->SetText("");
-	if (BTranslationUtils::GetStyledText(&file, textView) == B_OK) {
+	fTextView->SetText("");
+	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
 		BString windowTitle(kApplicationName);
@@ -643,7 +672,7 @@ MainWindow::SaveFile(const char* path)
 	if (file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE) != B_OK)
 		return;
 
-	if (BTranslationUtils::PutStyledText(textView, &file) == B_OK) {
+	if (BTranslationUtils::PutStyledText(fTextView, &file) == B_OK) {
 		fFilePath = path;
 
 		BPath p(path);

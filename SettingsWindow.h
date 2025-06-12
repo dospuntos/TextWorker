@@ -17,7 +17,8 @@
 
 class SettingsWindow : public BWindow {
 public:
-	SettingsWindow(bool saveText, bool saveSettings, bool clipboard);
+	SettingsWindow(bool saveText, bool saveSettings, bool clipboard, int32 fontSize,
+		BString fontFamily);
 	virtual void MessageReceived(BMessage* message);
 
 private:
@@ -25,10 +26,10 @@ private:
 	BCheckBox* fSaveSettingsCheck;
 	BCheckBox* fInsertClipboard;
 	BMenuField* fFontFamilyField;
+	BString fFontFamily;
 	BSlider* fFontSizeSlider;
 	BButton* fApplyButton;
 
-	void ApplySettings();
 	void PopulateFontMenu(BPopUpMenu* menu);
 };
 

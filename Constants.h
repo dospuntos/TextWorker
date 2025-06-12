@@ -38,6 +38,8 @@ enum {
 	M_FILE_SAVE = 'flsv',
 	M_FILE_SAVE_AS = 'flsa',
 	M_SHOW_SETTINGS = 'stng',
+	M_APPLY_SETTINGS = 'sapl',
+	M_CLOSE_SETTINGS = 'scls',
 	M_SETTINGS_SAVETEXT = 'stxt',
 	M_SETTINGS_SAVESETTINGS = 'sset',
 	M_SETTINGS_CLIPBOARD = 'sclp',
