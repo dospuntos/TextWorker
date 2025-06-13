@@ -21,7 +21,7 @@ void ToggleCase(BTextView* textView);
 void RemoveLineBreaks(BTextView* textView, BString replacement = "");
 void InsertLineBreaks(BTextView* textView, int32 maxWidth, bool breakOnWords = false);
 BString ProcessLineWithBreaks(const BString& line, int32 maxLength, bool KeepWordsIntact);
-void BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter);
+void BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter = true);
 void TrimLines(BTextView* textView);
 void TrimEmptyLines(BTextView* textView);
 void RemoveDuplicateLines(BTextView* textView, bool caseSensitive = true);

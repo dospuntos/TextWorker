@@ -214,7 +214,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			if (fSidebar->BreakMode() == BREAK_REMOVE_ALL) {
 				RemoveLineBreaks(fTextView);
 			} else if (fSidebar->BreakMode() == BREAK_ON) {
-				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput());
+				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
 			} else if (fSidebar->BreakMode() == BREAK_REPLACE) {
 				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
 			} else if (fSidebar->BreakMode() == BREAK_AFTER_CHARS) {

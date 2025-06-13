@@ -34,6 +34,7 @@ Sidebar::Sidebar()
 	fRemovePrefixInput = new BTextControl("RPrefixInput", "Prefix:", "", nullptr);
 	fRemoveSuffixInput = new BTextControl("RSuffixInput", "Suffix:", "", nullptr);
 	fBreakInput = new BTextControl("MaxWidthInput", nullptr, "", nullptr);
+	fBreakOnChars = new BSpinner("BreakOn", "Chars:", nullptr);
 	fWordWrapCheck = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
 	fDelimiterInput = new BTextControl("LineBreakDelimiter", nullptr, "", nullptr);
 
@@ -70,13 +71,13 @@ Sidebar::Sidebar()
 	// Grid layout
 	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid1.Add(new BStringView(NULL, "Find:"),			0, 0)
-		.Add(fSearchInput,								1, 0)
-		.Add(new BStringView(NULL, "Replace with:"),	0, 1)
-		.Add(fReplaceInput,                       		1, 1)
+	grid1.Add(new BStringView(NULL, "Find:"),			0, 0, 1)
+		.Add(fSearchInput,								1, 0, 1)
+		.Add(new BStringView(NULL, "Replace:"),	0, 1, 1)
+		.Add(fReplaceInput,                       		1, 1, 1)
 
-		.Add(fCaseCheck,            					0, 2)
-		.Add(fWholeWordCheck,                			1, 2)
+		.Add(fCaseCheck,            					0, 2, 1)
+		.Add(fWholeWordCheck,                			1, 2, 1)
 
 		.Add(searchReplaceBtn,                        0, 3, 2);
 	// clang-format on
@@ -106,9 +107,12 @@ Sidebar::Sidebar()
 	fBreakMenu->SetTargetForItems(this);
 
 	BMenuField* breakField = new BMenuField("breakField", "", fBreakMenu);
-
+	fBreakOnChars->SetMinValue(1);
+	fBreakOnChars->SetEnabled(false);
 	fWordWrapCheck = new BCheckBox("SplitWords", "Split on words", NULL);
 	fWordWrapCheck->SetEnabled(false);
+	fKeepDelimiterCheck = new BCheckBox("KeepDelimiter", "Keep delimiter", NULL);
+	fKeepDelimiterCheck->SetEnabled(false);
 	fBreakInput->SetExplicitMinSize(BSize(100, B_SIZE_UNSET));
 	BButton* applyBtn = new BButton("ApplyBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS));
 	applyBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
@@ -116,10 +120,12 @@ Sidebar::Sidebar()
 	// Layout grid
 	BGridLayoutBuilder grid(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid.Add(breakField,		0, 0)
-		.Add(fBreakInput,		0, 1)
-		.Add(fWordWrapCheck,    0, 2)
-		.Add(applyBtn,          0, 3);
+	grid.Add(breakField,		0, 0, 2)
+		.Add(fBreakInput,		0, 1, 1)
+		.Add(fBreakOnChars,		1, 1, 1)
+		.Add(fWordWrapCheck,    0, 2, 1)
+		.Add(fKeepDelimiterCheck, 1, 2, 1)
+		.Add(applyBtn,          0, 3, 2);
 	// clang-format on
 	grid.GridLayout()->SetMinColumnWidth(0, maxLabelWidth);
 
@@ -140,7 +146,7 @@ Sidebar::Sidebar()
 		= new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES));
 	BButton* trimEmptyLinesBtn
 		= new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
-	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn", "Remove duplicates",
+	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn", "Remove duplicate lines",
 		new BMessage(M_REMOVE_DUPLICATES));
 	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	trimEmptyLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
@@ -296,18 +302,24 @@ Sidebar::MessageReceived(BMessage* msg)
 		case M_MODE_REMOVE_ALL:
 			fWordWrapCheck->SetEnabled(false);
 			fBreakInput->SetEnabled(false);
+			fKeepDelimiterCheck->SetEnabled(false);
+			fBreakOnChars->SetEnabled(false);
 			this->Invalidate();
 			fBreakMode = BREAK_REMOVE_ALL;
 			break;
 		case M_MODE_BREAK_ON:
 			fWordWrapCheck->SetEnabled(false);
 			fBreakInput->SetEnabled(true);
+			fKeepDelimiterCheck->SetEnabled(true);
+			fBreakOnChars->SetEnabled(false);
 			this->Invalidate();
 			fBreakMode = BREAK_ON;
 			break;
 		case M_MODE_REPLACE_LINE_BREAKS:
 			fWordWrapCheck->SetEnabled(false);
 			fBreakInput->SetEnabled(true);
+			fKeepDelimiterCheck->SetEnabled(false);
+			fBreakOnChars->SetEnabled(false);
 			fBreakMode = BREAK_REPLACE;
 			this->Invalidate();
 			fBreakMode = BREAK_REPLACE;
@@ -315,6 +327,8 @@ Sidebar::MessageReceived(BMessage* msg)
 		case M_MODE_BREAK_AFTER_CHARS:
 			fWordWrapCheck->SetEnabled(true);
 			fBreakInput->SetEnabled(true);
+			fKeepDelimiterCheck->SetEnabled(false);
+			fBreakOnChars->SetEnabled(true);
 			fBreakMode = BREAK_AFTER_CHARS;
 			this->Invalidate();
 			break;

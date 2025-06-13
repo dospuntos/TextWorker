@@ -14,6 +14,7 @@
 #include <RadioButton.h>
 #include <TabView.h>
 #include <TextControl.h>
+#include <private/interface/Spinner.h>
 
 enum { M_SORT_ALPHA = 'salp', M_SORT_LENGTH, M_SORT_ASCENDING, M_SORT_DESCENDING, M_SORT_CASE };
 
@@ -49,6 +50,7 @@ public:
 	void setBreakMode(int breakMode) { fBreakMenu->ItemAt(breakMode)->SetMarked(true); }
 	BString getBreakModeInput() { return fBreakInput->Text(); }
 	void setBreakModeInput(const BString& text) { fBreakInput->SetText(text); }
+	bool getKeepDelimiterValue() {return fKeepDelimiterCheck->Value() == B_CONTROL_ON; }
 
 	// Replace Search String
 	BString ReplaceSearchText() const { return fSearchInput->Text(); }
@@ -74,15 +76,18 @@ public:
 
 
 private:
+	void _BuildLineTab();
 	BTextControl* fLineBreakInput;
 	BTextControl* fPrefixInput;
 	BTextControl* fSuffixInput;
 	BTextControl* fRemovePrefixInput;
 	BTextControl* fRemoveSuffixInput;
 	BTextControl* fBreakInput;
+	BSpinner* fBreakOnChars;
 	BTextControl* fIndentCountInput;
 	BCheckBox* fUseTabsCheckbox;
 	BCheckBox* fWordWrapCheck;
+	BCheckBox* fKeepDelimiterCheck;
 	BTextControl* fDelimiterInput;
 	BTextControl* fSearchInput;
 	BTextControl* fReplaceInput;

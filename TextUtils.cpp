@@ -465,37 +465,8 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 }
 
 
-BString
-ProcessLineWithBreaks(const BString& line, int32 maxLength, bool KeepWordsIntact)
-{
-	BString processedLine;
-	int32 start = 0;
-	int32 currentPos;
-
-	while (start < line.Length()) {
-		if ((start + maxLength) >= line.Length()) {
-			processedLine.Append(line.String() + start, line.Length() - start);
-			break;
-		}
-
-		if (KeepWordsIntact) {
-			currentPos = line.FindLast(' ', start + maxLength);
-			if (currentPos < start)
-				currentPos = start + maxLength;
-		} else {
-			currentPos = start + maxLength;
-		}
-
-		processedLine.Append(line.String() + start, currentPos - start);
-		processedLine << '\n';
-		start = currentPos + (KeepWordsIntact ? 1 : 0);
-	}
-	return processedLine;
-}
-
-
 void
-BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter)
+BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter)
 {
 	BString text(GetTextFromTextView(textView));
 	if (text.IsEmpty() || delimiter.Length() <= 0)
@@ -507,17 +478,25 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter)
 	int32 delimiterPosition;
 
 	while ((delimiterPosition = text.FindFirst(delimiter, start)) >= 0) {
-		updatedText.Append(text.String() + start, delimiterPosition - start + delimiter.Length());
+		if (keepDelimiter) {
+			// Include the delimiter in the line
+			updatedText.Append(text.String() + start, delimiterPosition - start + delimiter.Length());
+		} else {
+			// Exclude the delimiter from the line
+			updatedText.Append(text.String() + start, delimiterPosition - start);
+		}
 		updatedText.Append("\n");
 		start = delimiterPosition + delimiter.Length();
 	}
 
-	if (start < text.Length())
+	if (start < text.Length()) {
 		updatedText.Append(text.String() + start, text.Length() - start);
+	}
 
 	textView->SetText(updatedText.String());
 	RestoreCursorPosition(textView);
 }
+
 
 
 void
