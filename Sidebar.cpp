@@ -50,7 +50,7 @@ Sidebar::Sidebar()
 		maxLabelWidth = MAX(width, maxLabelWidth);
 	}
 
-	maxLabelWidth += 20;
+	maxLabelWidth += 10;
 
 	// === Search/Replace Box ===
 	BBox* searchReplaceBox = new BBox("SearchReplaceBox");
@@ -96,7 +96,7 @@ Sidebar::Sidebar()
 		new BMenuItem("Replace with" B_UTF8_ELLIPSIS, new BMessage(M_MODE_REPLACE_LINE_BREAKS)));
 	fBreakMenu->AddItem(new BMenuItem("Break on" B_UTF8_ELLIPSIS, new BMessage(M_MODE_BREAK_ON)));
 	fBreakMenu->AddItem(
-		new BMenuItem("Break after X characters", new BMessage(M_MODE_BREAK_AFTER_CHARS)));
+		new BMenuItem("Break after X characters" B_UTF8_ELLIPSIS, new BMessage(M_MODE_BREAK_AFTER_CHARS)));
 
 	fBreakMenu->SetLabelFromMarked(true);
 	fBreakMenu->SetRadioMode(true);
@@ -107,7 +107,7 @@ Sidebar::Sidebar()
 
 	fWordWrapCheck = new BCheckBox("SplitWords", "Split on words", NULL);
 	fWordWrapCheck->SetEnabled(false);
-	fBreakInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	fBreakInput->SetExplicitMinSize(BSize(100, B_SIZE_UNSET));
 	BButton* applyBtn = new BButton("ApplyBtn", "Apply", new BMessage(M_REMOVE_LINE_BREAKS));
 	applyBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
@@ -173,7 +173,6 @@ Sidebar::Sidebar()
 		.Add(fPrefixInput)
 		.Add(fSuffixInput)
 		.AddGroup(B_HORIZONTAL)
-			.AddGlue()
 			.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
 		.End()
 		.SetInsets(10, 12, 10, 10);

@@ -12,6 +12,9 @@
 #include <TextControl.h>
 #include <cctype>
 #include <sstream>
+#include <unicode/unistr.h>
+#include <unicode/brkiter.h>
+#include <unicode/locid.h>
 
 int32 startSelection, endSelection; // For cursor position
 
@@ -60,10 +63,15 @@ ConvertToUppercase(BTextView* textView)
 	if (text.IsEmpty())
 		return; // Nothing to convert
 
-	text.ToUpper();
-	textView->SetText(text.String());
+	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
+	unicodeText.toUpper();
 
-	textView->Select(startSelection, endSelection);
+	// Convert back to UTF-8
+	std::string utf8Text;
+	unicodeText.toUTF8String(utf8Text);
+
+	textView->SetText(utf8Text.c_str());
+	RestoreCursorPosition(textView);
 }
 
 
@@ -74,8 +82,14 @@ ConvertToLowercase(BTextView* textView)
 	if (text.IsEmpty())
 		return; // Nothing to convert
 
-	text.ToLower();
-	textView->SetText(text.String());
+	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
+	unicodeText.toLower();
+
+	// Convert back to UTF-8
+	std::string utf8Text;
+	unicodeText.toUTF8String(utf8Text);
+
+	textView->SetText(utf8Text.c_str());
 	RestoreCursorPosition(textView);
 }
 
@@ -85,12 +99,44 @@ ConvertToTitlecase(BTextView* textView)
 {
 	BString text = GetTextFromTextView(textView);
 	if (text.IsEmpty())
-		return; // Nothing to convert
+		return;
 
-	text.CapitalizeEachWord();
-	textView->SetText(text.String());
+	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
+	unicodeText.toLower(); // normalize first
+
+	bool capitalizeNext = true;
+
+	for (int32_t i = 0; i < unicodeText.length(); ++i) {
+		UChar32 c = unicodeText.char32At(i);
+
+		if (u_isUWhiteSpace(c) || u_ispunct(c)) {
+			capitalizeNext = true;
+			continue;
+		}
+
+		if (capitalizeNext) {
+			UChar32 upperC = u_toupper(c);
+			unicodeText.replace(i, U16_LENGTH(c), upperC);
+			capitalizeNext = false;
+		}
+	}
+
+	std::string result;
+	unicodeText.toUTF8String(result);
+
+	if (result.empty()) {
+		printf("Manual titlecase result is empty!\n");
+		return;
+	}
+
+	BString bResult(result.c_str());
+	textView->SetText(bResult.String());
 	RestoreCursorPosition(textView);
 }
+
+
+
+
 
 
 void
