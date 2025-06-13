@@ -10,11 +10,15 @@
 #include <LayoutBuilder.h>
 #include <String.h>
 #include <TextControl.h>
+#include <algorithm>
 #include <cctype>
+#include <set>
 #include <sstream>
-#include <unicode/unistr.h>
 #include <unicode/brkiter.h>
+#include <unicode/coll.h>
 #include <unicode/locid.h>
+#include <unicode/unistr.h>
+#include <vector>
 
 int32 startSelection, endSelection; // For cursor position
 
@@ -571,5 +575,180 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 	}
 
 	textView->SetText(text.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
+SortLines(BTextView* textView, bool ascending, bool caseSensitive)
+{
+	BString text(GetTextFromTextView(textView));
+	if (text.IsEmpty())
+		return;
+
+	// Split text into lines
+	std::vector<BString> lines;
+	int32_t start = 0;
+	while (true) {
+		int32_t end = text.FindFirst('\n', start);
+		BString line;
+		if (end >= 0) {
+			text.CopyInto(line, start, end - start);
+			start = end + 1;
+		} else {
+			text.CopyInto(line, start, text.Length() - start);
+			lines.push_back(line);
+			break;
+		}
+		lines.push_back(line);
+	}
+
+	// Create ICU Collator
+	UErrorCode status = U_ZERO_ERROR;
+	std::unique_ptr<icu::Collator> collator(
+		icu::Collator::createInstance(icu::Locale::getDefault(), status));
+
+	if (U_FAILURE(status) || !collator) {
+		printf("Failed to create ICU Collator: %s\n", u_errorName(status));
+		return;
+	}
+
+	collator->setStrength(
+		caseSensitive ? icu::Collator::TERTIARY // case-sensitive, accent-sensitive
+					  : icu::Collator::SECONDARY // case-insensitive, accent-sensitive
+	);
+
+	// Sort using ICU
+	std::sort(lines.begin(), lines.end(), [&](const BString& a, const BString& b) {
+		icu::UnicodeString ua = icu::UnicodeString::fromUTF8(a.String());
+		icu::UnicodeString ub = icu::UnicodeString::fromUTF8(b.String());
+		UErrorCode cmpStatus = U_ZERO_ERROR;
+		UCollationResult result = collator->compare(ua, ub, cmpStatus);
+		if (U_FAILURE(cmpStatus))
+			return ascending; // fallback: don't swap
+
+		return ascending ? result == UCOL_LESS : result == UCOL_GREATER;
+	});
+
+	// Reconstruct the sorted text
+	BString updatedText;
+	for (size_t i = 0; i < lines.size(); ++i) {
+		updatedText << lines[i];
+		if (i != lines.size() - 1)
+			updatedText << '\n';
+	}
+
+	textView->SetText(updatedText.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
+SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
+{
+	BString text(GetTextFromTextView(textView));
+	if (text.IsEmpty())
+		return;
+
+	// Split text into lines
+	std::vector<BString> lines;
+	int32_t start = 0;
+	while (true) {
+		int32_t end = text.FindFirst('\n', start);
+		BString line;
+		if (end >= 0) {
+			text.CopyInto(line, start, end - start);
+			start = end + 1;
+		} else {
+			text.CopyInto(line, start, text.Length() - start);
+			lines.push_back(line);
+			break;
+		}
+		lines.push_back(line);
+	}
+
+	// Sort by length, with optional case-aware tiebreaker
+	std::sort(lines.begin(), lines.end(), [&](const BString& a, const BString& b) {
+		int32_t lenA = a.Length();
+		int32_t lenB = b.Length();
+
+		if (lenA != lenB)
+			return ascending ? (lenA < lenB) : (lenA > lenB);
+
+		// Tie-breaker: case-sensitive or insensitive compare
+		icu::UnicodeString ua = icu::UnicodeString::fromUTF8(a.String());
+		icu::UnicodeString ub = icu::UnicodeString::fromUTF8(b.String());
+
+		if (!caseSensitive) {
+			ua.toLower();
+			ub.toLower();
+		}
+
+		int cmp = ua.compare(ub);
+		return ascending ? (cmp < 0) : (cmp > 0);
+	});
+
+	// Reconstruct sorted text
+	BString updatedText;
+	for (size_t i = 0; i < lines.size(); ++i) {
+		updatedText << lines[i];
+		if (i != lines.size() - 1)
+			updatedText << '\n';
+	}
+
+	textView->SetText(updatedText.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
+RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
+{
+	BString text(GetTextFromTextView(textView));
+	if (text.IsEmpty())
+		return;
+
+	// Split text into lines
+	std::vector<BString> lines;
+	int32_t start = 0;
+	while (true) {
+		int32_t end = text.FindFirst('\n', start);
+		BString line;
+		if (end >= 0) {
+			text.CopyInto(line, start, end - start);
+			start = end + 1;
+		} else {
+			text.CopyInto(line, start, text.Length() - start);
+			lines.push_back(line);
+			break;
+		}
+		lines.push_back(line);
+	}
+
+	// Store seen lines using ICU UnicodeString for proper comparison
+	std::set<icu::UnicodeString> seen;
+	std::vector<BString> uniqueLines;
+
+	for (const BString& line : lines) {
+		icu::UnicodeString uLine = icu::UnicodeString::fromUTF8(line.String());
+
+		if (!caseSensitive)
+			uLine.toLower();
+
+		if (seen.find(uLine) == seen.end()) {
+			seen.insert(uLine);
+			uniqueLines.push_back(line);
+		}
+	}
+
+	// Reconstruct unique lines into a single string
+	BString result;
+	for (size_t i = 0; i < uniqueLines.size(); ++i) {
+		result << uniqueLines[i];
+		if (i != uniqueLines.size() - 1)
+			result << '\n';
+	}
+
+	textView->SetText(result.String());
 	RestoreCursorPosition(textView);
 }

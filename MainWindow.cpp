@@ -248,11 +248,39 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_TRANSFORM_DECODE_URL:
 			URLDecode(fTextView);
 			break;
+		case M_SORT_LINES:
+		{
+			bool sortAlphabetically = true;
+			bool sortAscending = true;
+			bool caseSensitive = false;
+
+			BRadioButton* alpha = (BRadioButton*)FindView("radio_sort_alpha");
+			BRadioButton* asc = (BRadioButton*)FindView("radio_sort_asc");
+			BCheckBox* caseCheck = (BCheckBox*)FindView("checkbox_case");
+
+			if (alpha && alpha->Value() != B_CONTROL_ON)
+				sortAlphabetically = false;
+
+			if (asc && asc->Value() != B_CONTROL_ON)
+				sortAscending = false;
+
+			if (caseCheck)
+				caseSensitive = caseCheck->Value() == B_CONTROL_ON;
+
+			if (sortAlphabetically)
+				SortLines(fTextView, sortAscending, caseSensitive);
+			else
+				SortLinesByLength(fTextView, sortAscending, caseSensitive);
+			break;
+		}
 		case M_MODE_REMOVE_ALL:
 		case M_MODE_BREAK_ON:
 		case M_MODE_REPLACE_LINE_BREAKS:
 		case M_MODE_BREAK_AFTER_CHARS:
 			fSidebar->MessageReceived(msg);
+			break;
+		case M_REMOVE_DUPLICATES:
+			RemoveDuplicateLines(fTextView);
 			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			fTextView->SetText("Haiku is an open-source operating system.\n"

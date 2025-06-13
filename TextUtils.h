@@ -24,6 +24,7 @@ BString ProcessLineWithBreaks(const BString& line, int32 maxLength, bool KeepWor
 void BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter);
 void TrimLines(BTextView* textView);
 void TrimEmptyLines(BTextView* textView);
+void RemoveDuplicateLines(BTextView* textView, bool caseSensitive = true);
 void ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
 	bool fullWordsOnly);
 
@@ -34,5 +35,8 @@ void AddStringsToEachLine(BTextView* textView, const BString& startString,
 	const BString& endString);
 
 bool IsProbablyText(BFile& file);
+
+void SortLines(BTextView* textView, bool ascending = true, bool caseSensitive = true);
+void SortLinesByLength(BTextView* textView, bool ascending = true, bool caseSensitive = true);
 
 #endif // TEXT_UTILS_H

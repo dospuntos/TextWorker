@@ -138,12 +138,16 @@ Sidebar::Sidebar()
 		= new BButton("TrimLinesBtn", "Trim whitespace", new BMessage(M_TRIM_LINES));
 	BButton* trimEmptyLinesBtn
 		= new BButton("TrimEmptyLinesBtn", "Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
+	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn", "Remove duplicates",
+		new BMessage(M_REMOVE_DUPLICATES));
 	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	trimEmptyLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	removeDuplicates->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
 	BLayoutBuilder::Group<>(cleanGroup)
 		.Add(trimLinesBtn)
 		.Add(trimEmptyLinesBtn)
+		.Add(removeDuplicates)
 		.SetInsets(10, 12, 10, 10);
 
 	// === Line Operations Tab ===
@@ -177,6 +181,7 @@ Sidebar::Sidebar()
 		.End()
 		.SetInsets(10, 12, 10, 10);
 	// clang-format on
+
 	// === Prefix/suffix Tab ===
 	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 10)
 		.Add(prefixSuffixBox)
@@ -186,6 +191,69 @@ Sidebar::Sidebar()
 	BTab* prefixSuffixTab = new BTab();
 	AddTab(prefixSuffixView, prefixSuffixTab);
 	prefixSuffixTab->SetLabel("Prefix/suffix");
+
+	// === Sort lines Tab ===
+	// Tab: Line operations
+	BGroupView* sortView = new BGroupView(B_VERTICAL, 5);
+
+	// === Sort Box ===
+	BBox* sortBox = new BBox("SortBox");
+	sortBox->SetLabel("Sort lines");
+	BGroupView* sortGroup = new BGroupView(B_VERTICAL, 10);
+	sortBox->AddChild(sortGroup);
+
+	// --- Sorting method group ---
+	BGroupView* sortTypeGroup = new BGroupView(B_VERTICAL, 5);
+	BRadioButton* alphabeticalRadio = new BRadioButton("radio_sort_alpha", "Alphabetical", nullptr);
+	BRadioButton* lengthRadio = new BRadioButton("radio_sort_length", "By line length", nullptr);
+	alphabeticalRadio->SetValue(B_CONTROL_ON);
+
+	BLayoutBuilder::Group<>(sortTypeGroup)
+		.Add(new BStringView(nullptr, "Sort type:"))
+		.Add(alphabeticalRadio)
+		.Add(lengthRadio);
+
+	// --- Sort order group ---
+	BGroupView* sortOrderGroup = new BGroupView(B_VERTICAL, 5);
+	BRadioButton* ascendingRadio = new BRadioButton("radio_sort_asc", "Ascending", nullptr);
+	BRadioButton* descendingRadio = new BRadioButton("radio_sort_desc", "Descending", nullptr);
+	ascendingRadio->SetValue(B_CONTROL_ON); // default
+
+	BLayoutBuilder::Group<>(sortOrderGroup)
+		.Add(new BStringView(nullptr, "Sort order:"))
+		.Add(ascendingRadio)
+		.Add(descendingRadio);
+
+	// --- Case sensitivity checkbox ---
+	BCheckBox* caseCheck = new BCheckBox("checkbox_case", "Case sensitive", nullptr);
+	caseCheck->SetValue(B_CONTROL_OFF);
+
+	// --- Sort button ---
+	BButton* sortButton = new BButton("sortBtn", "Sort", new BMessage(M_SORT_LINES));
+
+	// Layout the full sortGroup box
+	BLayoutBuilder::Group<>(sortGroup)
+		.Add(sortTypeGroup)
+		.Add(sortOrderGroup)
+		.Add(caseCheck)
+		.Add(sortButton)
+		.SetInsets(10, 12, 10, 10);
+
+
+	// Pre-select default options
+	alphabeticalRadio->SetValue(B_CONTROL_ON);
+	ascendingRadio->SetValue(B_CONTROL_ON);
+	caseCheck->SetValue(B_CONTROL_OFF);
+
+	// === Prefix/suffix Tab ===
+	BLayoutBuilder::Group<>(sortView, B_VERTICAL, 10)
+		.Add(sortBox)
+		.AddGlue()
+		.SetInsets(10, 12, 10, 10);
+
+	BTab* sortTab = new BTab();
+	AddTab(sortView, sortTab);
+	sortTab->SetLabel("Sort lines");
 }
 
 

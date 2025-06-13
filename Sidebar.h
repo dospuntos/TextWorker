@@ -15,6 +15,8 @@
 #include <TabView.h>
 #include <TextControl.h>
 
+enum { M_SORT_ALPHA = 'salp', M_SORT_LENGTH, M_SORT_ASCENDING, M_SORT_DESCENDING, M_SORT_CASE };
+
 class Sidebar : public BTabView {
 public:
 	Sidebar();
