@@ -31,6 +31,8 @@ Sidebar::Sidebar()
 	fLineBreakInput = new BTextControl("ReplaceLineBreaksInput", nullptr, "", nullptr);
 	fPrefixInput = new BTextControl("PrefixInput", "Prefix:", "", nullptr);
 	fSuffixInput = new BTextControl("SuffixInput", "Suffix:", "", nullptr);
+	fRemovePrefixInput = new BTextControl("RPrefixInput", "Prefix:", "", nullptr);
+	fRemoveSuffixInput = new BTextControl("RSuffixInput", "Suffix:", "", nullptr);
 	fBreakInput = new BTextControl("MaxWidthInput", nullptr, "", nullptr);
 	fWordWrapCheck = new BCheckBox("SplitOnWordsCheckbox", "Split on words", nullptr);
 	fDelimiterInput = new BTextControl("LineBreakDelimiter", nullptr, "", nullptr);
@@ -166,25 +168,55 @@ Sidebar::Sidebar()
 	// Tab: Line operations
 	BGroupView* prefixSuffixView = new BGroupView(B_VERTICAL, 5);
 
-	// === Prefix/suffix Box ===
+	// === Add prefix/suffix Box ===
 	BBox* prefixSuffixBox = new BBox("PrefixSuffixBox");
 	prefixSuffixBox->SetLabel("Prefix/suffix each line");
-	BGroupView* prefixSuffixGroup = new BGroupView(B_VERTICAL, 5);
-	prefixSuffixBox->AddChild(prefixSuffixGroup);
+	BGroupView* addGroup = new BGroupView(B_VERTICAL, 5);
+	prefixSuffixBox->AddChild(addGroup);
 
 	// clang-format off
-	BLayoutBuilder::Group<>(prefixSuffixGroup)
+	BLayoutBuilder::Group<>(addGroup)
 		.Add(fPrefixInput)
 		.Add(fSuffixInput)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton("prefixSuffixBtn", "Apply", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
+			.Add(new BButton("addPrefixSuffixBtn", "Add", new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
+			.AddGlue()
+			.Add(new BButton("removePrefixSuffixBtn", "Remove", new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX)))
 		.End()
 		.SetInsets(10, 12, 10, 10);
 	// clang-format on
 
+	// === Indent/Unindent Box ===
+	BBox* indentBox = new BBox("IndentBox");
+	indentBox->SetLabel("Indent/unindent lines");
+
+	BGroupView* indentGroup = new BGroupView(B_VERTICAL, 5);
+	indentBox->AddChild(indentGroup);
+
+	// Inputs
+	fIndentCountInput = new BTextControl("IndentCount", "Indent size:", "4", nullptr);
+	fUseTabsCheckbox = new BCheckBox("UseTabs", "Use tabs instead of spaces", nullptr);
+
+	// Buttons
+	BButton* indentButton = new BButton("IndentBtn", "Indent", new BMessage(M_INDENT_LINES));
+	BButton* unindentButton
+		= new BButton("UnindentBtn", "Unindent", new BMessage(M_UNINDENT_LINES));
+
+	// Layout
+	BLayoutBuilder::Group<>(indentGroup)
+		.Add(fIndentCountInput)
+		.Add(fUseTabsCheckbox)
+		.AddGroup(B_HORIZONTAL)
+		.Add(indentButton)
+		.AddGlue()
+		.Add(unindentButton)
+		.End()
+		.SetInsets(10, 12, 10, 10);
+
 	// === Prefix/suffix Tab ===
 	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 10)
 		.Add(prefixSuffixBox)
+		.Add(indentBox)
 		.AddGlue()
 		.SetInsets(10, 12, 10, 10);
 
@@ -245,7 +277,7 @@ Sidebar::Sidebar()
 	ascendingRadio->SetValue(B_CONTROL_ON);
 	caseCheck->SetValue(B_CONTROL_OFF);
 
-	// === Prefix/suffix Tab ===
+	// === Sort Tab ===
 	BLayoutBuilder::Group<>(sortView, B_VERTICAL, 10)
 		.Add(sortBox)
 		.AddGlue()

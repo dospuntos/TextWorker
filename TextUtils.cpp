@@ -381,6 +381,50 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 
 
 void
+RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BString& suffix)
+{
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty())
+		return;
+
+	BString updatedText;
+	int32 start = 0;
+	int32 end;
+
+	while ((end = text.FindFirst('\n', start)) >= 0) {
+		BString line(text.String() + start, end - start);
+
+		// Remove prefix if present
+		if (!prefix.IsEmpty() && line.StartsWith(prefix))
+			line.Remove(0, prefix.Length());
+
+		// Remove suffix if present
+		if (!suffix.IsEmpty() && line.EndsWith(suffix))
+			line.Truncate(line.Length() - suffix.Length());
+
+		updatedText << line << '\n';
+		start = end + 1;
+	}
+
+	// Handle last line if it doesn't end with \n
+	if (start < text.Length()) {
+		BString line(text.String() + start, text.Length() - start);
+
+		if (!prefix.IsEmpty() && line.StartsWith(prefix))
+			line.Remove(0, prefix.Length());
+
+		if (!suffix.IsEmpty() && line.EndsWith(suffix))
+			line.Truncate(line.Length() - suffix.Length());
+
+		updatedText << line;
+	}
+
+	textView->SetText(updatedText.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
 InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 {
 	BString text(GetTextFromTextView(textView));
@@ -750,5 +794,118 @@ RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
 	}
 
 	textView->SetText(result.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
+IndentLines(BTextView* textView, bool useTabs, int32 count)
+{
+	if (count <= 0)
+		return;
+
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty())
+		return;
+
+	BString updatedText;
+	BString indent;
+
+	// Create the indentation string
+	if (useTabs) {
+		for (int32 i = 0; i < count; i++)
+			indent << '\t';
+	} else {
+		for (int32 i = 0; i < count; i++)
+			indent << ' ';
+	}
+
+	int32 start = 0;
+	int32 end;
+
+	while ((end = text.FindFirst('\n', start)) >= 0) {
+		BString line(text.String() + start, end - start);
+		updatedText << indent << line << '\n';
+		start = end + 1;
+	}
+
+	// Handle last line if no newline at the end
+	if (start < text.Length()) {
+		BString line(text.String() + start, text.Length() - start);
+		updatedText << indent << line;
+	}
+
+	textView->SetText(updatedText.String());
+	RestoreCursorPosition(textView);
+}
+
+
+void
+UnindentLines(BTextView* textView, bool useTabs, int32 count)
+{
+	if (count <= 0)
+		return;
+
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty())
+		return;
+
+	BString updatedText;
+	BString indent;
+
+	// Create the indentation string
+	if (useTabs) {
+		for (int32 i = 0; i < count; i++)
+			indent << '\t';
+	} else {
+		for (int32 i = 0; i < count; i++)
+			indent << ' ';
+	}
+
+	int32 start = 0;
+	int32 end;
+
+	while ((end = text.FindFirst('\n', start)) >= 0) {
+		BString line(text.String() + start, end - start);
+
+		if (line.StartsWith(indent)) {
+			line.Remove(0, indent.Length());
+		} else {
+			// Try to remove as much as possible
+			int32 i = 0;
+			while (i < count && line.Length() > 0) {
+				if ((useTabs && line.ByteAt(0) == '\t') || (!useTabs && line.ByteAt(0) == ' ')) {
+					line.Remove(0, 1);
+					i++;
+				} else {
+					break;
+				}
+			}
+		}
+
+		updatedText << line << '\n';
+		start = end + 1;
+	}
+
+	// Handle last line
+	if (start < text.Length()) {
+		BString line(text.String() + start, text.Length() - start);
+		if (line.StartsWith(indent)) {
+			line.Remove(0, indent.Length());
+		} else {
+			int32 i = 0;
+			while (i < count && line.Length() > 0) {
+				if ((useTabs && line.ByteAt(0) == '\t') || (!useTabs && line.ByteAt(0) == ' ')) {
+					line.Remove(0, 1);
+					i++;
+				} else {
+					break;
+				}
+			}
+		}
+		updatedText << line;
+	}
+
+	textView->SetText(updatedText.String());
 	RestoreCursorPosition(textView);
 }

@@ -236,8 +236,9 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRANSFORM_PREFIX_SUFFIX:
 			AddStringsToEachLine(fTextView, fSidebar->PrefixText(), fSidebar->SuffixText());
-			fSidebar->SetPrefixText("");
-			fSidebar->SetSuffixText("");
+			break;
+		case M_TRANSFORM_REMOVE_PREFIX_SUFFIX:
+			RemoveStringsFromEachLine(fTextView, fSidebar->PrefixText(), fSidebar->SuffixText());
 			break;
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(fTextView);
@@ -271,6 +272,23 @@ MainWindow::MessageReceived(BMessage* msg)
 				SortLines(fTextView, sortAscending, caseSensitive);
 			else
 				SortLinesByLength(fTextView, sortAscending, caseSensitive);
+			break;
+		}
+		case M_INDENT_LINES:
+		case M_UNINDENT_LINES:
+		{
+			BTextControl* countInput = (BTextControl*)FindView("IndentCount");
+			BCheckBox* useTabsCheck = (BCheckBox*)FindView("UseTabs");
+			bool useTabs = useTabsCheck->Value() == B_CONTROL_ON;
+
+			int32 count = atoi(countInput->Text());
+			if (count <= 0)
+				break;
+
+			if (msg->what == M_INDENT_LINES)
+				IndentLines(fTextView, useTabs, count);
+			else
+				UnindentLines(fTextView, useTabs, count);
 			break;
 		}
 		case M_MODE_REMOVE_ALL:

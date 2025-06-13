@@ -33,6 +33,10 @@ void URLDecode(BTextView* textView);
 void ConvertToROT13(BTextView* textView);
 void AddStringsToEachLine(BTextView* textView, const BString& startString,
 	const BString& endString);
+void RemoveStringsFromEachLine(BTextView* textView, const BString& startString,
+	const BString& endString);
+void IndentLines(BTextView* textView, bool useTabs = true, int32 count = 1);
+void UnindentLines(BTextView* textView, bool useTabs = true, int32 count = 1);
 
 bool IsProbablyText(BFile& file);
 

@@ -28,6 +28,7 @@ enum {
 	M_TRANSFORM_ROT13 = 'rt13',
 	M_TRANSFORM_WIP = 'twip',
 	M_TRANSFORM_PREFIX_SUFFIX = 'psfx',
+	M_TRANSFORM_REMOVE_PREFIX_SUFFIX = 'rmpf',
 	M_TRANSFORM_REPLACE = 'repl',
 	B_TEXT_CHANGED = 'txch',
 	B_CURSOR_MOVED = 'curm',
@@ -50,7 +51,9 @@ enum {
 	M_MODE_BREAK_ON = 'mdbr',
 	M_MODE_BREAK_AFTER_CHARS = 'mdba',
 	M_SORT_LINES = 'stln',
-	M_REMOVE_DUPLICATES = 'rmdp'
+	M_REMOVE_DUPLICATES = 'rmdp',
+	M_INDENT_LINES = 'inln',
+	M_UNINDENT_LINES = 'unln',
 };
 
 enum BreakMode { BREAK_REMOVE_ALL = 0, BREAK_ON, BREAK_REPLACE, BREAK_AFTER_CHARS };

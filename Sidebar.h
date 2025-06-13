@@ -77,7 +77,11 @@ private:
 	BTextControl* fLineBreakInput;
 	BTextControl* fPrefixInput;
 	BTextControl* fSuffixInput;
+	BTextControl* fRemovePrefixInput;
+	BTextControl* fRemoveSuffixInput;
 	BTextControl* fBreakInput;
+	BTextControl* fIndentCountInput;
+	BCheckBox* fUseTabsCheckbox;
 	BCheckBox* fWordWrapCheck;
 	BTextControl* fDelimiterInput;
 	BTextControl* fSearchInput;
