@@ -228,8 +228,6 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_TRANSFORM_REPLACE:
 			ReplaceAll(fTextView, fSidebar->ReplaceSearchText(), fSidebar->ReplaceWithText(),
 				fSidebar->ReplaceCaseSensitive(), fSidebar->ReplaceFullWordsOnly());
-			fSidebar->SetReplaceSearchText("");
-			fSidebar->SetReplaceWithText("");
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(fTextView);
@@ -277,18 +275,14 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_INDENT_LINES:
 		case M_UNINDENT_LINES:
 		{
-			BTextControl* countInput = (BTextControl*)FindView("IndentCount");
-			BCheckBox* useTabsCheck = (BCheckBox*)FindView("UseTabs");
-			bool useTabs = useTabsCheck->Value() == B_CONTROL_ON;
-
-			int32 count = atoi(countInput->Text());
-			if (count <= 0)
-				break;
+			BSpinner* countInput = (BSpinner*)FindView("IndentSize");
+			BRadioButton* useTabsRadio = (BRadioButton*)FindView("TabsRadio");
+			bool useTabs = useTabsRadio->Value() == B_CONTROL_ON;
 
 			if (msg->what == M_INDENT_LINES)
-				IndentLines(fTextView, useTabs, count);
+				IndentLines(fTextView, useTabs, countInput->Value());
 			else
-				UnindentLines(fTextView, useTabs, count);
+				UnindentLines(fTextView, useTabs, countInput->Value());
 			break;
 		}
 		case M_MODE_REMOVE_ALL:

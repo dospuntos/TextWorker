@@ -77,15 +77,18 @@ public:
 
 private:
 	void _BuildLineTab();
-	BTextControl* fLineBreakInput;
+	void _BuildPrefixTab();
+	void _BuildSortTab();
+	float fMaxLabelWidth;
 	BTextControl* fPrefixInput;
 	BTextControl* fSuffixInput;
 	BTextControl* fRemovePrefixInput;
 	BTextControl* fRemoveSuffixInput;
 	BTextControl* fBreakInput;
 	BSpinner* fBreakOnChars;
-	BTextControl* fIndentCountInput;
-	BCheckBox* fUseTabsCheckbox;
+	BSpinner* fIndentSizeSpinner;
+	BRadioButton* fTabsRadio;
+	BRadioButton* fSpacesRadio;
 	BCheckBox* fWordWrapCheck;
 	BCheckBox* fKeepDelimiterCheck;
 	BTextControl* fDelimiterInput;
