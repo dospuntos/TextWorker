@@ -1,18 +1,18 @@
 resource app_signature "application/x-vnd.jpw-TextWorker";
 
-resource app_flags B_SINGLE_LAUNCH;
+resource app_flags B_MULTIPLE_LAUNCH;
 
 resource app_version {
 	major = 0,
-	middle = 5,
-	minor = 0,
+	middle = 6,
+	minor = 1,
 
 	variety = 1,
 
-	internal = 0,
+	internal = 1,
 
-	short_info = "Effortlessly format text with this lightweight utility",
-	long_info = "Transform your text with easy using this versatile formatting tool. From uppercase conversion to line break removal and simple text encoding."
+	short_info = "Clean and transform text easily with this lightweight tool.",
+	long_info = "TextWorker is a Haiku-native utility that helps you clean, format, and transform plain text. It supports operations like case conversion, line sorting, trimming, prefix/suffix edits, and more."
 };
 
 resource vector_icon array {

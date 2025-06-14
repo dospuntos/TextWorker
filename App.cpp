@@ -18,7 +18,7 @@ void
 App::AboutRequested()
 {
 	BAboutWindow* about = new BAboutWindow(kApplicationName, kApplicationSignature);
-	about->AddDescription("A small program to manipulate text in a multitude of ways.");
+	about->AddDescription("Clean and transform text easily with this lightweight tool.");
 	about->AddCopyright(2025, "Johan Wagenheim");
 	about->Show();
 }
