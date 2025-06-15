@@ -54,9 +54,9 @@ MainWindow::MainWindow(void)
 		.Add(fToolbar, 0)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
-		.Add(fSidebar, 0)
-		.Add(fScrollView, 1)
-		.SetInsets(5, 5, 5, 5)
+			.Add(fSidebar, 0)
+			.Add(fScrollView, 1)
+			.SetInsets(5, 5, 5, 5)
 		.End()
 		.Add(fStatusBar, 0);
 
@@ -92,8 +92,7 @@ MainWindow::MainWindow(void)
 					&& text != nullptr) {
 					// Only insert if the text is not empty
 					if (textLen > 0) {
-						fTextView->SetText(text,
-							textLen); // Replace default text with clipboard contents
+						fTextView->SetText(text, textLen);
 					}
 				}
 			}
@@ -115,6 +114,20 @@ void
 MainWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
+		case B_UNDO:
+		case B_REDO:
+		case B_CUT:
+		case B_COPY:
+		case B_PASTE:
+		case B_SELECT_ALL:
+		{
+			BView* focusView = CurrentFocus();
+			if (focusView) {
+				BMessenger messenger(focusView);
+				messenger.SendMessage(msg);
+				return;
+			}
+		}
 		case M_FILE_NEW:
 			fTextView->SetText("");
 			fFilePath = "";
@@ -339,6 +352,13 @@ MainWindow::_BuildMenu()
 	BMenu* subMenu;
 	BMenuItem* item;
 
+	fUndoItem = new BMenuItem("Undo", new BMessage(B_UNDO), 'Z');
+	fRedoItem = new BMenuItem("Redo", new BMessage(B_REDO), 'Y');
+	fCutItem = new BMenuItem("Cut", new BMessage(B_CUT), 'X');
+	fCopyItem = new BMenuItem("Copy", new BMessage(B_COPY), 'C');
+	fPasteItem = new BMenuItem("Paste", new BMessage(B_PASTE), 'V');
+	fSelectAllItem = new BMenuItem("Select all", new BMessage(B_SELECT_ALL), 'A');
+
 	// 'File' menu
 	menu = new BMenu("File");
 
@@ -358,14 +378,14 @@ MainWindow::_BuildMenu()
 	// 'Edit' menu
 	menu = new BMenu("Edit");
 
-	menu->AddItem(new BMenuItem("Undo", new BMessage(B_UNDO), 'Z'));
-	menu->AddItem(new BMenuItem("Redo", new BMessage(B_REDO), 'Y'));
+	// menu->AddItem(fUndoItem);
+	// menu->AddItem(fRedoItem);
+	// menu->AddSeparatorItem();
+	menu->AddItem(fCutItem);
+	menu->AddItem(fCopyItem);
+	menu->AddItem(fPasteItem);
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem("Cut", new BMessage(B_CUT), 'X'));
-	menu->AddItem(new BMenuItem("Copy", new BMessage(B_COPY), 'C'));
-	menu->AddItem(new BMenuItem("Paste", new BMessage(B_PASTE), 'V'));
-	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem("Select all", new BMessage(B_SELECT_ALL), 'A'));
+	menu->AddItem(fSelectAllItem);
 	menu->AddSeparatorItem();
 	menu->AddItem(new BMenuItem("Insert example text", new BMessage(M_INSERT_EXAMPLE_TEXT), 'E'));
 
@@ -748,3 +768,32 @@ MainWindow::ResourceToBitmap(const char* resName)
 	}
 	return nullptr;
 }
+
+
+void
+MainWindow::MenusBeginning()
+{
+	BView* focus = CurrentFocus();
+	BTextView* textView = nullptr;
+
+	if (auto control = dynamic_cast<BTextControl*>(focus))
+		textView = control->TextView();
+	else
+		textView = dynamic_cast<BTextView*>(focus);
+
+	// Check if the view supports editing and selection
+	bool hasTextView = (textView != nullptr);
+	bool hasSelection = false;
+	if (hasTextView) {
+		int32 start = 0, end = 0;
+		textView->GetSelection(&start, &end);
+		hasSelection = (start != end);
+	}
+
+	// Enable/disable menu items based on state
+	fCutItem->SetEnabled(hasTextView && hasSelection && textView->IsEditable());
+	fCopyItem->SetEnabled(hasTextView && hasSelection);
+	fPasteItem->SetEnabled(hasTextView && textView->IsEditable());
+	fSelectAllItem->SetEnabled(hasTextView);
+}
+

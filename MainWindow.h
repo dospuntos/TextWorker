@@ -26,6 +26,7 @@ public:
 
 	void OpenFile(const entry_ref& ref);
 	void SaveFile(const char* path);
+	void MenusBeginning();
 
 private:
 	BMenuBar* _BuildMenu();
@@ -52,6 +53,13 @@ private:
 	BFilePanel* fSavePanel;
 	BString fFilePath;
 	BWindow* fSettingsWindow;
+
+	BMenuItem* fUndoItem;
+	BMenuItem* fRedoItem;
+	BMenuItem* fCutItem;
+	BMenuItem* fCopyItem;
+	BMenuItem* fPasteItem;
+	BMenuItem* fSelectAllItem;
 };
 
 #endif
