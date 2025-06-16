@@ -566,9 +566,9 @@ MainWindow::_SaveSettings()
 		settings.AddBool("tabsRadio", fSidebar->getTabsRadio());
 
 		// Sort lines
-		// settings.AddBool("sortType", fSidebar->getAlphaSortRadio());
-		// settings.AddBool("sortAsc", fSidebar->getSortAsc());
-		// settings.AddBool("sortCase", fSidebar->getCaseSortCheck());
+		settings.AddBool("sortType", fSidebar->getAlphaSortRadio());
+		settings.AddBool("sortAsc", fSidebar->getSortAsc());
+		settings.AddBool("sortCase", fSidebar->getCaseSortCheck());
 	}
 
 	if (status == B_OK)
@@ -661,15 +661,13 @@ MainWindow::_RestoreValues(BMessage& settings)
 		if (settings.FindBool("tabsRadio", &flag) == B_OK)
 			fSidebar->setTabsRadio(flag);
 
-
 		// Sort lines
 		if (settings.FindBool("sortType", &flag) == B_OK)
 			fSidebar->setAlphaSortRadio(flag);
-		if (settings.FindBool("sortOrder", &flag) == B_OK)
+		if (settings.FindBool("sortAsc", &flag) == B_OK)
 			fSidebar->setSortAsc(flag);
 		if (settings.FindBool("sortCase", &flag) == B_OK)
 			fSidebar->setCaseSortCheck(flag);
-
 	}
 }
 

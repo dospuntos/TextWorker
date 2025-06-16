@@ -78,11 +78,25 @@ public:
 	void setTabsRadio(bool value) const { fTabsRadio->SetValue(value); }
 
 	// Sort lines
-	bool getAlphaSortRadio() const { return fAlphaSortRadio->Value() == B_CONTROL_ON; }
-	void setAlphaSortRadio(bool enabled) const { fAlphaSortRadio->SetValue(enabled); }
-	bool getSortAsc() const { return fSortAsc->Value() == B_CONTROL_ON; }
-	void setSortAsc(bool enabled) const { fSortAsc->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF); }
-	bool getCaseSortCheck() const { return fCaseSortCheck->Value() == B_CONTROL_ON; }
+	bool getAlphaSortRadio() const
+	{
+		return fAlphaSortRadio && fAlphaSortRadio->Value() == B_CONTROL_ON;
+	}
+	void setAlphaSortRadio(bool enabled) const
+	{
+		fAlphaSortRadio->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+		fLengthSortRadio->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
+	}
+	bool getSortAsc() const { return fSortAsc && fSortAsc->Value() == B_CONTROL_ON; }
+	void setSortAsc(bool enabled) const
+	{
+		fSortAsc->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+		fSortDesc->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
+	}
+	bool getCaseSortCheck() const
+	{
+		return fCaseSortCheck && fCaseSortCheck->Value() == B_CONTROL_ON;
+	}
 	void setCaseSortCheck(bool enabled) {fCaseSortCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF); }
 
 
