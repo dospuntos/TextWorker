@@ -17,6 +17,7 @@
 #include <TabView.h>
 #include <TextControl.h>
 #include <Window.h>
+#include <cstdio>
 
 
 Sidebar::Sidebar()

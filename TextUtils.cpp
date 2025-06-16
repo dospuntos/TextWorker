@@ -425,7 +425,7 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 
 
 void
-InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
+InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 {
 	BString text(GetTextFromTextView(textView));
 	if (text.IsEmpty() || maxLength <= 0)
@@ -442,7 +442,7 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 			break;
 		}
 
-		if (KeepWordsIntact) {
+		if (breakOnWords) {
 			int32 nearestSpace = text.FindLast(' ', segmentEnd);
 			if (nearestSpace >= start)
 				segmentEnd = nearestSpace;
@@ -452,7 +452,7 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool KeepWordsIntact)
 		updatedText.Append(text.String() + start, segmentEnd - start);
 		updatedText.Append("\n");
 
-		if (!KeepWordsIntact && segmentEnd == start + maxLength) {
+		if (!breakOnWords && segmentEnd == start + maxLength) {
 			start = segmentEnd;
 		} else {
 			// Move past the space or to the next segment

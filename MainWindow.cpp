@@ -238,8 +238,11 @@ MainWindow::MessageReceived(BMessage* msg)
 			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
 				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
 			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
-				InsertLineBreaks(fTextView, atoi(fSidebar->getBreakModeInput()),
+				InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
 					fSidebar->getSplitOnWords());
+			}
+			if (fClearSettingsAfterUse) {
+				fSidebar->setBreakModeInput("");
 			}
 			break;
 		case M_TRIM_LINES:
@@ -260,10 +263,18 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRANSFORM_PREFIX_SUFFIX:
 			AddStringsToEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText());
+			if (fClearSettingsAfterUse) {
+				fSidebar->setPrefixText("");
+				fSidebar->setSuffixText("");
+			}
 			break;
 		case M_TRANSFORM_REMOVE_PREFIX_SUFFIX:
 			RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(),
 				fSidebar->getSuffixText());
+			if (fClearSettingsAfterUse) {
+				fSidebar->setPrefixText("");
+				fSidebar->setSuffixText("");
+			}
 			break;
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(fTextView);
@@ -276,22 +287,9 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_SORT_LINES:
 		{
-			bool sortAlphabetically = true;
-			bool sortAscending = true;
-			bool caseSensitive = false;
-
-			BRadioButton* alpha = (BRadioButton*)FindView("radio_sort_alpha");
-			BRadioButton* asc = (BRadioButton*)FindView("radio_sort_asc");
-			BCheckBox* caseCheck = (BCheckBox*)FindView("checkbox_case");
-
-			if (alpha && alpha->Value() != B_CONTROL_ON)
-				sortAlphabetically = false;
-
-			if (asc && asc->Value() != B_CONTROL_ON)
-				sortAscending = false;
-
-			if (caseCheck)
-				caseSensitive = caseCheck->Value() == B_CONTROL_ON;
+			bool sortAlphabetically = fSidebar->getAlphaSortRadio();
+			bool sortAscending = fSidebar->getSortAsc();
+			bool caseSensitive = fSidebar->getCaseSortCheck();
 
 			if (sortAlphabetically)
 				SortLines(fTextView, sortAscending, caseSensitive);
@@ -302,14 +300,10 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_INDENT_LINES:
 		case M_UNINDENT_LINES:
 		{
-			BSpinner* countInput = (BSpinner*)FindView("IndentSize");
-			BRadioButton* useTabsRadio = (BRadioButton*)FindView("TabsRadio");
-			bool useTabs = useTabsRadio->Value() == B_CONTROL_ON;
-
 			if (msg->what == M_INDENT_LINES)
-				IndentLines(fTextView, useTabs, countInput->Value());
+				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
 			else
-				UnindentLines(fTextView, useTabs, countInput->Value());
+				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
 			break;
 		}
 		case M_MODE_REMOVE_ALL:
