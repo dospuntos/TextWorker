@@ -1,0 +1,88 @@
+1	English	application/x-vnd.jpw-TextWorker	4040029097
+lowercase	MainView		lowercase
+Trim whitespace	MainView		Trim whitespace
+Insert line breaks (width)	MainView		Insert line breaks (width)
+Copy	MainView		Copy
+ROT-13 encode/decode	MainView		ROT-13 encode/decode
+Tabs	Sidebar		Tabs
+Line Tools	MainView		Line Tools
+Ascending	Sidebar		Ascending
+Toggle case	MainView		Toggle case
+Prefix/suffix each line	Sidebar		Prefix/suffix each line
+Save	MainView		Save
+Save text on exit	Settings		Save text on exit
+Indent size:	Sidebar		Indent size:
+The selected file is not a recognized text file.	MainView		The selected file is not a recognized text file.
+Clear field values after use	Settings		Clear field values after use
+Case sensitive	Sidebar		Case sensitive
+Remove duplicate lines	Sidebar		Remove duplicate lines
+About…	MainView		About…
+%d:%d | Chars: %d | Words: %d	MainView	Statusbar text - only change Chars and Words	%d:%d | Chars: %d | Words: %d
+Text Case	MainView		Text Case
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.
+Replace:	Sidebar		Replace:
+Prefix:	Sidebar		Prefix:
+Remove empty lines	Sidebar		Remove empty lines
+Cleanup	Sidebar		Cleanup
+Insert example text	MainView		Insert example text
+New…	MainView		New…
+Lines	Sidebar		Lines
+Replace	Sidebar		Replace
+Split on words	Sidebar		Split on words
+Add	Sidebar		Add
+Prefix/suffix	Sidebar		Prefix/suffix
+Remove empty lines	MainView		Remove empty lines
+Not implemented	MainView		Not implemented
+URL encode	MainView		URL encode
+Settings	Settings		Settings
+Sort	Sidebar		Sort
+Remove line breaks	MainView		Remove line breaks
+Close	Settings		Close
+Alphabetical	Sidebar		Alphabetical
+Cut	MainView		Cut
+Apply	Sidebar		Apply
+Transform	MainView		Transform
+Font size:	Settings		Font size:
+Paste	MainView		Paste
+Sort type:	Sidebar		Sort type:
+Quit	MainView		Quit
+Remove all	Sidebar		Remove all
+Unindent	Sidebar		Unindent
+Font family:	Settings		Font family:
+Sort order:	Sidebar		Sort order:
+Settings…	MainView		Settings…
+Remove	Sidebar		Remove
+AlTeRnAtInG cAsE	MainView		AlTeRnAtInG cAsE
+Break after X characters…	Sidebar		Break after X characters…
+Descending	Sidebar		Descending
+Indent/unindent lines	Sidebar		Indent/unindent lines
+Indent	Sidebar		Indent
+Select all	MainView		Select all
+Chars:	Sidebar		Chars:
+OK	MainView		OK
+RaNDoM caSE	MainView		RaNDoM caSE
+Keep delimiter	Sidebar		Keep delimiter
+Capitalize	MainView		Capitalize
+Encode/Decode	MainView		Encode/Decode
+By line length	Sidebar		By line length
+Save as…	MainView		Save as…
+Line break options	Sidebar		Line break options
+Title Case	MainView		Title Case
+Open…	MainView		Open…
+Break on…	Sidebar		Break on…
+Find:	Sidebar		Find:
+Paste clipboard contents on open	Settings		Paste clipboard contents on open
+TextWorker	System name		TextWorker
+Undo	MainView		Undo
+Replace with…	Sidebar		Replace with…
+Save field values on exit	Settings		Save field values on exit
+Trim whitespace	Sidebar		Trim whitespace
+Break lines on delimiter	MainView		Break lines on delimiter
+Redo	MainView		Redo
+Sort lines	Sidebar		Sort lines
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Sorry, this functionality has not been implemented yet, but it is planned for the near future.
+Suffix:	Sidebar		Suffix:
+URL decode	MainView		URL decode
+Search and replace	Sidebar		Search and replace
+Spaces	Sidebar		Spaces
+UPPERCASE	MainView		UPPERCASE

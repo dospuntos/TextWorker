@@ -4,9 +4,13 @@
  */
 
 #include "Constants.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "App"
 
 const char* kApplicationSignature = "application/x-vnd.jpw-TextWorker";
-const char* kApplicationName = "TextWorker";
+const char* kApplicationName = B_TRANSLATE_SYSTEM_NAME("TextWorker");
 
 const int kDefaultFontSize = 12;
 const char* kDefaultFontFamily = "be_fixed_font";

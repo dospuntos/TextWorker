@@ -1,9 +1,12 @@
 #include "App.h"
 #include "Constants.h"
+#include <Catalog.h>
 #include "MainWindow.h"
 
 #include <AboutWindow.h>
 
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "MainView"
 
 App::App(void)
 	:

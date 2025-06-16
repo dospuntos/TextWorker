@@ -248,7 +248,7 @@ RemoveLineBreaks(BTextView* textView, BString replacement)
 	if (text.IsEmpty())
 		return;
 
-	text.ReplaceAll("\n", replacement); // Replace line breaks ('\n') with value
+	text.ReplaceAll("\n", replacement);
 
 	textView->SetText(text.String());
 	RestoreCursorPosition(textView);

@@ -72,8 +72,6 @@ private:
 	float fMaxLabelWidth;
 	BTextControl* fPrefixInput;
 	BTextControl* fSuffixInput;
-	BTextControl* fRemovePrefixInput;
-	BTextControl* fRemoveSuffixInput;
 	BTextControl* fBreakInput;
 	BSpinner* fBreakOnChars;
 	BSpinner* fIndentSizeSpinner;

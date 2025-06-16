@@ -4,6 +4,7 @@
 #include <Application.h>
 #include <Bitmap.h>
 #include <Button.h>
+#include <Catalog.h>
 #include <Clipboard.h>
 #include <File.h>
 #include <FindDirectory.h>
@@ -28,6 +29,8 @@
 
 static const char* kSettingsFile = "TextWorker_settings";
 
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "MainView"
 
 MainWindow::MainWindow(void)
 	:
@@ -316,17 +319,17 @@ MainWindow::MessageReceived(BMessage* msg)
 			RemoveDuplicateLines(fTextView);
 			break;
 		case M_INSERT_EXAMPLE_TEXT:
-			fTextView->SetText("Haiku is an open-source operating system.\n"
+			fTextView->SetText(B_TRANSLATE("Haiku is an open-source operating system.\n"
 							  "It is fast, simple and elegant.\n"
 							  "Developers love its clean architecture.\n"
 							  "Users enjoy its intuitive interface.\n"
-							  "Start exploring the power of Haiku today.");
+							  "Start exploring the power of Haiku today."));
 			break;
 		case M_TRANSFORM_WIP:
-			(new BAlert("Not implemented",
-				 "Sorry, this functionality has not been implemented "
-				 "yet, but it is planned for the near future.",
-				 "OK"))
+			(new BAlert(B_TRANSLATE("Not implemented"),
+				 B_TRANSLATE("Sorry, this functionality has not been implemented "
+				 "yet, but it is planned for the near future."),
+				 B_TRANSLATE("OK")))
 				->Go();
 			break;
 		case M_TOGGLE_WORD_WRAP:
@@ -360,27 +363,27 @@ MainWindow::_BuildMenu()
 	BMenu* subMenu;
 	BMenuItem* item;
 
-	fUndoItem = new BMenuItem("Undo", new BMessage(B_UNDO), 'Z');
-	fRedoItem = new BMenuItem("Redo", new BMessage(B_REDO), 'Y');
-	fCutItem = new BMenuItem("Cut", new BMessage(B_CUT), 'X');
-	fCopyItem = new BMenuItem("Copy", new BMessage(B_COPY), 'C');
-	fPasteItem = new BMenuItem("Paste", new BMessage(B_PASTE), 'V');
-	fSelectAllItem = new BMenuItem("Select all", new BMessage(B_SELECT_ALL), 'A');
+	fUndoItem = new BMenuItem(B_TRANSLATE("Undo"), new BMessage(B_UNDO), 'Z');
+	fRedoItem = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(B_REDO), 'Y');
+	fCutItem = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT), 'X');
+	fCopyItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), 'C');
+	fPasteItem = new BMenuItem(B_TRANSLATE("Paste"), new BMessage(B_PASTE), 'V');
+	fSelectAllItem = new BMenuItem(B_TRANSLATE("Select all"), new BMessage(B_SELECT_ALL), 'A');
 
 	// 'File' menu
 	menu = new BMenu("File");
 
-	menu->AddItem(new BMenuItem("New" B_UTF8_ELLIPSIS, new BMessage(M_FILE_NEW), 'N'));
-	menu->AddItem(new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(M_FILE_OPEN), 'O'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("New" B_UTF8_ELLIPSIS), new BMessage(M_FILE_NEW), 'N'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(M_FILE_OPEN), 'O'));
 	menu->AddSeparatorItem();
 
-	menu->AddItem(new BMenuItem("Save", new BMessage(M_FILE_SAVE), 'S'));
-	menu->AddItem(new BMenuItem("Save as...", new BMessage(M_FILE_SAVE_AS)));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Save"), new BMessage(M_FILE_SAVE), 'S'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS), new BMessage(M_FILE_SAVE_AS)));
 	menu->AddSeparatorItem();
 
-	menu->AddItem(new BMenuItem("Settings" B_UTF8_ELLIPSIS, new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
-	menu->AddItem(new BMenuItem("About" B_UTF8_ELLIPSIS, new BMessage(B_ABOUT_REQUESTED)));
-	menu->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 
 	menuBar->AddItem(menu);
 
@@ -396,86 +399,86 @@ MainWindow::_BuildMenu()
 	menu->AddSeparatorItem();
 	menu->AddItem(fSelectAllItem);
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem("Insert example text", new BMessage(M_INSERT_EXAMPLE_TEXT), 'E'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Insert example text"), new BMessage(M_INSERT_EXAMPLE_TEXT), 'E'));
 
 	menuBar->AddItem(menu);
 
 	// ====== Transform Menu Structure ======
-	BMenu* transformMenu = new BMenu("Transform");
+	BMenu* transformMenu = new BMenu(B_TRANSLATE("Transform"));
 
 	// === TEXT CASE MENU ===
-	BMenu* textCaseMenu = new BMenu("Text Case");
+	BMenu* textCaseMenu = new BMenu(B_TRANSLATE("Text Case"));
 
-	BMenuItem* uppercaseItem = new BMenuItem("UPPERCASE", new BMessage(M_TRANSFORM_UPPERCASE));
+	BMenuItem* uppercaseItem = new BMenuItem(B_TRANSLATE("UPPERCASE"), new BMessage(M_TRANSFORM_UPPERCASE));
 	uppercaseItem->SetShortcut('u', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(uppercaseItem);
 
-	BMenuItem* lowercaseItem = new BMenuItem("lowercase", new BMessage(M_TRANSFORM_LOWERCASE));
+	BMenuItem* lowercaseItem = new BMenuItem(B_TRANSLATE("lowercase"), new BMessage(M_TRANSFORM_LOWERCASE));
 	lowercaseItem->SetShortcut('l', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(lowercaseItem);
 
-	BMenuItem* capitalizeItem = new BMenuItem("Capitalize", new BMessage(M_TRANSFORM_CAPITALIZE));
+	BMenuItem* capitalizeItem = new BMenuItem(B_TRANSLATE("Capitalize"), new BMessage(M_TRANSFORM_CAPITALIZE));
 	capitalizeItem->SetShortcut('c', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(capitalizeItem);
 
-	BMenuItem* titleCaseItem = new BMenuItem("Title Case", new BMessage(M_TRANSFORM_TITLE_CASE));
+	BMenuItem* titleCaseItem = new BMenuItem(B_TRANSLATE("Title Case"), new BMessage(M_TRANSFORM_TITLE_CASE));
 	titleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(titleCaseItem);
 
-	BMenuItem* randomCaseItem = new BMenuItem("RaNDoM caSE", new BMessage(M_TRANSFORM_RANDOM_CASE));
+	BMenuItem* randomCaseItem = new BMenuItem(B_TRANSLATE("RaNDoM caSE"), new BMessage(M_TRANSFORM_RANDOM_CASE));
 	randomCaseItem->SetShortcut('r', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(randomCaseItem);
 
 	BMenuItem* alternatingCaseItem
-		= new BMenuItem("AlTeRnAtInG cAsE", new BMessage(M_TRANSFORM_ALTERNATING_CASE));
+		= new BMenuItem(B_TRANSLATE("AlTeRnAtInG cAsE"), new BMessage(M_TRANSFORM_ALTERNATING_CASE));
 	alternatingCaseItem->SetShortcut('a', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(alternatingCaseItem);
 
-	BMenuItem* toggleCaseItem = new BMenuItem("Toggle case", new BMessage(M_TRANSFORM_TOGGLE_CASE));
+	BMenuItem* toggleCaseItem = new BMenuItem(B_TRANSLATE("Toggle case"), new BMessage(M_TRANSFORM_TOGGLE_CASE));
 	toggleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY | B_SHIFT_KEY);
 	textCaseMenu->AddItem(toggleCaseItem);
 
 	transformMenu->AddItem(textCaseMenu);
 
 	// === ENCODE/DECODE MENU ===
-	BMenu* encodeMenu = new BMenu("Encode/Decode");
+	BMenu* encodeMenu = new BMenu(B_TRANSLATE("Encode/Decode"));
 
-	BMenuItem* urlEncodeItem = new BMenuItem("URL encode", new BMessage(M_TRANSFORM_ENCODE_URL));
+	BMenuItem* urlEncodeItem = new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL));
 	encodeMenu->AddItem(urlEncodeItem);
 
-	BMenuItem* urlDecodeItem = new BMenuItem("URL decode", new BMessage(M_TRANSFORM_DECODE_URL));
+	BMenuItem* urlDecodeItem = new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL));
 	encodeMenu->AddItem(urlDecodeItem);
 
-	BMenuItem* rot13Item = new BMenuItem("ROT-13 encode/decode", new BMessage(M_TRANSFORM_ROT13));
+	BMenuItem* rot13Item = new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13));
 	rot13Item->SetShortcut('m', B_COMMAND_KEY | B_OPTION_KEY);
 	encodeMenu->AddItem(rot13Item);
 
 	transformMenu->AddItem(encodeMenu);
 
 	// === LINE TOOLS MENU ===
-	BMenu* lineMenu = new BMenu("Line Tools");
+	BMenu* lineMenu = new BMenu(B_TRANSLATE("Line Tools"));
 
 	BMenuItem* removeLineBreaksItem
-		= new BMenuItem("Remove line breaks", new BMessage(M_REMOVE_LINE_BREAKS));
+		= new BMenuItem(B_TRANSLATE("Remove line breaks"), new BMessage(M_REMOVE_LINE_BREAKS));
 	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(removeLineBreaksItem);
 
 	BMenuItem* insertLineBreaksItem
-		= new BMenuItem("Insert line breaks (width)", new BMessage(M_INSERT_LINE_BREAKS));
+		= new BMenuItem(B_TRANSLATE("Insert line breaks (width)"), new BMessage(M_INSERT_LINE_BREAKS));
 	insertLineBreaksItem->SetShortcut('i', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(insertLineBreaksItem);
 
 	BMenuItem* breakOnDelimiterItem
-		= new BMenuItem("Break lines on delimiter", new BMessage(M_BREAK_LINES_ON_DELIMITER));
+		= new BMenuItem(B_TRANSLATE("Break lines on delimiter"), new BMessage(M_BREAK_LINES_ON_DELIMITER));
 	breakOnDelimiterItem->SetShortcut('d', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(breakOnDelimiterItem);
 
-	BMenuItem* trimItem = new BMenuItem("Trim whitespace", new BMessage(M_TRIM_LINES));
+	BMenuItem* trimItem = new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES));
 	trimItem->SetShortcut('w', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(trimItem);
 
 	BMenuItem* removeEmptyLinesItem
-		= new BMenuItem("Remove empty lines", new BMessage(M_TRIM_EMPTY_LINES));
+		= new BMenuItem(B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES));
 	removeEmptyLinesItem->SetShortcut('e', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(removeEmptyLinesItem);
 
@@ -707,7 +710,7 @@ MainWindow::UpdateStatusBar()
 
 	// Update the status bar text
 	BString statusText;
-	statusText.SetToFormat("%d:%d | Chars: %d | Words: %d", row, col, charCount, wordCount);
+	statusText.SetToFormat(B_TRANSLATE_COMMENT("%d:%d | Chars: %d | Words: %d", "Statusbar text - only change Chars and Words"), row, col, charCount, wordCount);
 	fStatusBar->SetText(statusText.String());
 }
 
@@ -758,7 +761,7 @@ MainWindow::OpenFile(const entry_ref& ref)
 
 
 	if (!isText) {
-		(new BAlert("Error", "The selected file is not a recognized text file.", "OK"))->Go();
+		(new BAlert("Error", B_TRANSLATE("The selected file is not a recognized text file."), B_TRANSLATE("OK")))->Go();
 		return;
 	}
 

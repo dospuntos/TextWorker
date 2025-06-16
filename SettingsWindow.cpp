@@ -7,35 +7,38 @@
 #include "Constants.h"
 #include <Alert.h>
 #include <Application.h>
+#include <Catalog.h>
 #include <Font.h>
 #include <LayoutBuilder.h>
 #include <MenuItem.h>
 #include <StringView.h>
 
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "Settings"
 
 SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize,
 	BString fontFamily)
 	:
-	BWindow(BRect(200, 200, 500, 400), "Settings", B_TITLED_WINDOW,
+	BWindow(BRect(200, 200, 500, 400), B_TRANSLATE("Settings"), B_TITLED_WINDOW,
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS
 			| B_CLOSE_ON_ESCAPE),
 	fFontFamily(fontFamily)
 {
-	fSaveTextCheck = new BCheckBox("SaveText", "Save text on exit", new BMessage(M_APPLY_SETTINGS));
+	fSaveTextCheck = new BCheckBox("SaveText", B_TRANSLATE("Save text on exit"), new BMessage(M_APPLY_SETTINGS));
 	fSaveTextCheck->SetValue(saveText ? B_CONTROL_ON : B_CONTROL_OFF);
 	fSaveFieldsCheck
-		= new BCheckBox("SaveSettings", "Save field values on exit", new BMessage(M_APPLY_SETTINGS));
+		= new BCheckBox("SaveSettings", B_TRANSLATE("Save field values on exit"), new BMessage(M_APPLY_SETTINGS));
 	fSaveFieldsCheck->SetValue(saveSettings ? B_CONTROL_ON : B_CONTROL_OFF);
-	fInsertClipboard = new BCheckBox("Clipboard", "Paste clipboard contents on open",
+	fInsertClipboard = new BCheckBox("Clipboard", B_TRANSLATE("Paste clipboard contents on open"),
 		new BMessage(M_APPLY_SETTINGS));
 	fInsertClipboard->SetValue(clipboard ? B_CONTROL_ON : B_CONTROL_OFF);
-	fClearSettingsAfterUse = new BCheckBox("ClearSettings", "Clear field values after use",
+	fClearSettingsAfterUse = new BCheckBox("ClearSettings", B_TRANSLATE("Clear field values after use"),
 		new BMessage(M_APPLY_SETTINGS));
 	fClearSettingsAfterUse->SetValue(clearSettings ? B_CONTROL_ON : B_CONTROL_OFF);
 
 	BPopUpMenu* fontMenu = new BPopUpMenu("FontFamily");
 	PopulateFontMenu(fontMenu);
-	fFontFamilyField = new BMenuField("Font", "Font family:", fontMenu);
+	fFontFamilyField = new BMenuField("Font", B_TRANSLATE("Font family:"), fontMenu);
 
 	fFontSizeSlider
 		= new BSlider("FontSize", "", new BMessage(M_APPLY_SETTINGS), 8, 48, B_HORIZONTAL);
@@ -44,11 +47,11 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 	fFontSizeSlider->SetHashMarkCount(10);
 	fFontSizeSlider->SetValue(fontSize);
 	fFontSizeSlider->SetModificationMessage(new BMessage(M_APPLY_SETTINGS));
-	BString sliderLabel = "Font size:";
+	BString sliderLabel = B_TRANSLATE("Font size:");
 	sliderLabel << " " << fontSize << "pt";
 	fFontSizeSlider->SetLabel(sliderLabel.String());
 
-	fApplyButton = new BButton("Close", "Close", new BMessage(M_CLOSE_SETTINGS));
+	fApplyButton = new BButton("Close", B_TRANSLATE("Close"), new BMessage(M_CLOSE_SETTINGS));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.Add(fInsertClipboard)
@@ -106,7 +109,7 @@ SettingsWindow::MessageReceived(BMessage* message)
 
 			be_app->WindowAt(0)->PostMessage(&applyMsg);
 
-			BString sliderLabel = "Font size:";
+			BString sliderLabel = B_TRANSLATE("Font size:");
 			sliderLabel << " " << fFontSizeSlider->Value() << "pt";
 			fFontSizeSlider->SetLabel(sliderLabel.String());
 			break;

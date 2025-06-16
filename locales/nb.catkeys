@@ -1,0 +1,87 @@
+1	Norwegian	application/x-vnd.jpw-TextWorker	2873519941
+lowercase	MainView		små bokstaver
+Trim whitespace	MainView		Fjern mellomrom
+Insert line breaks (width)	MainView		Insert line breaks (width)
+Copy	MainView		Kopier
+ROT-13 encode/decode	MainView		ROT-13 koding/dekoding
+Tabs	Sidebar		Tabulatur
+Line Tools	MainView		Linjeverktøy
+Ascending	Sidebar		Stigende
+Toggle case	MainView		Bytt store/små bokstaver
+Prefix/suffix each line	Sidebar		Prefiks/suffiks hver linje
+Save	MainView		Lagre
+Save text on exit	Settings		Lagre tekst ved avslutning
+Indent size:	Sidebar		Innryksstørrelse:
+The selected file is not a recognized text file.	MainView		Den valgte filen er ikke gjenkjent som en tekstfil.
+Clear field values after use	Settings		Tøm felt etter bruk
+Case sensitive	Sidebar		Skill mellom store og små bokstaver
+Remove duplicate lines	Sidebar		Fjern dupliserte linjer
+About…	MainView		Om…
+%d:%d | Chars: %d | Words: %d	MainView	Statusbar text - only change Chars and Words	%d:%d | Tegn: %d | Ord: %d
+Text Case	MainView		Store/små bokstaver
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.
+Replace:	Sidebar		Erstatt:
+Prefix:	Sidebar		Prefiks:
+Remove empty lines	Sidebar		Fjern tomme linjer
+Cleanup	Sidebar		Opprydning
+Insert example text	MainView		Sett inn eksempeltekst
+New…	MainView		Ny…
+Lines	Sidebar		Linjer
+Replace	Sidebar		Erstatt
+Split on words	Sidebar		Del etter ord
+Add	Sidebar		Legg til
+Prefix/suffix	Sidebar		Prefiks/suffiks
+Remove empty lines	MainView		Fjern tomme linjer
+Not implemented	MainView		Ikke implementert
+URL encode	MainView		URL-kodet
+Settings	Settings		Innstillinger
+Sort	Sidebar		Sortér
+Remove line breaks	MainView		Fjern linjeskift
+Close	Settings		Lukk
+Alphabetical	Sidebar		Alfabetisk
+Cut	MainView		Klipp ut
+Apply	Sidebar		Bruk
+Transform	MainView		Transformér
+Font size:	Settings		Skriftstørrelse:
+Paste	MainView		Lim inn
+Sort type:	Sidebar		Sorteringsmåte:
+Quit	MainView		Avslutt
+Remove all	Sidebar		Fjern alle
+Unindent	Sidebar		Fjern innrykk
+Font family:	Settings		Skrifttype:
+Sort order:	Sidebar		Sortér etter:
+Settings…	MainView		Innstillinger…
+Remove	Sidebar		Fjern
+AlTeRnAtInG cAsE	MainView		VeKsLeNdE
+Break after X characters…	Sidebar		Linjeskift etter X bokstaver…
+Descending	Sidebar		Synkende
+Indent/unindent lines	Sidebar		Legg til/fjern innrykk
+Indent	Sidebar		Innrykk
+Select all	MainView		Velg alt
+Chars:	Sidebar		Tegn:
+OK	MainView		OK
+RaNDoM caSE	MainView		TiLFeldIG
+Keep delimiter	Sidebar		Behold skilletekst
+Capitalize	MainView		Setningsformat
+Encode/Decode	MainView		Kode/dekode
+By line length	Sidebar		Etter linjelengde
+Save as…	MainView		Lagre som…
+Line break options	Sidebar		Valg for linjeskift
+Title Case	MainView		Tittelformat
+Open…	MainView		Åpne…
+Break on…	Sidebar		Bryt på…
+Find:	Sidebar		Finn:
+Paste clipboard contents on open	Settings		Lim inn fra utklippstavle ved oppstart
+Undo	MainView		Angre
+Replace with…	Sidebar		Erstatt med…
+Save field values on exit	Settings		Lagre feltverdier ved avslutning
+Trim whitespace	Sidebar		Fjern mellomrom
+Break lines on delimiter	MainView		Linjeskift på skilletekst
+Redo	MainView		Gjenta
+Sort lines	Sidebar		Sortér linjer
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Sorry, this functionality has not been implemented yet, but it is planned for the near future.
+Suffix:	Sidebar		Suffiks:
+URL decode	MainView		URL dekoding
+Search and replace	Sidebar		Søk og ersatt
+Spaces	Sidebar		Mellomrom
+UPPERCASE	MainView		STORE BOKSTAVER
