@@ -23,11 +23,9 @@ public:
 	Sidebar();
 	void MessageReceived(BMessage* msg);
 
-	// Prefix
+	// Prefix/suffix
 	BString PrefixText() const { return fPrefixInput->Text(); }
 	void SetPrefixText(const BString& text) { fPrefixInput->SetText(text); }
-
-	// Suffix
 	BString SuffixText() const { return fSuffixInput->Text(); }
 	void SetSuffixText(const BString& text) { fSuffixInput->SetText(text); }
 
@@ -45,34 +43,47 @@ public:
 		fWordWrapCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
 	}
 
-	// Line break mode
-	int8 BreakMode() const { return fBreakMode; }
-	void setBreakMode(int breakMode) { fBreakMenu->ItemAt(breakMode)->SetMarked(true); }
-	BString getBreakModeInput() { return fBreakInput->Text(); }
-	void setBreakModeInput(const BString& text) { fBreakInput->SetText(text); }
-	bool getKeepDelimiterValue() {return fKeepDelimiterCheck->Value() == B_CONTROL_ON; }
-
-	// Replace Search String
+	// Search and replace
 	BString ReplaceSearchText() const { return fSearchInput->Text(); }
 	void SetReplaceSearchText(const BString& text) { fSearchInput->SetText(text); }
-
-	// Replace With String
 	BString ReplaceWithText() const { return fReplaceInput->Text(); }
 	void SetReplaceWithText(const BString& text) { fReplaceInput->SetText(text); }
-
-	// Case Sensitivity
 	bool ReplaceCaseSensitive() const { return fCaseCheck->Value() == B_CONTROL_ON; }
 	void SetReplaceCaseSensitive(bool enabled)
 	{
 		fCaseCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
 	}
 
-	// Full Word Match
+	// Line break mode
+	int8 BreakMode() const { return fBreakMode; }
+	void setBreakMode(int breakMode) { fBreakMenu->ItemAt(breakMode)->SetMarked(true); }
+	BString getBreakModeInput() { return fBreakInput->Text(); }
+	void setBreakModeInput(const BString& text) { fBreakInput->SetText(text); }
+	int getBreakOnCharsSpinner() { return fBreakOnChars->Value(); }
+	void setBreakOnCharsSpinner(const int value) {fBreakOnChars->SetValue(value); }
+	bool getKeepDelimiterValue() {return fKeepDelimiterCheck->Value() == B_CONTROL_ON; }
+	void setKeepDelimiterValue(const bool value) { fKeepDelimiterCheck->SetValue(value); }
+
+	// Prefix/suffix
 	bool ReplaceFullWordsOnly() const { return fWholeWordCheck->Value() == B_CONTROL_ON; }
 	void SetReplaceFullWordsOnly(bool enabled)
 	{
 		fWholeWordCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
 	}
+
+	// Indent/unindent
+	int32 getIndentSpinner() const { return fIndentSizeSpinner->Value(); }
+	void setIndentSpinner(const int value) { fIndentSizeSpinner->SetValue(value); }
+	bool getTabsRadio() const { return fTabsRadio->Value() == B_CONTROL_ON; }
+	void setTabsRadio(bool value) const { fTabsRadio->SetValue(value); }
+
+	// Sort lines
+	bool getAlphaSortRadio() const { return fAlphaSortRadio->Value() == B_CONTROL_ON; }
+	void setAlphaSortRadio(bool enabled) const { fAlphaSortRadio->SetValue(enabled); }
+	bool getSortAsc() const { return fSortAsc->Value() == B_CONTROL_ON; }
+	void setSortAsc(bool enabled) const { fSortAsc->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF); }
+	bool getCaseSortCheck() const { return fCaseSortCheck->Value() == B_CONTROL_ON; }
+	void setCaseSortCheck(bool enabled) {fCaseSortCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF); }
 
 
 private:
@@ -96,6 +107,11 @@ private:
 	BTextControl* fReplaceInput;
 	BCheckBox* fCaseCheck;
 	BCheckBox* fWholeWordCheck;
+	BRadioButton* fAlphaSortRadio;
+	BRadioButton* fLengthSortRadio;
+	BRadioButton* fSortAsc;
+	BRadioButton* fSortDesc;
+	BCheckBox* fCaseSortCheck;
 
 	BMenu* fBreakMenu;
 	enum BreakMode fBreakMode;

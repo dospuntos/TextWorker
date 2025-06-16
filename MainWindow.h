@@ -35,8 +35,9 @@ private:
 	void UpdateStatusBar();
 
 	bool fSaveTextOnExit;
-	bool fSaveSettingsOnExit;
+	bool fSaveFieldsOnExit;
 	bool fInsertClipboard;
+	bool fClearSettingsAfterUse;
 	int32 fFontSize;
 	BString fFontFamily;
 	status_t _LoadSettings(BMessage& settings);

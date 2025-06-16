@@ -168,8 +168,8 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_SHOW_SETTINGS:
 		{
-			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveSettingsOnExit,
-				fInsertClipboard, fFontSize, fFontFamily);
+			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveFieldsOnExit,
+				fInsertClipboard, fClearSettingsAfterUse, fFontSize, fFontFamily);
 			fSettingsWindow->CenterIn(Frame());
 			fSettingsWindow->Show();
 			break;
@@ -183,10 +183,13 @@ MainWindow::MessageReceived(BMessage* msg)
 				fSaveTextOnExit = flag;
 
 			if (msg->FindBool("saveSettings", &flag) == B_OK)
-				fSaveSettingsOnExit = flag;
+				fSaveFieldsOnExit = flag;
 
 			if (msg->FindBool("insertClipboard", &flag) == B_OK)
 				fInsertClipboard = flag;
+
+			if (msg->FindBool("clearSettings", &flag) == B_OK)
+				fClearSettingsAfterUse = flag;
 
 			if (msg->FindInt32("fontSize", &number) == B_OK)
 				fFontSize = number;
@@ -241,6 +244,12 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_TRANSFORM_REPLACE:
 			ReplaceAll(fTextView, fSidebar->ReplaceSearchText(), fSidebar->ReplaceWithText(),
 				fSidebar->ReplaceCaseSensitive(), fSidebar->ReplaceFullWordsOnly());
+			if (fClearSettingsAfterUse) {
+				fSidebar->SetReplaceSearchText("");
+				fSidebar->SetReplaceWithText("");
+				fSidebar->SetReplaceCaseSensitive(false);
+				fSidebar->SetReplaceFullWordsOnly(false);
+			}
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(fTextView);
@@ -370,6 +379,7 @@ MainWindow::_BuildMenu()
 	menu->AddItem(new BMenuItem("Save as...", new BMessage(M_FILE_SAVE_AS)));
 	menu->AddSeparatorItem();
 
+	menu->AddItem(new BMenuItem("Settings" B_UTF8_ELLIPSIS, new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
 	menu->AddItem(new BMenuItem("About" B_UTF8_ELLIPSIS, new BMessage(B_ABOUT_REQUESTED)));
 	menu->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
 
@@ -522,28 +532,43 @@ MainWindow::_SaveSettings()
 	BMessage settings;
 	status = settings.AddRect("main_window_rect", Frame());
 	settings.AddBool("saveTextOnExit", fSaveTextOnExit);
-	settings.AddBool("saveSettingsOnExit", fSaveSettingsOnExit);
+	settings.AddBool("saveFieldsOnExit", fSaveFieldsOnExit);
 	settings.AddBool("insertClipboard", fInsertClipboard);
+	settings.AddBool("clearAfterUse", fClearSettingsAfterUse);
 	settings.AddInt32("fontSize", fFontSize);
 	settings.AddString("fontFamily", fFontFamily);
 
-	// Save settings and textView (optional setting in the future)
+	// Save textView
 	if (fTextView && fSaveTextOnExit)
 		settings.AddString("textViewContent", fTextView->Text());
 
 	// Save sidebar text inputs
-	if (fSidebar && fSaveSettingsOnExit) {
-		settings.AddInt32("breakMode", fSidebar->BreakMode());
-		settings.AddString("breakModeInput", fSidebar->getBreakModeInput());
-		settings.AddString("prefixInput", fSidebar->PrefixText());
-		settings.AddString("suffixInput", fSidebar->SuffixText());
-
-		settings.AddBool("splitOnWords", fSidebar->SplitOnWordsEnabled());
-
+	if (fSidebar && fSaveFieldsOnExit) {
+		// Search/replace
 		settings.AddString("replaceSearchString", fSidebar->ReplaceSearchText());
 		settings.AddString("replaceWithString", fSidebar->ReplaceWithText());
 		settings.AddBool("replaceCaseSensitive", fSidebar->ReplaceCaseSensitive());
 		settings.AddBool("replaceFullWords", fSidebar->ReplaceFullWordsOnly());
+
+		// Line breaks
+		settings.AddInt32("breakMode", fSidebar->BreakMode());
+		settings.AddString("breakModeInput", fSidebar->getBreakModeInput());
+		settings.AddInt32("breakOnChars", fSidebar->getBreakOnCharsSpinner());
+		settings.AddBool("splitOnWords", fSidebar->SplitOnWordsEnabled());
+		settings.AddBool("keepDelimiter", fSidebar->getKeepDelimiterValue());
+
+		// Prefix/suffix
+		settings.AddString("prefixInput", fSidebar->PrefixText());
+		settings.AddString("suffixInput", fSidebar->SuffixText());
+
+		// Indent/unindent
+		settings.AddInt32("indentSize", fSidebar->getIndentSpinner());
+		settings.AddBool("tabsRadio", fSidebar->getTabsRadio());
+
+		// Sort lines
+		// settings.AddBool("sortType", fSidebar->getAlphaSortRadio());
+		// settings.AddBool("sortAsc", fSidebar->getSortAsc());
+		// settings.AddBool("sortCase", fSidebar->getCaseSortCheck());
 	}
 
 	if (status == B_OK)
@@ -560,8 +585,9 @@ MainWindow::_RestoreValues(BMessage& settings)
 	fFontSize = be_fixed_font->Size();
 	fFontFamily = "System default";
 	fSaveTextOnExit = false;
-	fSaveSettingsOnExit = false;
+	fSaveFieldsOnExit = false;
 	fInsertClipboard = true;
+	fClearSettingsAfterUse = false;
 
 	BString text;
 	int32 number;
@@ -571,11 +597,14 @@ MainWindow::_RestoreValues(BMessage& settings)
 	if (settings.FindBool("saveTextOnExit", &flag) == B_OK)
 		fSaveTextOnExit = flag;
 
-	if (settings.FindBool("saveSettingsOnExit", &flag) == B_OK)
-		fSaveSettingsOnExit = flag;
+	if (settings.FindBool("saveFieldsOnExit", &flag) == B_OK)
+		fSaveFieldsOnExit = flag;
 
 	if (settings.FindBool("insertClipboard", &flag) == B_OK)
 		fInsertClipboard = flag;
+
+	if (settings.FindBool("clearAfterUse", &flag) == B_OK)
+		fClearSettingsAfterUse = flag;
 
 	if (settings.FindInt32("fontSize", &number) == B_OK)
 		fFontSize = number;
@@ -596,33 +625,51 @@ MainWindow::_RestoreValues(BMessage& settings)
 	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
 		fTextView->SetText(text);
 
-	if (fSidebar && fSaveSettingsOnExit) {
+	if (fSidebar && fSaveFieldsOnExit) {
+		// Search/replace
+		if (settings.FindString("replaceSearchString", &text) == B_OK)
+			fSidebar->SetReplaceSearchText(text);
+		if (settings.FindString("replaceWithString", &text) == B_OK)
+			fSidebar->SetReplaceWithText(text);
+		if (settings.FindBool("replaceCaseSensitive", &flag) == B_OK)
+			fSidebar->SetReplaceCaseSensitive(flag);
+		if (settings.FindBool("replaceFullWords", &flag) == B_OK)
+			fSidebar->SetReplaceFullWordsOnly(flag);
+
+		// Line breaks
 		if (settings.FindInt32("breakMode", &number) == B_OK)
 			fSidebar->setBreakMode(number);
-
 		if (settings.FindString("breakModeInput", &text) == B_OK)
 			fSidebar->setBreakModeInput(text);
+		if (settings.FindInt32("breakOnChars", &number) == B_OK)
+			fSidebar->setBreakOnCharsSpinner(number);
+		if (settings.FindBool("splitOnWords", &flag) == B_OK)
+			fSidebar->SetSplitOnWordsEnabled(flag);
+		if (settings.FindBool("keepDelimiter", &flag) == B_OK)
+			fSidebar->setKeepDelimiterValue(flag);
+		// Todo: enable/disable corresponding fields for restored breakMode
 
+		// Prefix/suffix
 		if (settings.FindString("prefixInput", &text) == B_OK)
 			fSidebar->SetPrefixText(text);
-
 		if (settings.FindString("suffixInput", &text) == B_OK)
 			fSidebar->SetSuffixText(text);
 
-		if (settings.FindBool("splitOnWords", &flag) == B_OK)
-			fSidebar->SetSplitOnWordsEnabled(flag);
+		// Indent/unindent
+		if (settings.FindInt32("indentSize", &number) == B_OK)
+			fSidebar->setIndentSpinner(number);
+		if (settings.FindBool("tabsRadio", &flag) == B_OK)
+			fSidebar->setTabsRadio(flag);
 
-		if (settings.FindString("replaceSearchString", &text) == B_OK)
-			fSidebar->SetReplaceSearchText(text);
 
-		if (settings.FindString("replaceWithString", &text) == B_OK)
-			fSidebar->SetReplaceWithText(text);
+		// Sort lines
+		if (settings.FindBool("sortType", &flag) == B_OK)
+			fSidebar->setAlphaSortRadio(flag);
+		if (settings.FindBool("sortOrder", &flag) == B_OK)
+			fSidebar->setSortAsc(flag);
+		if (settings.FindBool("sortCase", &flag) == B_OK)
+			fSidebar->setCaseSortCheck(flag);
 
-		if (settings.FindBool("replaceCaseSensitive", &flag) == B_OK)
-			fSidebar->SetReplaceCaseSensitive(flag);
-
-		if (settings.FindBool("replaceFullWords", &flag) == B_OK)
-			fSidebar->SetReplaceFullWordsOnly(flag);
 	}
 }
 

@@ -1,28 +1,14 @@
 - Re-organize menu
 - Enable save menu if file changed
-- General settings:
-	- Tab size
-	- Save textView on close
-	- Save settings (on by default)
-	- Default font and size
-- App icon
-
-Add text transformation tools:
-
-Text case:
-- Handle non-english characters
 
 Coding:
 - HEX encode/decode
 - Base64 encode
 - Tabs <> space
 
-Lines:
-- Sort lines by length
-- Sort lines alphabetically (asc/desc)
-- Remove duplicates
-
 Other:
 - Regex
 - Word count by occurence
-
+- Live preview
+- Floating settings window?
+- Support "Open with" for text files

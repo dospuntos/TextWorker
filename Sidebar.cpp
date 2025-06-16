@@ -306,25 +306,23 @@ Sidebar::_BuildSortTab()
 
 	// --- Sorting method group ---
 	BGroupView* sortTypeGroup = new BGroupView(B_VERTICAL, 5);
-	BRadioButton* alphabeticalRadio = new BRadioButton("radio_sort_alpha", "Alphabetical", nullptr);
-	BRadioButton* lengthRadio = new BRadioButton("radio_sort_length", "By line length", nullptr);
-	alphabeticalRadio->SetValue(B_CONTROL_ON);
+	fAlphaSortRadio = new BRadioButton("radio_sort_alpha", "Alphabetical", nullptr);
+	fLengthSortRadio = new BRadioButton("radio_sort_length", "By line length", nullptr);
 
 	BLayoutBuilder::Group<>(sortTypeGroup)
 		.Add(new BStringView(nullptr, "Sort type:"))
-		.Add(alphabeticalRadio)
-		.Add(lengthRadio);
+		.Add(fAlphaSortRadio)
+		.Add(fLengthSortRadio);
 
 	// --- Sort order group ---
 	BGroupView* sortOrderGroup = new BGroupView(B_VERTICAL, 5);
-	BRadioButton* ascendingRadio = new BRadioButton("radio_sort_asc", "Ascending", nullptr);
-	BRadioButton* descendingRadio = new BRadioButton("radio_sort_desc", "Descending", nullptr);
-	ascendingRadio->SetValue(B_CONTROL_ON); // default
+	BRadioButton* fSortAsc = new BRadioButton("radio_sort_asc", "Ascending", nullptr);
+	BRadioButton* fSortDesc = new BRadioButton("radio_sort_desc", "Descending", nullptr);
 
 	BLayoutBuilder::Group<>(sortOrderGroup)
 		.Add(new BStringView(nullptr, "Sort order:"))
-		.Add(ascendingRadio)
-		.Add(descendingRadio);
+		.Add(fSortAsc)
+		.Add(fSortDesc);
 
 	BCheckBox* caseCheck = new BCheckBox("checkbox_case", "Case sensitive", nullptr);
 	caseCheck->SetValue(B_CONTROL_OFF);
@@ -340,8 +338,8 @@ Sidebar::_BuildSortTab()
 		.Add(sortButton)
 		.SetInsets(10, 12, 10, 10);
 
-	alphabeticalRadio->SetValue(B_CONTROL_ON);
-	ascendingRadio->SetValue(B_CONTROL_ON);
+	fAlphaSortRadio->SetValue(B_CONTROL_ON);
+	fSortAsc->SetValue(B_CONTROL_ON);
 	caseCheck->SetValue(B_CONTROL_OFF);
 
 	// === Sort Tab ===

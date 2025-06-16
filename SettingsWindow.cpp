@@ -13,7 +13,7 @@
 #include <StringView.h>
 
 
-SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, int32 fontSize,
+SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize,
 	BString fontFamily)
 	:
 	BWindow(BRect(200, 200, 500, 400), "Settings", B_FLOATING_WINDOW_LOOK, B_MODAL_APP_WINDOW_FEEL,
@@ -23,12 +23,15 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 {
 	fSaveTextCheck = new BCheckBox("SaveText", "Save text on exit", new BMessage(M_APPLY_SETTINGS));
 	fSaveTextCheck->SetValue(saveText ? B_CONTROL_ON : B_CONTROL_OFF);
-	fSaveSettingsCheck
-		= new BCheckBox("SaveSettings", "Save settings on exit", new BMessage(M_APPLY_SETTINGS));
-	fSaveSettingsCheck->SetValue(saveSettings ? B_CONTROL_ON : B_CONTROL_OFF);
+	fSaveFieldsCheck
+		= new BCheckBox("SaveSettings", "Save field values on exit", new BMessage(M_APPLY_SETTINGS));
+	fSaveFieldsCheck->SetValue(saveSettings ? B_CONTROL_ON : B_CONTROL_OFF);
 	fInsertClipboard = new BCheckBox("Clipboard", "Paste clipboard contents on open",
 		new BMessage(M_APPLY_SETTINGS));
 	fInsertClipboard->SetValue(clipboard ? B_CONTROL_ON : B_CONTROL_OFF);
+	fClearSettingsAfterUse = new BCheckBox("ClearSettings", "Clear field values after use",
+		new BMessage(M_APPLY_SETTINGS));
+	fClearSettingsAfterUse->SetValue(clearSettings ? B_CONTROL_ON : B_CONTROL_OFF);
 
 	BPopUpMenu* fontMenu = new BPopUpMenu("FontFamily");
 	PopulateFontMenu(fontMenu);
@@ -48,9 +51,10 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 	fApplyButton = new BButton("Close", "Close", new BMessage(M_CLOSE_SETTINGS));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
-		.Add(fSaveTextCheck)
-		.Add(fSaveSettingsCheck)
 		.Add(fInsertClipboard)
+		.Add(fSaveTextCheck)
+		.Add(fSaveFieldsCheck)
+		.Add(fClearSettingsAfterUse)
 		.Add(fFontFamilyField)
 		.Add(fFontSizeSlider)
 		.AddGlue()
@@ -94,8 +98,9 @@ SettingsWindow::MessageReceived(BMessage* message)
 
 			BMessage applyMsg(M_APPLY_SETTINGS);
 			applyMsg.AddBool("saveText", fSaveTextCheck->Value() == B_CONTROL_ON);
-			applyMsg.AddBool("saveSettings", fSaveSettingsCheck->Value() == B_CONTROL_ON);
+			applyMsg.AddBool("saveSettings", fSaveFieldsCheck->Value() == B_CONTROL_ON);
 			applyMsg.AddBool("insertClipboard", fInsertClipboard->Value() == B_CONTROL_ON);
+			applyMsg.AddBool("clearSettings", fClearSettingsAfterUse->Value() == B_CONTROL_ON);
 			applyMsg.AddInt32("fontSize", fFontSizeSlider->Value());
 			applyMsg.AddString("fontFamily", fontFamily);
 
@@ -114,4 +119,3 @@ SettingsWindow::MessageReceived(BMessage* message)
 			break;
 	}
 }
- 
