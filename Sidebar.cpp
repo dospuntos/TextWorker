@@ -351,3 +351,234 @@ Sidebar::_BuildSortTab()
 	AddTab(sortView, sortTab);
 	sortTab->SetLabel("Sort lines");
 }
+
+
+// Search and replace
+BString
+Sidebar::getSearchText() const
+{
+	return fSearchInput->Text();
+}
+
+
+void
+Sidebar::setSearchText(const BString& text)
+{
+	fSearchInput->SetText(text);
+}
+
+
+BString
+Sidebar::getReplaceText() const
+{
+	return fReplaceInput->Text();
+}
+
+
+void
+Sidebar::setReplaceText(const BString& text)
+{
+	fReplaceInput->SetText(text);
+}
+
+
+bool
+Sidebar::getReplaceCaseSensitive() const
+{
+	return fCaseCheck->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setReplaceCaseSensitive(bool enabled)
+{
+	fCaseCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+}
+
+
+bool
+Sidebar::getReplaceFullWords() const
+{
+	return fWholeWordCheck->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setReplaceFullWords(bool enabled)
+{
+	fWholeWordCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+}
+
+
+// Line break mode
+int8
+Sidebar::getBreakMode() const
+{
+	return fBreakMode;
+}
+
+
+void
+Sidebar::setBreakMode(int breakMode)
+{
+	fBreakMenu->ItemAt(breakMode)->SetMarked(true);
+}
+
+
+BString
+Sidebar::getBreakModeInput()
+{
+	return fBreakInput->Text();
+}
+
+
+void
+Sidebar::setBreakModeInput(const BString& text)
+{
+	fBreakInput->SetText(text);
+}
+
+
+int
+Sidebar::getBreakOnCharsSpinner()
+{
+	return fBreakOnChars->Value();
+}
+
+
+void
+Sidebar::setBreakOnCharsSpinner(const int value)
+{
+	fBreakOnChars->SetValue(value);
+}
+
+
+bool
+Sidebar::getSplitOnWords() const
+{
+	return fWordWrapCheck->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setSplitOnWords(bool enabled)
+{
+	fWordWrapCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+}
+
+
+bool
+Sidebar::getKeepDelimiterValue()
+{
+	return fKeepDelimiterCheck->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setKeepDelimiterValue(const bool value)
+{
+	fKeepDelimiterCheck->SetValue(value ? B_CONTROL_ON : B_CONTROL_OFF);
+}
+
+
+// Prefix/suffix
+BString
+Sidebar::getPrefixText() const
+{
+	return fPrefixInput->Text();
+}
+
+
+void
+Sidebar::setPrefixText(const BString& text)
+{
+	fPrefixInput->SetText(text);
+}
+
+
+BString
+Sidebar::getSuffixText() const
+{
+	return fSuffixInput->Text();
+}
+
+
+void
+Sidebar::setSuffixText(const BString& text)
+{
+	fSuffixInput->SetText(text);
+}
+
+
+// Indent/unindent
+int32
+Sidebar::getIndentSpinner() const
+{
+	return fIndentSizeSpinner->Value();
+}
+
+
+void
+Sidebar::setIndentSpinner(const int value)
+{
+	fIndentSizeSpinner->SetValue(value);
+}
+
+
+bool
+Sidebar::getTabsRadio() const
+{
+	return fTabsRadio->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setTabsRadio(bool enabled) const
+{
+	fTabsRadio->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+	fSpacesRadio->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
+}
+
+// Sort lines
+bool
+Sidebar::getAlphaSortRadio() const
+{
+	return fAlphaSortRadio && fAlphaSortRadio->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setAlphaSortRadio(bool enabled) const
+{
+	fAlphaSortRadio->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+	fLengthSortRadio->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
+}
+
+
+bool
+Sidebar::getSortAsc() const
+{
+	return fSortAsc && fSortAsc->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setSortAsc(bool enabled) const
+{
+	fSortAsc->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+	fSortDesc->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
+}
+
+
+bool
+Sidebar::getCaseSortCheck() const
+{
+	return fCaseSortCheck && fCaseSortCheck->Value() == B_CONTROL_ON;
+}
+
+
+void
+Sidebar::setCaseSortCheck(bool enabled)
+{
+	fCaseSortCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
+}

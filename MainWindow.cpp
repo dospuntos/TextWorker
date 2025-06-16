@@ -227,38 +227,39 @@ MainWindow::MessageReceived(BMessage* msg)
 			ToggleCase(fTextView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
-			if (fSidebar->BreakMode() == BREAK_REMOVE_ALL) {
+			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
 				RemoveLineBreaks(fTextView);
-			} else if (fSidebar->BreakMode() == BREAK_ON) {
+			} else if (fSidebar->getBreakMode() == BREAK_ON) {
 				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
-			} else if (fSidebar->BreakMode() == BREAK_REPLACE) {
+			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
 				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
-			} else if (fSidebar->BreakMode() == BREAK_AFTER_CHARS) {
+			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
 				InsertLineBreaks(fTextView, atoi(fSidebar->getBreakModeInput()),
-					fSidebar->SplitOnWordsEnabled());
+					fSidebar->getSplitOnWords());
 			}
 			break;
 		case M_TRIM_LINES:
 			TrimLines(fTextView);
 			break;
 		case M_TRANSFORM_REPLACE:
-			ReplaceAll(fTextView, fSidebar->ReplaceSearchText(), fSidebar->ReplaceWithText(),
-				fSidebar->ReplaceCaseSensitive(), fSidebar->ReplaceFullWordsOnly());
+			ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
+				fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords());
 			if (fClearSettingsAfterUse) {
-				fSidebar->SetReplaceSearchText("");
-				fSidebar->SetReplaceWithText("");
-				fSidebar->SetReplaceCaseSensitive(false);
-				fSidebar->SetReplaceFullWordsOnly(false);
+				fSidebar->setSearchText("");
+				fSidebar->setReplaceText("");
+				fSidebar->setReplaceCaseSensitive(false);
+				fSidebar->setReplaceFullWords(false);
 			}
 			break;
 		case M_TRIM_EMPTY_LINES:
 			TrimEmptyLines(fTextView);
 			break;
 		case M_TRANSFORM_PREFIX_SUFFIX:
-			AddStringsToEachLine(fTextView, fSidebar->PrefixText(), fSidebar->SuffixText());
+			AddStringsToEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText());
 			break;
 		case M_TRANSFORM_REMOVE_PREFIX_SUFFIX:
-			RemoveStringsFromEachLine(fTextView, fSidebar->PrefixText(), fSidebar->SuffixText());
+			RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(),
+				fSidebar->getSuffixText());
 			break;
 		case M_TRANSFORM_ROT13:
 			ConvertToROT13(fTextView);
@@ -545,21 +546,21 @@ MainWindow::_SaveSettings()
 	// Save sidebar text inputs
 	if (fSidebar && fSaveFieldsOnExit) {
 		// Search/replace
-		settings.AddString("replaceSearchString", fSidebar->ReplaceSearchText());
-		settings.AddString("replaceWithString", fSidebar->ReplaceWithText());
-		settings.AddBool("replaceCaseSensitive", fSidebar->ReplaceCaseSensitive());
-		settings.AddBool("replaceFullWords", fSidebar->ReplaceFullWordsOnly());
+		settings.AddString("replaceSearchString", fSidebar->getSearchText());
+		settings.AddString("replaceWithString", fSidebar->getReplaceText());
+		settings.AddBool("replaceCaseSensitive", fSidebar->getReplaceCaseSensitive());
+		settings.AddBool("replaceFullWords", fSidebar->getReplaceFullWords());
 
 		// Line breaks
-		settings.AddInt32("breakMode", fSidebar->BreakMode());
+		settings.AddInt32("breakMode", fSidebar->getBreakMode());
 		settings.AddString("breakModeInput", fSidebar->getBreakModeInput());
 		settings.AddInt32("breakOnChars", fSidebar->getBreakOnCharsSpinner());
-		settings.AddBool("splitOnWords", fSidebar->SplitOnWordsEnabled());
+		settings.AddBool("splitOnWords", fSidebar->getSplitOnWords());
 		settings.AddBool("keepDelimiter", fSidebar->getKeepDelimiterValue());
 
 		// Prefix/suffix
-		settings.AddString("prefixInput", fSidebar->PrefixText());
-		settings.AddString("suffixInput", fSidebar->SuffixText());
+		settings.AddString("prefixInput", fSidebar->getPrefixText());
+		settings.AddString("suffixInput", fSidebar->getSuffixText());
 
 		// Indent/unindent
 		settings.AddInt32("indentSize", fSidebar->getIndentSpinner());
@@ -628,13 +629,13 @@ MainWindow::_RestoreValues(BMessage& settings)
 	if (fSidebar && fSaveFieldsOnExit) {
 		// Search/replace
 		if (settings.FindString("replaceSearchString", &text) == B_OK)
-			fSidebar->SetReplaceSearchText(text);
+			fSidebar->setSearchText(text);
 		if (settings.FindString("replaceWithString", &text) == B_OK)
-			fSidebar->SetReplaceWithText(text);
+			fSidebar->setReplaceText(text);
 		if (settings.FindBool("replaceCaseSensitive", &flag) == B_OK)
-			fSidebar->SetReplaceCaseSensitive(flag);
+			fSidebar->setReplaceCaseSensitive(flag);
 		if (settings.FindBool("replaceFullWords", &flag) == B_OK)
-			fSidebar->SetReplaceFullWordsOnly(flag);
+			fSidebar->setReplaceFullWords(flag);
 
 		// Line breaks
 		if (settings.FindInt32("breakMode", &number) == B_OK)
@@ -644,16 +645,16 @@ MainWindow::_RestoreValues(BMessage& settings)
 		if (settings.FindInt32("breakOnChars", &number) == B_OK)
 			fSidebar->setBreakOnCharsSpinner(number);
 		if (settings.FindBool("splitOnWords", &flag) == B_OK)
-			fSidebar->SetSplitOnWordsEnabled(flag);
+			fSidebar->setSplitOnWords(flag);
 		if (settings.FindBool("keepDelimiter", &flag) == B_OK)
 			fSidebar->setKeepDelimiterValue(flag);
 		// Todo: enable/disable corresponding fields for restored breakMode
 
 		// Prefix/suffix
 		if (settings.FindString("prefixInput", &text) == B_OK)
-			fSidebar->SetPrefixText(text);
+			fSidebar->setPrefixText(text);
 		if (settings.FindString("suffixInput", &text) == B_OK)
-			fSidebar->SetSuffixText(text);
+			fSidebar->setSuffixText(text);
 
 		// Indent/unindent
 		if (settings.FindInt32("indentSize", &number) == B_OK)

@@ -23,82 +23,47 @@ public:
 	Sidebar();
 	void MessageReceived(BMessage* msg);
 
-	// Prefix/suffix
-	BString PrefixText() const { return fPrefixInput->Text(); }
-	void SetPrefixText(const BString& text) { fPrefixInput->SetText(text); }
-	BString SuffixText() const { return fSuffixInput->Text(); }
-	void SetSuffixText(const BString& text) { fSuffixInput->SetText(text); }
-
-	void SetMaxWidthText(const int32 value)
-	{
-		BString text;
-		text << value;
-		fBreakInput->SetText(text.String());
-	}
-
-	// Split on Words
-	bool SplitOnWordsEnabled() const { return fWordWrapCheck->Value() == B_CONTROL_ON; }
-	void SetSplitOnWordsEnabled(bool enabled)
-	{
-		fWordWrapCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
-	}
-
 	// Search and replace
-	BString ReplaceSearchText() const { return fSearchInput->Text(); }
-	void SetReplaceSearchText(const BString& text) { fSearchInput->SetText(text); }
-	BString ReplaceWithText() const { return fReplaceInput->Text(); }
-	void SetReplaceWithText(const BString& text) { fReplaceInput->SetText(text); }
-	bool ReplaceCaseSensitive() const { return fCaseCheck->Value() == B_CONTROL_ON; }
-	void SetReplaceCaseSensitive(bool enabled)
-	{
-		fCaseCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
-	}
+	BString getSearchText() const;
+	void setSearchText(const BString& text);
+	BString getReplaceText() const;
+	void setReplaceText(const BString& text);
+	bool getReplaceCaseSensitive() const;
+	void setReplaceCaseSensitive(bool enabled);
+	bool getReplaceFullWords() const;
+	void setReplaceFullWords(bool enabled);
 
-	// Line break mode
-	int8 BreakMode() const { return fBreakMode; }
-	void setBreakMode(int breakMode) { fBreakMenu->ItemAt(breakMode)->SetMarked(true); }
-	BString getBreakModeInput() { return fBreakInput->Text(); }
-	void setBreakModeInput(const BString& text) { fBreakInput->SetText(text); }
-	int getBreakOnCharsSpinner() { return fBreakOnChars->Value(); }
-	void setBreakOnCharsSpinner(const int value) {fBreakOnChars->SetValue(value); }
-	bool getKeepDelimiterValue() {return fKeepDelimiterCheck->Value() == B_CONTROL_ON; }
-	void setKeepDelimiterValue(const bool value) { fKeepDelimiterCheck->SetValue(value); }
+	// Line breaks
+	int8 getBreakMode() const;
+	void setBreakMode(int breakMode);
+	BString getBreakModeInput();
+	void setBreakModeInput(const BString& text);
+	int getBreakOnCharsSpinner();
+	void setBreakOnCharsSpinner(int value);
+	bool getSplitOnWords() const;
+	void setSplitOnWords(bool enabled);
+	bool getKeepDelimiterValue();
+	void setKeepDelimiterValue(bool value);
 
 	// Prefix/suffix
-	bool ReplaceFullWordsOnly() const { return fWholeWordCheck->Value() == B_CONTROL_ON; }
-	void SetReplaceFullWordsOnly(bool enabled)
-	{
-		fWholeWordCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
-	}
+	BString getPrefixText() const;
+	void setPrefixText(const BString& text);
+	BString getSuffixText() const;
+	void setSuffixText(const BString& text);
 
 	// Indent/unindent
-	int32 getIndentSpinner() const { return fIndentSizeSpinner->Value(); }
-	void setIndentSpinner(const int value) { fIndentSizeSpinner->SetValue(value); }
-	bool getTabsRadio() const { return fTabsRadio->Value() == B_CONTROL_ON; }
-	void setTabsRadio(bool value) const { fTabsRadio->SetValue(value); }
+	int32 getIndentSpinner() const;
+	void setIndentSpinner(int value);
+	bool getTabsRadio() const;
+	void setTabsRadio(bool value) const;
 
 	// Sort lines
-	bool getAlphaSortRadio() const
-	{
-		return fAlphaSortRadio && fAlphaSortRadio->Value() == B_CONTROL_ON;
-	}
-	void setAlphaSortRadio(bool enabled) const
-	{
-		fAlphaSortRadio->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
-		fLengthSortRadio->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
-	}
-	bool getSortAsc() const { return fSortAsc && fSortAsc->Value() == B_CONTROL_ON; }
-	void setSortAsc(bool enabled) const
-	{
-		fSortAsc->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF);
-		fSortDesc->SetValue(enabled ? B_CONTROL_OFF : B_CONTROL_ON);
-	}
-	bool getCaseSortCheck() const
-	{
-		return fCaseSortCheck && fCaseSortCheck->Value() == B_CONTROL_ON;
-	}
-	void setCaseSortCheck(bool enabled) {fCaseSortCheck->SetValue(enabled ? B_CONTROL_ON : B_CONTROL_OFF); }
-
+	bool getAlphaSortRadio() const;
+	void setAlphaSortRadio(bool enabled) const;
+	bool getSortAsc() const;
+	void setSortAsc(bool enabled) const;
+	bool getCaseSortCheck() const;
+	void setCaseSortCheck(bool enabled);
 
 private:
 	void _BuildLineTab();
