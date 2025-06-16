@@ -168,10 +168,14 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_SHOW_SETTINGS:
 		{
-			fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveFieldsOnExit,
-				fInsertClipboard, fClearSettingsAfterUse, fFontSize, fFontFamily);
-			fSettingsWindow->CenterIn(Frame());
-			fSettingsWindow->Show();
+			if (!fSettingsWindow) {
+				fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveFieldsOnExit,
+					fInsertClipboard, fClearSettingsAfterUse, fFontSize, fFontFamily);
+				fSettingsWindow->CenterIn(Frame());
+				fSettingsWindow->Show();
+			} else {
+				fSettingsWindow->Activate();
+			}
 			break;
 		}
 		case M_APPLY_SETTINGS:
@@ -545,6 +549,7 @@ MainWindow::_SaveSettings()
 
 	// Save sidebar text inputs
 	if (fSidebar && fSaveFieldsOnExit) {
+		settings.AddInt32("activeTab", fSidebar->Selection());
 		// Search/replace
 		settings.AddString("replaceSearchString", fSidebar->getSearchText());
 		settings.AddString("replaceWithString", fSidebar->getReplaceText());
@@ -627,6 +632,9 @@ MainWindow::_RestoreValues(BMessage& settings)
 		fTextView->SetText(text);
 
 	if (fSidebar && fSaveFieldsOnExit) {
+		if (settings.FindInt32("activeTab", &number) == B_OK)
+			fSidebar->Select(number);
+
 		// Search/replace
 		if (settings.FindString("replaceSearchString", &text) == B_OK)
 			fSidebar->setSearchText(text);

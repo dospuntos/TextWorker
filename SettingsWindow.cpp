@@ -16,7 +16,7 @@
 SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize,
 	BString fontFamily)
 	:
-	BWindow(BRect(200, 200, 500, 400), "Settings", B_FLOATING_WINDOW_LOOK, B_MODAL_APP_WINDOW_FEEL,
+	BWindow(BRect(200, 200, 500, 400), "Settings", B_TITLED_WINDOW,
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS
 			| B_CLOSE_ON_ESCAPE),
 	fFontFamily(fontFamily)
