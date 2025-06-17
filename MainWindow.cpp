@@ -378,20 +378,27 @@ MainWindow::_BuildMenu()
 	fPasteItem = new BMenuItem(B_TRANSLATE("Paste"), new BMessage(B_PASTE), 'V');
 	fSelectAllItem = new BMenuItem(B_TRANSLATE("Select all"), new BMessage(B_SELECT_ALL), 'A');
 
+	// App menu
+	menu = new BMenu("App");
+	menu->AddItem(new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Help" B_UTF8_ELLIPSIS), new BMessage(M_TRANSFORM_WIP), 'H'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Report a bug" B_UTF8_ELLIPSIS), new BMessage(M_REPORT_A_BUG)));
+	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
+	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
+
+	menuBar->AddItem(menu);
+
 	// 'File' menu
 	menu = new BMenu("File");
 
-	menu->AddItem(new BMenuItem(B_TRANSLATE("New" B_UTF8_ELLIPSIS), new BMessage(M_FILE_NEW), 'N'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("New"), new BMessage(M_FILE_NEW), 'N'));
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(M_FILE_OPEN), 'O'));
 	menu->AddSeparatorItem();
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Save"), new BMessage(M_FILE_SAVE), 'S'));
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS), new BMessage(M_FILE_SAVE_AS)));
-	menu->AddSeparatorItem();
-
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 
 	menuBar->AddItem(menu);
 
