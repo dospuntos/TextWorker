@@ -20,6 +20,7 @@ public:
 	SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize,
 		BString fontFamily);
 	virtual void MessageReceived(BMessage* message);
+	bool QuitRequested();
 
 private:
 	BCheckBox* fSaveTextCheck;

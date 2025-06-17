@@ -51,6 +51,8 @@ MainWindow::MainWindow(void)
 	fStatusBar = new BStringView("StatusBar", "");
 	fStatusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
 
+	fSettingsWindow = nullptr;
+
 	// Layout
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar, 0)
@@ -177,6 +179,8 @@ MainWindow::MessageReceived(BMessage* msg)
 				fSettingsWindow->CenterIn(Frame());
 				fSettingsWindow->Show();
 			} else {
+				if (fSettingsWindow->IsHidden())
+					fSettingsWindow->Show();
 				fSettingsWindow->Activate();
 			}
 			break;
@@ -350,6 +354,10 @@ MainWindow::MessageReceived(BMessage* msg)
 bool
 MainWindow::QuitRequested(void)
 {
+	if (fSettingsWindow && fSettingsWindow->LockLooper()) {
+		fSettingsWindow->Quit();
+		fSettingsWindow = nullptr;
+	}
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }

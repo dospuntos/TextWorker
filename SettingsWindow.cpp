@@ -122,3 +122,12 @@ SettingsWindow::MessageReceived(BMessage* message)
 			break;
 	}
 }
+
+
+bool
+SettingsWindow::QuitRequested()
+{
+	if (!IsHidden())
+		Hide();
+	return false;
+}
