@@ -24,8 +24,11 @@
 
 #include "Constants.h"
 #include "SettingsWindow.h"
+#include "TransformCommand.h"
 #include "TextUtils.h"
 #include "Toolbar.h"
+
+using namespace std::placeholders;
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -120,7 +123,11 @@ MainWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 		case B_UNDO:
+			fCommandManager.Undo(fTextView);
+			break;
 		case B_REDO:
+			fCommandManager.Redo(fTextView);
+			break;
 		case B_CUT:
 		case B_COPY:
 		case B_PASTE:
@@ -217,31 +224,56 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
-			ConvertToUppercase(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToUppercase(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_TRANSFORM_LOWERCASE:
-			ConvertToLowercase(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToLowercase(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_TRANSFORM_CAPITALIZE:
-			Capitalize(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {Capitalize(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_TRANSFORM_TITLE_CASE:
-			ConvertToTitlecase(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToTitlecase(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_TRANSFORM_RANDOM_CASE:
-			ConvertToRandomCase(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToRandomCase(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_TRANSFORM_ALTERNATING_CASE:
-			ConvertToAlternatingCase(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToAlternatingCase(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_TRANSFORM_TOGGLE_CASE:
-			ToggleCase(fTextView);
+			{
+			auto cmd = std::make_unique<TransformCommand>([=]() {ToggleCase(fTextView);});
+			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
+			}
 		case M_REMOVE_LINE_BREAKS:
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
-				RemoveLineBreaks(fTextView);
+				auto cmd = std::make_unique<TransformCommand>([=]() {RemoveLineBreaks(fTextView);});
+				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_ON) {
-				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
+				auto cmd = std::make_unique<TransformCommand>([=]() {
+					BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
+				});
+				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
 				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
 			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
@@ -405,9 +437,9 @@ MainWindow::_BuildMenu()
 	// 'Edit' menu
 	menu = new BMenu("Edit");
 
-	// menu->AddItem(fUndoItem);
-	// menu->AddItem(fRedoItem);
-	// menu->AddSeparatorItem();
+	menu->AddItem(fUndoItem);
+	menu->AddItem(fRedoItem);
+	menu->AddSeparatorItem();
 	menu->AddItem(fCutItem);
 	menu->AddItem(fCopyItem);
 	menu->AddItem(fPasteItem);
@@ -861,5 +893,7 @@ MainWindow::MenusBeginning()
 	fCopyItem->SetEnabled(hasTextView && hasSelection);
 	fPasteItem->SetEnabled(hasTextView && textView->IsEditable());
 	fSelectAllItem->SetEnabled(hasTextView);
+	fUndoItem->SetEnabled(fCommandManager.CanUndo());
+	fRedoItem->SetEnabled(fCommandManager.CanRedo());
 }
 

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "CommandManager.h"
 #include "Sidebar.h"
 #include <Application.h>
 #include <Bitmap.h>
@@ -33,6 +34,7 @@ private:
 	BToolBar* fToolbar;
 	Sidebar* fSidebar;
 	void UpdateStatusBar();
+	CommandManager fCommandManager;
 
 	bool fSaveTextOnExit;
 	bool fSaveFieldsOnExit;
