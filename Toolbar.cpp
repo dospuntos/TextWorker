@@ -34,6 +34,17 @@ CreateToolbar(BHandler* target)
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
+	toolbar->AddAction(new BMessage(B_UNDO), target, ResourceToBitmap("UNDO_ICON"),
+		"Undo (Alt-Z)", "", false);
+	toolbar->AddAction(new BMessage(B_REDO), target, ResourceToBitmap("REDO_ICON"),
+		"Redo (Alt-Y)", "", false);
+
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddSeparator();
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+
 	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), target, ResourceToBitmap("LINE_WRAP_ICON"),
 		"Word wrap", "", true);
 

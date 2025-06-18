@@ -15,6 +15,13 @@ resource app_version {
 	long_info = "TextWorker is a Haiku-native utility that helps you clean, format, and transform plain text. It supports operations like case conversion, line sorting, trimming, prefix/suffix edits, and more."
 };
 
+resource file_types message
+{
+	"types" = "text",
+	"types" = "locale/x-vnd.Be.locale-catalog.plaintext",
+	"types" = "application/xhtml+xml"
+};
+
 resource vector_icon array {
 	$"6E6369661302000603399E0F3D9C0ABF82B23B84A94B88504870C900A5B1FFBC"
 	$"EAF1FFFFB3B8FF0501020106023E49240000000000003CAAAA4940004A30007C"
@@ -85,3 +92,5 @@ resource(11, "HELP_ICON") #'VICN' import "icons/help.hvif";
 resource(12, "URL_ENCODE_ICON") #'VICN' import "icons/link.hvif";
 resource(13, "URL_DECODE_ICON") #'VICN' import "icons/unlink.hvif";
 resource(14, "PUZZLE_ICON") #'VICN' import "icons/puzzle.hvif";
+resource(15, "UNDO_ICON") #'VICN' import "icons/undo.hvif";
+resource(16, "REDO_ICON") #'VICN' import "icons/redo.hvif";
