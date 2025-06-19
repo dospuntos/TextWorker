@@ -1,7 +1,7 @@
 #include "App.h"
 #include "Constants.h"
 #include <Catalog.h>
-#include "MainWindow.h"
+#include <Path.h>
 
 #include <AboutWindow.h>
 
@@ -12,8 +12,8 @@ App::App(void)
 	:
 	BApplication(kApplicationSignature)
 {
-	MainWindow* mainwin = new MainWindow();
-	mainwin->Show();
+	fMainWindow = new MainWindow();
+	fMainWindow->Show();
 }
 
 
@@ -35,4 +35,12 @@ main(void)
 	app->Run();
 	delete app;
 	return 0;
+}
+
+
+void
+App::RefsReceived(BMessage* msg)
+{
+	if (fMainWindow)
+		fMainWindow->PostMessage(msg);
 }

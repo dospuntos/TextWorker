@@ -809,7 +809,7 @@ MainWindow::OpenFile(const entry_ref& ref)
 		return;
 	}
 
-	//fTextView->SetText("");
+	fTextView->SetText("");
 	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();

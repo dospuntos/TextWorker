@@ -41,8 +41,8 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 	fFontFamilyField = new BMenuField("Font", B_TRANSLATE("Font family:"), fontMenu);
 
 	fFontSizeSlider
-		= new BSlider("FontSize", "", new BMessage(M_APPLY_SETTINGS), 8, 48, B_HORIZONTAL);
-	fFontSizeSlider->SetLimitLabels("8", "48");
+		= new BSlider("FontSize", "", new BMessage(M_APPLY_SETTINGS), 6, 72, B_HORIZONTAL);
+	fFontSizeSlider->SetLimitLabels("6", "72");
 	fFontSizeSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	fFontSizeSlider->SetHashMarkCount(10);
 	fFontSizeSlider->SetValue(fontSize);

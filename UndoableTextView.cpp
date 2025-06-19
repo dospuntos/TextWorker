@@ -178,5 +178,3 @@ void UndoableTextView::SetColorsFromTheme()
 	SetHighColor(textColor);
 	SetFontAndColor(nullptr, B_FONT_ALL, &textColor);
 }
-
-
