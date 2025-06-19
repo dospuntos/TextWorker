@@ -28,6 +28,7 @@
 #include "SettingsWindow.h"
 #include "TextUtils.h"
 #include "Toolbar.h"
+#include "IconMenuItem.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -405,7 +406,7 @@ MainWindow::_BuildMenu()
 	fSelectAllItem = new BMenuItem(B_TRANSLATE("Select all"), new BMessage(B_SELECT_ALL), 'A');
 
 	// App menu
-	menu = new BMenu(B_TRANSLATE("App"));
+	menu = new BMenu(B_TRANSLATE(""));
 	menu->AddItem(
 		new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
 	menu->AddItem(
@@ -418,6 +419,8 @@ MainWindow::_BuildMenu()
 	menu->AddSeparatorItem();
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 
+	IconMenuItem* iconMenu;
+	iconMenu = new IconMenuItem(menu, NULL, kApplicationSignature, B_MINI_ICON);
 	menuBar->AddItem(menu);
 
 	// 'File' menu
@@ -546,7 +549,6 @@ MainWindow::_BuildMenu()
 
 	// Add the whole Transform menu to the menu bar
 	menuBar->AddItem(transformMenu);
-
 
 	return menuBar;
 }

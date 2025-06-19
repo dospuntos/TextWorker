@@ -36,7 +36,8 @@ SRCS =  App.cpp \
  Constants.cpp	\
  Toolbar.cpp	\
  SettingsWindow.cpp \
- UndoableTextView.cpp
+ UndoableTextView.cpp \
+ IconMenuItem.cpp
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
