@@ -101,7 +101,7 @@ CreateToolbar(BHandler* target)
 
 	toolbar->AddAction(new BMessage(M_SHOW_SETTINGS), target, ResourceToBitmap("SETTINGS_ICON"),
 		B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), target, ResourceToBitmap("HELP_ICON"),
+	toolbar->AddAction(new BMessage(M_SHOW_HELP), target, ResourceToBitmap("HELP_ICON"),
 		B_TRANSLATE("Help" B_UTF8_ELLIPSIS), "", false);
 
 	return toolbar;

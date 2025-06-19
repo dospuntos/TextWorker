@@ -20,7 +20,9 @@
 #include <TranslationUtils.h>
 #include <TranslatorRoster.h>
 #include <View.h>
+#include <Url.h>
 #include <cctype>
+#include <Screen.h>
 
 #include "Constants.h"
 #include "SettingsWindow.h"
@@ -336,7 +338,7 @@ MainWindow::MessageReceived(BMessage* msg)
 							  "Start exploring the power of Haiku today."));
 			break;
 		case M_TRANSFORM_WIP:
-			(new BAlert(B_TRANSLATE("Not implemented"),
+			(new BAlert("Not implemented",
 				 B_TRANSLATE("Sorry, this functionality has not been implemented "
 				 "yet, but it is planned for the near future."),
 				 B_TRANSLATE("OK")))
@@ -347,6 +349,24 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case B_ABOUT_REQUESTED:
 			be_app->AboutRequested();
+			break;
+		case M_SHOW_HELP:
+			{
+			BString helpText = B_TRANSLATE("TextWorker Help\n\n"
+				"Use the tabs on the left to apply transformations such as:\n"
+				"- Search and replace\n"
+				"- Add/remove prefixes and suffixes\n"
+				"- Sort or clean up lines\n"
+				"- Adjust indentation\n\n"
+				"You can open text files via \"File → Open\" or by dragging them into the window.\n\n"
+				"Undo changes with \"Edit → Undo\" or Ctrl+Z.\n"
+				"Zoom text using Ctrl + Mouse Wheel.\n\n"
+				"Use \"Settings\" to configure font and save options.");
+			(new BAlert("Help", helpText.String(), B_TRANSLATE("OK")))->Go();
+			break;
+			}
+		case M_REPORT_A_BUG:
+			BUrl("https://github.com/dospuntos/TextWorker/issues/", true).OpenWithPreferredApplication();
 			break;
 		default:
 			BWindow::MessageReceived(msg);
@@ -389,7 +409,7 @@ MainWindow::_BuildMenu()
 	menu->AddItem(
 		new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
 	menu->AddItem(
-		new BMenuItem(B_TRANSLATE("Help" B_UTF8_ELLIPSIS), new BMessage(M_TRANSFORM_WIP), 'H'));
+		new BMenuItem(B_TRANSLATE("Help" B_UTF8_ELLIPSIS), new BMessage(M_SHOW_HELP), 'H'));
 	menu->AddItem(
 		new BMenuItem(B_TRANSLATE("Report a bug" B_UTF8_ELLIPSIS), new BMessage(M_REPORT_A_BUG)));
 	menu->AddSeparatorItem();

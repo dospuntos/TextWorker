@@ -54,7 +54,8 @@ enum {
 	M_REMOVE_DUPLICATES = 'rmdp',
 	M_INDENT_LINES = 'inln',
 	M_UNINDENT_LINES = 'unln',
-	M_REPORT_A_BUG = 'rbug'
+	M_REPORT_A_BUG = 'rbug',
+	M_SHOW_HELP = 'shlp'
 };
 
 enum BreakMode { BREAK_REMOVE_ALL = 0, BREAK_ON, BREAK_REPLACE, BREAK_AFTER_CHARS };
