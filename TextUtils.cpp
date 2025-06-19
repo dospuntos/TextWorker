@@ -5,6 +5,7 @@
 
 
 #include "TextUtils.h"
+#include "UndoableTextView.h"
 #include <Alert.h>
 #include <File.h>
 #include <LayoutBuilder.h>
@@ -74,7 +75,7 @@ ConvertToUppercase(BTextView* textView)
 	std::string utf8Text;
 	unicodeText.toUTF8String(utf8Text);
 
-	textView->SetText(utf8Text.c_str());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(utf8Text.c_str());
 	RestoreCursorPosition(textView);
 }
 
@@ -93,7 +94,7 @@ ConvertToLowercase(BTextView* textView)
 	std::string utf8Text;
 	unicodeText.toUTF8String(utf8Text);
 
-	textView->SetText(utf8Text.c_str());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(utf8Text.c_str());
 	RestoreCursorPosition(textView);
 }
 
@@ -134,13 +135,9 @@ ConvertToTitlecase(BTextView* textView)
 	}
 
 	BString bResult(result.c_str());
-	textView->SetText(bResult.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(bResult.String());
 	RestoreCursorPosition(textView);
 }
-
-
-
-
 
 
 void
@@ -163,7 +160,7 @@ Capitalize(BTextView* textView)
 			capitalizeNext = true;
 		}
 	}
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -189,7 +186,7 @@ ConvertToRandomCase(BTextView* textView)
 		}
 	}
 
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -215,7 +212,7 @@ ConvertToAlternatingCase(BTextView* textView)
 		}
 	}
 
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -236,7 +233,7 @@ ToggleCase(BTextView* textView)
 		text.SetByteAt(i, currentChar);
 	}
 
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -250,7 +247,7 @@ RemoveLineBreaks(BTextView* textView, BString replacement)
 
 	text.ReplaceAll("\n", replacement);
 
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -275,7 +272,7 @@ ConvertToROT13(BTextView* textView)
 		text.SetByteAt(i, currentChar);
 	}
 
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -310,7 +307,7 @@ URLEncode(BTextView* textView)
 		}
 	}
 
-	textView->SetText(encoded.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(encoded.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -345,7 +342,7 @@ URLDecode(BTextView* textView)
 		}
 	}
 
-	textView->SetText(decoded.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(decoded.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -375,7 +372,7 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 		updatedText << startString << line << endString;
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -419,7 +416,7 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 		updatedText << line;
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -460,7 +457,7 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 		}
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -493,7 +490,7 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDe
 		updatedText.Append(text.String() + start, text.Length() - start);
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -523,7 +520,7 @@ TrimLines(BTextView* textView)
 		updatedText << line << "\n";
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -555,7 +552,7 @@ TrimEmptyLines(BTextView* textView)
 			updatedText.Append(lastLine);
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -597,7 +594,7 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 		pos += replaceWith.Length();
 	}
 
-	textView->SetText(text.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -661,7 +658,7 @@ SortLines(BTextView* textView, bool ascending, bool caseSensitive)
 			updatedText << '\n';
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -719,7 +716,7 @@ SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
 			updatedText << '\n';
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -772,7 +769,7 @@ RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
 			result << '\n';
 	}
 
-	textView->SetText(result.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(result.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -814,7 +811,7 @@ IndentLines(BTextView* textView, bool useTabs, int32 count)
 		updatedText << indent << line;
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }
 
@@ -885,6 +882,6 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count)
 		updatedText << line;
 	}
 
-	textView->SetText(updatedText.String());
+	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
 }

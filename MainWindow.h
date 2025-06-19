@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "CommandManager.h"
 #include "Sidebar.h"
+#include "UndoableTextView.h"
 #include <Application.h>
 #include <Bitmap.h>
 #include <FilePanel.h>
@@ -34,7 +34,6 @@ private:
 	BToolBar* fToolbar;
 	Sidebar* fSidebar;
 	void UpdateStatusBar();
-	CommandManager fCommandManager;
 
 	bool fSaveTextOnExit;
 	bool fSaveFieldsOnExit;
@@ -46,7 +45,7 @@ private:
 	status_t _SaveSettings();
 	void _RestoreValues(BMessage& settings);
 
-	BTextView* fTextView;
+	UndoableTextView* fTextView;
 	BScrollView* fScrollView;
 	BStringView* fStatusBar;
 	BMessageRunner* fStatusUpdater;

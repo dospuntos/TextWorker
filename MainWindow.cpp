@@ -26,9 +26,6 @@
 #include "SettingsWindow.h"
 #include "TextUtils.h"
 #include "Toolbar.h"
-#include "TransformCommand.h"
-
-using namespace std::placeholders;
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -43,7 +40,7 @@ MainWindow::MainWindow(void)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
-	fTextView = new BTextView("TextView");
+	fTextView = new UndoableTextView("TextView");
 	fTextView->MakeEditable(true);
 
 	fScrollView = new BScrollView("TextViewScroll", fTextView, B_WILL_DRAW | B_FRAME_EVENTS, true,
@@ -123,10 +120,12 @@ MainWindow::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 		case B_UNDO:
-			fCommandManager.Undo(fTextView);
+			if (fTextView->CanUndo())
+				fTextView->Undo();
 			break;
 		case B_REDO:
-			fCommandManager.Redo(fTextView);
+			if (fTextView->CanRedo())
+				fTextView->Redo();
 			break;
 		case B_CUT:
 		case B_COPY:
@@ -224,89 +223,47 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToUppercase(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ConvertToUppercase(fTextView);
 			break;
-		}
 		case M_TRANSFORM_LOWERCASE:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToLowercase(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ConvertToLowercase(fTextView);
 			break;
-		}
 		case M_TRANSFORM_CAPITALIZE:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { Capitalize(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			Capitalize(fTextView);
 			break;
-		}
 		case M_TRANSFORM_TITLE_CASE:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToTitlecase(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ConvertToTitlecase(fTextView);
 			break;
-		}
 		case M_TRANSFORM_RANDOM_CASE:
-		{
-			auto cmd
-				= std::make_unique<TransformCommand>([=]() { ConvertToRandomCase(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ConvertToRandomCase(fTextView);
 			break;
-		}
 		case M_TRANSFORM_ALTERNATING_CASE:
-		{
-			auto cmd = std::make_unique<TransformCommand>(
-				[=]() { ConvertToAlternatingCase(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ConvertToAlternatingCase(fTextView);
 			break;
-		}
 		case M_TRANSFORM_TOGGLE_CASE:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { ToggleCase(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ToggleCase(fTextView);
 			break;
-		}
 		case M_REMOVE_LINE_BREAKS:
-		{
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
-				auto cmd
-					= std::make_unique<TransformCommand>([=]() { RemoveLineBreaks(fTextView); });
-				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+				RemoveLineBreaks(fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_ON) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {
-					BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(),
-						fSidebar->getKeepDelimiterValue());
-				});
-				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
 			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
-				auto cmd = std::make_unique<TransformCommand>(
-					[=]() { RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput()); });
-				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
 			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {
-					InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
-						fSidebar->getSplitOnWords());
-				});
-				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+				InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
+					fSidebar->getSplitOnWords());
 			}
-			if (fClearSettingsAfterUse)
+			if (fClearSettingsAfterUse) {
 				fSidebar->setBreakModeInput("");
+			}
 			break;
-		}
 		case M_TRIM_LINES:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { TrimLines(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			TrimLines(fTextView);
 			break;
-		}
 		case M_TRANSFORM_REPLACE:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {
-				ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
-					fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords());
-			});
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
+				fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords());
 			if (fClearSettingsAfterUse) {
 				fSidebar->setSearchText("");
 				fSidebar->setReplaceText("");
@@ -314,87 +271,52 @@ MainWindow::MessageReceived(BMessage* msg)
 				fSidebar->setReplaceFullWords(false);
 			}
 			break;
-		}
 		case M_TRIM_EMPTY_LINES:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { TrimEmptyLines(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			TrimEmptyLines(fTextView);
 			break;
-		}
 		case M_TRANSFORM_PREFIX_SUFFIX:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {
-				AddStringsToEachLine(fTextView, fSidebar->getPrefixText(),
-					fSidebar->getSuffixText());
-			});
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			AddStringsToEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText());
 			if (fClearSettingsAfterUse) {
 				fSidebar->setPrefixText("");
 				fSidebar->setSuffixText("");
 			}
 			break;
-		}
 		case M_TRANSFORM_REMOVE_PREFIX_SUFFIX:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {
-				RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(),
-					fSidebar->getSuffixText());
-			});
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(),
+				fSidebar->getSuffixText());
 			if (fClearSettingsAfterUse) {
 				fSidebar->setPrefixText("");
 				fSidebar->setSuffixText("");
 			}
 			break;
-		}
 		case M_TRANSFORM_ROT13:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToROT13(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			ConvertToROT13(fTextView);
 			break;
-		}
 		case M_TRANSFORM_ENCODE_URL:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { URLEncode(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			URLEncode(fTextView);
 			break;
-		}
 		case M_TRANSFORM_DECODE_URL:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() { URLDecode(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			URLDecode(fTextView);
 			break;
-		}
 		case M_SORT_LINES:
 		{
-			if (fSidebar->getAlphaSortRadio()) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {
-					SortLines(fTextView, fSidebar->getSortAsc(), fSidebar->getCaseSortCheck());
-				});
-				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
-			} else {
-				auto cmd = std::make_unique<TransformCommand>([=]() {
-					SortLinesByLength(fTextView, fSidebar->getSortAsc(),
-						fSidebar->getCaseSortCheck());
-				});
-				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
-			}
+			bool sortAlphabetically = fSidebar->getAlphaSortRadio();
+			bool sortAscending = fSidebar->getSortAsc();
+			bool caseSensitive = fSidebar->getCaseSortCheck();
+
+			if (sortAlphabetically)
+				SortLines(fTextView, sortAscending, caseSensitive);
+			else
+				SortLinesByLength(fTextView, sortAscending, caseSensitive);
 			break;
 		}
 		case M_INDENT_LINES:
-		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {
-				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
-			});
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
-			break;
-		}
 		case M_UNINDENT_LINES:
 		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {
+			if (msg->what == M_INDENT_LINES)
+				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
+			else
 				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
-			});
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
 		case M_MODE_REMOVE_ALL:
@@ -404,27 +326,19 @@ MainWindow::MessageReceived(BMessage* msg)
 			fSidebar->MessageReceived(msg);
 			break;
 		case M_REMOVE_DUPLICATES:
-		{
-			auto cmd
-				= std::make_unique<TransformCommand>([=]() { RemoveDuplicateLines(fTextView); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			RemoveDuplicateLines(fTextView);
 			break;
-		}
 		case M_INSERT_EXAMPLE_TEXT:
-		{
-			BString text(B_TRANSLATE("Haiku is an open-source operating system.\n"
-									 "It is fast, simple and elegant.\n"
-									 "Developers love its clean architecture.\n"
-									 "Users enjoy its intuitive interface.\n"
-									 "Start exploring the power of Haiku today."));
-			auto cmd = std::make_unique<TransformCommand>([=]() { fTextView->SetText(text); });
-			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
+			fTextView->SetText(B_TRANSLATE("Haiku is an open-source operating system.\n"
+							  "It is fast, simple and elegant.\n"
+							  "Developers love its clean architecture.\n"
+							  "Users enjoy its intuitive interface.\n"
+							  "Start exploring the power of Haiku today."));
 			break;
-		}
 		case M_TRANSFORM_WIP:
 			(new BAlert(B_TRANSLATE("Not implemented"),
 				 B_TRANSLATE("Sorry, this functionality has not been implemented "
-							 "yet, but it is planned for the near future."),
+				 "yet, but it is planned for the near future."),
 				 B_TRANSLATE("OK")))
 				->Go();
 			break;
@@ -976,6 +890,6 @@ MainWindow::MenusBeginning()
 	fCopyItem->SetEnabled(hasTextView && hasSelection);
 	fPasteItem->SetEnabled(hasTextView && textView->IsEditable());
 	fSelectAllItem->SetEnabled(hasTextView);
-	fUndoItem->SetEnabled(fCommandManager.CanUndo());
-	fRedoItem->SetEnabled(fCommandManager.CanRedo());
+	fUndoItem->SetEnabled(fTextView->CanUndo());
+	fRedoItem->SetEnabled(fTextView->CanRedo());
 }
