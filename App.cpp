@@ -23,6 +23,7 @@ App::AboutRequested()
 	BAboutWindow* about = new BAboutWindow(kApplicationName, kApplicationSignature);
 	about->AddDescription("Clean and transform text easily with this lightweight tool.");
 	about->AddCopyright(2025, "Johan Wagenheim");
+	about->AddDescription("Toolbar icons by ZuMi\nThanks to Humdinger for advice and review");
 	about->Show();
 }
 

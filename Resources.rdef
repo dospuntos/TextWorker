@@ -4,8 +4,8 @@ resource app_flags B_MULTIPLE_LAUNCH;
 
 resource app_version {
 	major = 0,
-	middle = 6,
-	minor = 1,
+	middle = 8,
+	minor = 0,
 
 	variety = 1,
 
@@ -94,3 +94,6 @@ resource(13, "URL_DECODE_ICON") #'VICN' import "icons/unlink.hvif";
 resource(14, "PUZZLE_ICON") #'VICN' import "icons/puzzle.hvif";
 resource(15, "UNDO_ICON") #'VICN' import "icons/undo.hvif";
 resource(16, "REDO_ICON") #'VICN' import "icons/redo.hvif";
+resource(17, "CUT_ICON") #'VICN' import "icons/edit cut.hvif";
+resource(18, "COPY_ICON") #'VICN' import "icons/edit copy.hvif";
+resource(19, "PASTE_ICON") #'VICN' import "icons/edit paste.hvif";

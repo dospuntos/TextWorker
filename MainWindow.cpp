@@ -24,9 +24,9 @@
 
 #include "Constants.h"
 #include "SettingsWindow.h"
-#include "TransformCommand.h"
 #include "TextUtils.h"
 #include "Toolbar.h"
+#include "TransformCommand.h"
 
 using namespace std::placeholders;
 
@@ -34,6 +34,7 @@ static const char* kSettingsFile = "TextWorker_settings";
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "MainView"
+
 
 MainWindow::MainWindow(void)
 	:
@@ -62,9 +63,9 @@ MainWindow::MainWindow(void)
 		.Add(fToolbar, 0)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
-			.Add(fSidebar, 0)
-			.Add(fScrollView, 1)
-			.SetInsets(5, 5, 5, 5)
+		.Add(fSidebar, 0)
+		.Add(fScrollView, 1)
+		.SetInsets(5, 5, 5, 5)
 		.End()
 		.Add(fStatusBar, 0);
 
@@ -99,9 +100,8 @@ MainWindow::MainWindow(void)
 						== B_OK
 					&& text != nullptr) {
 					// Only insert if the text is not empty
-					if (textLen > 0) {
+					if (textLen > 0)
 						fTextView->SetText(text, textLen);
-					}
 				}
 			}
 			be_clipboard->Unlock();
@@ -224,80 +224,88 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToUppercase(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToUppercase(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_LOWERCASE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToLowercase(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToLowercase(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_CAPITALIZE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {Capitalize(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { Capitalize(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_TITLE_CASE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToTitlecase(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToTitlecase(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_RANDOM_CASE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToRandomCase(fTextView);});
+		{
+			auto cmd
+				= std::make_unique<TransformCommand>([=]() { ConvertToRandomCase(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_ALTERNATING_CASE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToAlternatingCase(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>(
+				[=]() { ConvertToAlternatingCase(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_TOGGLE_CASE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ToggleCase(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { ToggleCase(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_REMOVE_LINE_BREAKS:
-			{
+		{
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {RemoveLineBreaks(fTextView);});
+				auto cmd
+					= std::make_unique<TransformCommand>([=]() { RemoveLineBreaks(fTextView); });
 				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_ON) {
 				auto cmd = std::make_unique<TransformCommand>([=]() {
-					BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
+					BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(),
+						fSidebar->getKeepDelimiterValue());
 				});
 				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());});
+				auto cmd = std::make_unique<TransformCommand>(
+					[=]() { RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput()); });
 				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
-					fSidebar->getSplitOnWords());});
+				auto cmd = std::make_unique<TransformCommand>([=]() {
+					InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
+						fSidebar->getSplitOnWords());
+				});
 				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			}
-			if (fClearSettingsAfterUse) {
+			if (fClearSettingsAfterUse)
 				fSidebar->setBreakModeInput("");
-			}
 			break;
-			}
+		}
 		case M_TRIM_LINES:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {TrimLines(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { TrimLines(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_REPLACE:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
-				fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords());});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() {
+				ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
+					fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords());
+			});
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			if (fClearSettingsAfterUse) {
 				fSidebar->setSearchText("");
@@ -306,71 +314,86 @@ MainWindow::MessageReceived(BMessage* msg)
 				fSidebar->setReplaceFullWords(false);
 			}
 			break;
-			}
+		}
 		case M_TRIM_EMPTY_LINES:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {TrimEmptyLines(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { TrimEmptyLines(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_PREFIX_SUFFIX:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {AddStringsToEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText());});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() {
+				AddStringsToEachLine(fTextView, fSidebar->getPrefixText(),
+					fSidebar->getSuffixText());
+			});
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			if (fClearSettingsAfterUse) {
 				fSidebar->setPrefixText("");
 				fSidebar->setSuffixText("");
 			}
 			break;
-			}
+		}
 		case M_TRANSFORM_REMOVE_PREFIX_SUFFIX:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText());});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() {
+				RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(),
+					fSidebar->getSuffixText());
+			});
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			if (fClearSettingsAfterUse) {
 				fSidebar->setPrefixText("");
 				fSidebar->setSuffixText("");
 			}
 			break;
-			}
+		}
 		case M_TRANSFORM_ROT13:
-			{
-			auto cmd = std::make_unique<TransformCommand>([=]() {ConvertToROT13(fTextView);});
+		{
+			auto cmd = std::make_unique<TransformCommand>([=]() { ConvertToROT13(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
-			}
+		}
 		case M_TRANSFORM_ENCODE_URL:
 		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {URLEncode(fTextView);});
+			auto cmd = std::make_unique<TransformCommand>([=]() { URLEncode(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
 		case M_TRANSFORM_DECODE_URL:
 		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {URLDecode(fTextView);});
+			auto cmd = std::make_unique<TransformCommand>([=]() { URLDecode(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
 		case M_SORT_LINES:
 		{
 			if (fSidebar->getAlphaSortRadio()) {
-				auto cmd = std::make_unique<TransformCommand>([=]() {SortLines(fTextView, fSidebar->getSortAsc(), fSidebar->getCaseSortCheck());});
+				auto cmd = std::make_unique<TransformCommand>([=]() {
+					SortLines(fTextView, fSidebar->getSortAsc(), fSidebar->getCaseSortCheck());
+				});
 				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			} else {
-				auto cmd = std::make_unique<TransformCommand>([=]() {SortLinesByLength(fTextView, fSidebar->getSortAsc(), fSidebar->getCaseSortCheck());});
+				auto cmd = std::make_unique<TransformCommand>([=]() {
+					SortLinesByLength(fTextView, fSidebar->getSortAsc(),
+						fSidebar->getCaseSortCheck());
+				});
 				fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			}
 			break;
 		}
 		case M_INDENT_LINES:
 		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());});
+			auto cmd = std::make_unique<TransformCommand>([=]() {
+				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
+			});
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
 		case M_UNINDENT_LINES:
 		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());});
+			auto cmd = std::make_unique<TransformCommand>([=]() {
+				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
+			});
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
@@ -382,25 +405,26 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_REMOVE_DUPLICATES:
 		{
-			auto cmd = std::make_unique<TransformCommand>([=]() {RemoveDuplicateLines(fTextView); });
+			auto cmd
+				= std::make_unique<TransformCommand>([=]() { RemoveDuplicateLines(fTextView); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
 		case M_INSERT_EXAMPLE_TEXT:
 		{
 			BString text(B_TRANSLATE("Haiku is an open-source operating system.\n"
-							  "It is fast, simple and elegant.\n"
-							  "Developers love its clean architecture.\n"
-							  "Users enjoy its intuitive interface.\n"
-							  "Start exploring the power of Haiku today."));
-			auto cmd = std::make_unique<TransformCommand>([=]() {fTextView->SetText(text); });
+									 "It is fast, simple and elegant.\n"
+									 "Developers love its clean architecture.\n"
+									 "Users enjoy its intuitive interface.\n"
+									 "Start exploring the power of Haiku today."));
+			auto cmd = std::make_unique<TransformCommand>([=]() { fTextView->SetText(text); });
 			fCommandManager.ExecuteCommand(std::move(cmd), fTextView);
 			break;
 		}
 		case M_TRANSFORM_WIP:
 			(new BAlert(B_TRANSLATE("Not implemented"),
 				 B_TRANSLATE("Sorry, this functionality has not been implemented "
-				 "yet, but it is planned for the near future."),
+							 "yet, but it is planned for the near future."),
 				 B_TRANSLATE("OK")))
 				->Go();
 			break;
@@ -448,11 +472,15 @@ MainWindow::_BuildMenu()
 
 	// App menu
 	menu = new BMenu(B_TRANSLATE("App"));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Help" B_UTF8_ELLIPSIS), new BMessage(M_TRANSFORM_WIP), 'H'));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Report a bug" B_UTF8_ELLIPSIS), new BMessage(M_REPORT_A_BUG)));
+	menu->AddItem(
+		new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
+	menu->AddItem(
+		new BMenuItem(B_TRANSLATE("Help" B_UTF8_ELLIPSIS), new BMessage(M_TRANSFORM_WIP), 'H'));
+	menu->AddItem(
+		new BMenuItem(B_TRANSLATE("Report a bug" B_UTF8_ELLIPSIS), new BMessage(M_REPORT_A_BUG)));
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Settings" B_UTF8_ELLIPSIS),
+		new BMessage(M_SHOW_SETTINGS), ',', B_COMMAND_KEY));
 	menu->AddSeparatorItem();
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 
@@ -462,11 +490,13 @@ MainWindow::_BuildMenu()
 	menu = new BMenu(B_TRANSLATE("File"));
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("New"), new BMessage(M_FILE_NEW), 'N'));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(M_FILE_OPEN), 'O'));
+	menu->AddItem(
+		new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(M_FILE_OPEN), 'O'));
 	menu->AddSeparatorItem();
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Save"), new BMessage(M_FILE_SAVE), 'S'));
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS), new BMessage(M_FILE_SAVE_AS), 'S', B_SHIFT_KEY));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS),
+		new BMessage(M_FILE_SAVE_AS), 'S', B_SHIFT_KEY));
 
 	menuBar->AddItem(menu);
 
@@ -482,59 +512,70 @@ MainWindow::_BuildMenu()
 	menu->AddSeparatorItem();
 	menu->AddItem(fSelectAllItem);
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Insert example text"), new BMessage(M_INSERT_EXAMPLE_TEXT), 'E'));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Insert example text"),
+		new BMessage(M_INSERT_EXAMPLE_TEXT), 'E'));
 
 	menuBar->AddItem(menu);
+
+	// === TEXT CASE MENU ===
+	BMenu* textCaseMenu = new BMenu(B_TRANSLATE("Text case"));
+
+	BMenuItem* uppercaseItem
+		= new BMenuItem(B_TRANSLATE("UPPERCASE"), new BMessage(M_TRANSFORM_UPPERCASE));
+	uppercaseItem->SetShortcut('u', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(uppercaseItem);
+
+	BMenuItem* lowercaseItem
+		= new BMenuItem(B_TRANSLATE("lowercase"), new BMessage(M_TRANSFORM_LOWERCASE));
+	lowercaseItem->SetShortcut('l', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(lowercaseItem);
+
+	BMenuItem* capitalizeItem
+		= new BMenuItem(B_TRANSLATE("Capitalize"), new BMessage(M_TRANSFORM_CAPITALIZE));
+	capitalizeItem->SetShortcut('c', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(capitalizeItem);
+
+	BMenuItem* titleCaseItem
+		= new BMenuItem(B_TRANSLATE("Title Case"), new BMessage(M_TRANSFORM_TITLE_CASE));
+	titleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(titleCaseItem);
+
+	BMenuItem* randomCaseItem
+		= new BMenuItem(B_TRANSLATE("RaNDoM caSE"), new BMessage(M_TRANSFORM_RANDOM_CASE));
+	randomCaseItem->SetShortcut('r', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(randomCaseItem);
+
+	BMenuItem* alternatingCaseItem = new BMenuItem(B_TRANSLATE("AlTeRnAtInG cAsE"),
+		new BMessage(M_TRANSFORM_ALTERNATING_CASE));
+	alternatingCaseItem->SetShortcut('a', B_COMMAND_KEY | B_OPTION_KEY);
+	textCaseMenu->AddItem(alternatingCaseItem);
+
+	BMenuItem* toggleCaseItem
+		= new BMenuItem(B_TRANSLATE("Toggle case"), new BMessage(M_TRANSFORM_TOGGLE_CASE));
+	toggleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY | B_SHIFT_KEY);
+	textCaseMenu->AddItem(toggleCaseItem);
+
+	menuBar->AddItem(textCaseMenu);
 
 	// ====== Transform Menu Structure ======
 	BMenu* transformMenu = new BMenu(B_TRANSLATE("Transform"));
 
-	// === TEXT CASE MENU ===
-	BMenu* textCaseMenu = new BMenu(B_TRANSLATE("Text Case"));
-
-	BMenuItem* uppercaseItem = new BMenuItem(B_TRANSLATE("UPPERCASE"), new BMessage(M_TRANSFORM_UPPERCASE));
-	uppercaseItem->SetShortcut('u', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(uppercaseItem);
-
-	BMenuItem* lowercaseItem = new BMenuItem(B_TRANSLATE("lowercase"), new BMessage(M_TRANSFORM_LOWERCASE));
-	lowercaseItem->SetShortcut('l', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(lowercaseItem);
-
-	BMenuItem* capitalizeItem = new BMenuItem(B_TRANSLATE("Capitalize"), new BMessage(M_TRANSFORM_CAPITALIZE));
-	capitalizeItem->SetShortcut('c', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(capitalizeItem);
-
-	BMenuItem* titleCaseItem = new BMenuItem(B_TRANSLATE("Title Case"), new BMessage(M_TRANSFORM_TITLE_CASE));
-	titleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(titleCaseItem);
-
-	BMenuItem* randomCaseItem = new BMenuItem(B_TRANSLATE("RaNDoM caSE"), new BMessage(M_TRANSFORM_RANDOM_CASE));
-	randomCaseItem->SetShortcut('r', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(randomCaseItem);
-
-	BMenuItem* alternatingCaseItem
-		= new BMenuItem(B_TRANSLATE("AlTeRnAtInG cAsE"), new BMessage(M_TRANSFORM_ALTERNATING_CASE));
-	alternatingCaseItem->SetShortcut('a', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(alternatingCaseItem);
-
-	BMenuItem* toggleCaseItem = new BMenuItem(B_TRANSLATE("Toggle case"), new BMessage(M_TRANSFORM_TOGGLE_CASE));
-	toggleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY | B_SHIFT_KEY);
-	textCaseMenu->AddItem(toggleCaseItem);
-
-	transformMenu->AddItem(textCaseMenu);
-
-	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Search and replace"), new BMessage(M_TRANSFORM_REPLACE)));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Search and replace"), new BMessage(M_TRANSFORM_REPLACE)));
 
 	// === ENCODE/DECODE MENU ===
 	BMenu* encodeMenu = new BMenu(B_TRANSLATE("Encode/Decode"));
 
-	BMenuItem* urlEncodeItem = new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL));
+	BMenuItem* urlEncodeItem
+		= new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL));
 	encodeMenu->AddItem(urlEncodeItem);
 
-	BMenuItem* urlDecodeItem = new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL));
+	BMenuItem* urlDecodeItem
+		= new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL));
 	encodeMenu->AddItem(urlDecodeItem);
 
-	BMenuItem* rot13Item = new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13));
+	BMenuItem* rot13Item
+		= new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13));
 	rot13Item->SetShortcut('m', B_COMMAND_KEY | B_OPTION_KEY);
 	encodeMenu->AddItem(rot13Item);
 
@@ -548,13 +589,13 @@ MainWindow::_BuildMenu()
 	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(removeLineBreaksItem);
 
-	BMenuItem* insertLineBreaksItem
-		= new BMenuItem(B_TRANSLATE("Insert line breaks (width)"), new BMessage(M_INSERT_LINE_BREAKS));
+	BMenuItem* insertLineBreaksItem = new BMenuItem(B_TRANSLATE("Insert line breaks (width)"),
+		new BMessage(M_INSERT_LINE_BREAKS));
 	insertLineBreaksItem->SetShortcut('i', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(insertLineBreaksItem);
 
-	BMenuItem* breakOnDelimiterItem
-		= new BMenuItem(B_TRANSLATE("Break lines on delimiter"), new BMessage(M_BREAK_LINES_ON_DELIMITER));
+	BMenuItem* breakOnDelimiterItem = new BMenuItem(B_TRANSLATE("Break lines on delimiter"),
+		new BMessage(M_BREAK_LINES_ON_DELIMITER));
 	breakOnDelimiterItem->SetShortcut('d', B_COMMAND_KEY | B_OPTION_KEY);
 	lineMenu->AddItem(breakOnDelimiterItem);
 
@@ -795,7 +836,9 @@ MainWindow::UpdateStatusBar()
 
 	// Update the status bar text
 	BString statusText;
-	statusText.SetToFormat(B_TRANSLATE_COMMENT("%d:%d | Chars: %d | Words: %d", "Statusbar text - only change Chars and Words"), row, col, charCount, wordCount);
+	statusText.SetToFormat(B_TRANSLATE_COMMENT("%d:%d | Chars: %d | Words: %d",
+							   "Statusbar text - only change Chars and Words"),
+		row, col, charCount, wordCount);
 	fStatusBar->SetText(statusText.String());
 }
 
@@ -846,11 +889,13 @@ MainWindow::OpenFile(const entry_ref& ref)
 
 
 	if (!isText) {
-		(new BAlert("Error", B_TRANSLATE("The selected file is not a recognized text file."), B_TRANSLATE("OK")))->Go();
+		(new BAlert("Error", B_TRANSLATE("The selected file is not a recognized text file."),
+			 B_TRANSLATE("OK")))
+			->Go();
 		return;
 	}
 
-	fTextView->SetText("");
+	//fTextView->SetText("");
 	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
@@ -934,4 +979,3 @@ MainWindow::MenusBeginning()
 	fUndoItem->SetEnabled(fCommandManager.CanUndo());
 	fRedoItem->SetEnabled(fCommandManager.CanRedo());
 }
-

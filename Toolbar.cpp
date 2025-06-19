@@ -6,6 +6,7 @@
 #include "Toolbar.h"
 #include "Constants.h"
 #include <Bitmap.h>
+#include <Catalog.h>
 #include <File.h>
 #include <IconUtils.h>
 #include <InterfaceDefs.h>
@@ -15,6 +16,9 @@
 #include <SpaceLayoutItem.h>
 #include <View.h>
 
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "Toolbar"
+
 
 BToolBar*
 CreateToolbar(BHandler* target)
@@ -22,11 +26,11 @@ CreateToolbar(BHandler* target)
 	BToolBar* toolbar = new BToolBar(B_HORIZONTAL);
 
 	toolbar->AddAction(new BMessage(M_FILE_NEW), target, ResourceToBitmap("NEW_ICON"),
-		"New file (Alt-N)", "", false);
+		B_TRANSLATE("New file (Alt-N)"), "", false);
 	toolbar->AddAction(new BMessage(M_FILE_OPEN), target, ResourceToBitmap("OPEN_ICON"),
-		"Open file (Alt-O)", "", false);
+		B_TRANSLATE("Open file (Alt-O)"), "", false);
 	toolbar->AddAction(new BMessage(M_FILE_SAVE), target, ResourceToBitmap("SAVE_ICON"),
-		"Save file (Alt-S)", "", false);
+		B_TRANSLATE("Save file (Alt-S)"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -35,9 +39,24 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(B_UNDO), target, ResourceToBitmap("UNDO_ICON"),
-		"Undo (Alt-Z)", "", false);
+		B_TRANSLATE("Undo (Alt-Z)"), "", false);
 	toolbar->AddAction(new BMessage(B_REDO), target, ResourceToBitmap("REDO_ICON"),
-		"Redo (Alt-Y)", "", false);
+		B_TRANSLATE("Redo (Alt-Y)"), "", false);
+
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+	toolbar->AddSeparator();
+	toolbar->GroupLayout()->AddItem(
+		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
+
+	toolbar->AddAction(new BMessage(B_CUT), target, ResourceToBitmap("CUT_ICON"),
+		B_TRANSLATE("Cut (Alt-X)"), "", true);
+
+	toolbar->AddAction(new BMessage(B_COPY), target, ResourceToBitmap("COPY_ICON"),
+		B_TRANSLATE("Copy (Alt-C)"), "", true);
+
+	toolbar->AddAction(new BMessage(B_PASTE), target, ResourceToBitmap("PASTE_ICON"),
+		B_TRANSLATE("Paste (Alt-V)"), "", true);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -46,7 +65,7 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), target, ResourceToBitmap("LINE_WRAP_ICON"),
-		"Word wrap", "", true);
+		B_TRANSLATE("Word wrap"), "", true);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -55,15 +74,15 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(M_TRANSFORM_UPPERCASE), target,
-		ResourceToBitmap("UPPERCASE_ICON"), "UPPERCASE", "", false);
+		ResourceToBitmap("UPPERCASE_ICON"), B_TRANSLATE("UPPERCASE"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_LOWERCASE), target,
-		ResourceToBitmap("LOWERCASE_ICON"), "lowercase", "", false);
+		ResourceToBitmap("LOWERCASE_ICON"), B_TRANSLATE("lowercase"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_TITLE_CASE), target,
-		ResourceToBitmap("TITLECASE_ICON"), "Title Case", "", false);
+		ResourceToBitmap("TITLECASE_ICON"), B_TRANSLATE("Title Case"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_CAPITALIZE), target,
-		ResourceToBitmap("CAPITALIZE_ICON"), "Capitalize", "", false);
+		ResourceToBitmap("CAPITALIZE_ICON"), B_TRANSLATE("Capitalize"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_TOGGLE_CASE), target,
-		ResourceToBitmap("TOGGLE_ICON"), "Toggle case", "", false);
+		ResourceToBitmap("TOGGLE_ICON"), B_TRANSLATE("Toggle case"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -72,18 +91,18 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(M_TRANSFORM_ENCODE_URL), target,
-		ResourceToBitmap("URL_ENCODE_ICON"), "URL encode", "", false);
+		ResourceToBitmap("URL_ENCODE_ICON"), B_TRANSLATE("URL encode"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_DECODE_URL), target,
-		ResourceToBitmap("URL_DECODE_ICON"), "URL decode", "", false);
+		ResourceToBitmap("URL_DECODE_ICON"), B_TRANSLATE("URL decode"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_ROT13), target, ResourceToBitmap("PUZZLE_ICON"),
-		"ROT13 encode/decode", "", false);
+		B_TRANSLATE("ROT13 encode/decode"), "", false);
 
 	toolbar->AddGlue();
 
 	toolbar->AddAction(new BMessage(M_SHOW_SETTINGS), target, ResourceToBitmap("SETTINGS_ICON"),
-		"Settings" B_UTF8_ELLIPSIS, "", false);
+		B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_WIP), target, ResourceToBitmap("HELP_ICON"),
-		"Help" B_UTF8_ELLIPSIS, "", false);
+		B_TRANSLATE("Help" B_UTF8_ELLIPSIS), "", false);
 
 	return toolbar;
 }
