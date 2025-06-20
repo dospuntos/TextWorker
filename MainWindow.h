@@ -33,7 +33,8 @@ private:
 	BMenuBar* _BuildMenu();
 	BToolBar* fToolbar;
 	Sidebar* fSidebar;
-	void UpdateStatusBar();
+	void _UpdateStatusBar();
+	void _UpdateMessageBar(BString message);
 
 	bool fSaveTextOnExit;
 	bool fSaveFieldsOnExit;
@@ -48,6 +49,7 @@ private:
 	UndoableTextView* fTextView;
 	BScrollView* fScrollView;
 	BStringView* fStatusBar;
+	BStringView* fMessageBar;
 	BMessageRunner* fStatusUpdater;
 
 	BMenuItem* fSaveMenuItem;

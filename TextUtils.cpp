@@ -20,6 +20,11 @@
 #include <unicode/locid.h>
 #include <unicode/unistr.h>
 #include <vector>
+#include <map>
+#include <unicode/brkiter.h>
+#include <unicode/unistr.h>
+#include "StatsWindow.h"
+
 
 int32 startSelection, endSelection; // For cursor position
 
@@ -884,4 +889,99 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count)
 
 	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
 	RestoreCursorPosition(textView);
+}
+
+
+void
+ShowTextStats(BTextView* textView)
+{
+	BString text = GetTextFromTextView(textView);
+	if (text.IsEmpty()) {
+		(new BAlert("stats", "The text is empty.", "OK"))->Go();
+		return;
+	}
+
+	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
+	BString statsMsg;
+
+	int32 charCount = unicodeText.countChar32();
+	int32 lineCount = 0; //text.CountChars('\n') + 1;
+	int32 maxLineLength = 0;
+	int32 totalWordLength = 0;
+	int32 wordCount = 0;
+	int32 sentenceCount = 0;
+
+	std::map<std::string, int> wordFrequency;
+
+	// Max line length
+	int32 start = 0, end;
+	while ((end = text.FindFirst('\n', start)) >= 0) {
+		int32 lineLen = end - start;
+		if (lineLen > maxLineLength)
+			maxLineLength = lineLen;
+		start = end + 1;
+	}
+	if (start < text.Length()) {
+		int32 lineLen = text.Length() - start;
+		if (lineLen > maxLineLength)
+			maxLineLength = lineLen;
+	}
+
+	// ICU word iterator
+	UErrorCode status = U_ZERO_ERROR;
+	std::unique_ptr<icu::BreakIterator> wordIter(
+		icu::BreakIterator::createWordInstance(icu::Locale::getDefault(), status));
+	wordIter->setText(unicodeText);
+
+	int32_t startWord = wordIter->first();
+	for (int32_t endWord = wordIter->next(); endWord != icu::BreakIterator::DONE; startWord = endWord, endWord = wordIter->next()) {
+		icu::UnicodeString word = unicodeText.tempSubStringBetween(startWord, endWord);
+		if (word.trim().isEmpty()) continue;
+		if (word.char32At(0) >= 0x30 && u_isalnum(word.char32At(0))) {
+			wordCount++;
+			totalWordLength += word.countChar32();
+			word.toLower();
+			std::string utf8;
+			word.toUTF8String(utf8);
+			if (utf8.length() > 2) {
+				wordFrequency[utf8]++;
+			}
+		}
+	}
+
+	// ICU sentence iterator
+	std::unique_ptr<icu::BreakIterator> sentIter(
+		icu::BreakIterator::createSentenceInstance(icu::Locale::getDefault(), status));
+	sentIter->setText(unicodeText);
+
+	for (int32_t boundary = sentIter->first(); boundary != icu::BreakIterator::DONE; boundary = sentIter->next())
+		sentenceCount++;
+
+	// Most common words
+	std::vector<std::pair<BString, int>> sortedWords;
+	for (const auto& entry : wordFrequency) {
+		sortedWords.emplace_back(BString(entry.first.c_str()), entry.second);
+	}
+	std::sort(sortedWords.begin(), sortedWords.end(),
+		[](const auto& a, const auto& b) { return b.second > a.second; });
+
+	statsMsg.SetToFormat(
+		"STATISTICS FOR CURRENT TEXT\n\n"
+		"Characters: %d\n"
+		"Words: %d\n"
+		"Lines: %d\n"
+		"Sentences: %d\n"
+		"Longest line: %d chars\n"
+		"Average word length: %.2f\n\n"
+		"Most used words:\n",
+		charCount, wordCount, lineCount, sentenceCount, maxLineLength,
+		wordCount > 0 ? (float)totalWordLength / wordCount : 0.0);
+
+	int shown = 0;
+	for (const auto& [word, freq] : sortedWords) {
+		statsMsg << "  " << word << ": " << freq << '\n';
+		if (++shown == 5) break;
+	}
+	(new BAlert("Stats", statsMsg.String(), "OK", NULL, NULL, B_WIDTH_AS_USUAL, B_IDEA_ALERT))->Go();
+
 }

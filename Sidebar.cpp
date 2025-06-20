@@ -104,7 +104,7 @@ Sidebar::_BuildLineTab()
 	// Grid layout
 	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid1.Add(new BStringView(NULL, B_TRANSLATE("Find:")),		0, 0, 1)
+	grid1.Add(new BStringView(NULL, B_TRANSLATE("Search:")),		0, 0, 1)
 		.Add(fSearchInput,										1, 0, 1)
 		.Add(new BStringView(NULL, B_TRANSLATE("Replace:")),	0, 1, 1)
 		.Add(fReplaceInput,                    				   	1, 1, 1)

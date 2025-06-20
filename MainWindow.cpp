@@ -45,6 +45,7 @@ MainWindow::MainWindow(void)
 
 	fTextView = new UndoableTextView("TextView");
 	fTextView->MakeEditable(true);
+	fTextView->SetInsets(5,5, 5, 5);
 
 	fScrollView = new BScrollView("TextViewScroll", fTextView, B_WILL_DRAW | B_FRAME_EVENTS, true,
 		true, B_PLAIN_BORDER);
@@ -54,6 +55,8 @@ MainWindow::MainWindow(void)
 
 	fStatusBar = new BStringView("StatusBar", "");
 	fStatusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
+	fMessageBar = new BStringView("MessageBar", "");
+	fMessageBar->SetExplicitAlignment(BAlignment(B_ALIGN_RIGHT, B_ALIGN_VERTICAL_CENTER));
 
 	fSettingsWindow = nullptr;
 
@@ -63,11 +66,14 @@ MainWindow::MainWindow(void)
 		.Add(fToolbar, 0)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
-		.Add(fSidebar, 0)
-		.Add(fScrollView, 1)
-		.SetInsets(5, 5, 5, 5)
+			.Add(fSidebar, 0)
+			.Add(fScrollView, 1)
+			.SetInsets(5, 5, 5, 5)
 		.End()
-		.Add(fStatusBar, 0);
+		.AddGroup(B_HORIZONTAL, 0)
+			.Add(fStatusBar, 0)
+			.Add(fMessageBar, 0)
+		.End();
 
 	BMessage settings;
 	_LoadSettings(settings);
@@ -178,7 +184,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			fSavePanel->Show();
 			break;
 		case M_UPDATE_STATUSBAR:
-			UpdateStatusBar();
+			_UpdateStatusBar();
 			break;
 		case M_SHOW_SETTINGS:
 		{
@@ -223,6 +229,7 @@ MainWindow::MessageReceived(BMessage* msg)
 				newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
 			newFont.SetSize(fFontSize);
 			fTextView->SetFontAndColor(&newFont);
+			_UpdateMessageBar("Settings updated");
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
@@ -263,6 +270,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRIM_LINES:
 			TrimLines(fTextView);
+			_UpdateMessageBar(B_TRANSLATE("Removed 12 empty lines"));
 			break;
 		case M_TRANSFORM_REPLACE:
 			ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
@@ -366,6 +374,9 @@ MainWindow::MessageReceived(BMessage* msg)
 			(new BAlert("Help", helpText.String(), B_TRANSLATE("OK")))->Go();
 			break;
 			}
+		case M_SHOW_STATS:
+			ShowTextStats(fTextView);
+			break;
 		case M_REPORT_A_BUG:
 			BUrl("https://github.com/dospuntos/TextWorker/issues/", true).OpenWithPreferredApplication();
 			break;
@@ -421,7 +432,7 @@ MainWindow::_BuildMenu()
 
 	IconMenuItem* iconMenu;
 	iconMenu = new IconMenuItem(menu, NULL, kApplicationSignature, B_MINI_ICON);
-	menuBar->AddItem(menu);
+	menuBar->AddItem(iconMenu);
 
 	// 'File' menu
 	menu = new BMenu(B_TRANSLATE("File"));
@@ -741,7 +752,7 @@ MainWindow::_RestoreValues(BMessage& settings)
 
 
 void
-MainWindow::UpdateStatusBar()
+MainWindow::_UpdateStatusBar()
 {
 	// Calculate Row/column based on cursor position
 	int32 start, end;
@@ -776,6 +787,13 @@ MainWindow::UpdateStatusBar()
 							   "Statusbar text - only change Chars and Words"),
 		row, col, charCount, wordCount);
 	fStatusBar->SetText(statusText.String());
+}
+
+
+void
+MainWindow::_UpdateMessageBar(BString message)
+{
+	fMessageBar->SetText(message);
 }
 
 

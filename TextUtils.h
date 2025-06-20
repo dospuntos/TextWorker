@@ -39,6 +39,7 @@ void IndentLines(BTextView* textView, bool useTabs = true, int32 count = 1);
 void UnindentLines(BTextView* textView, bool useTabs = true, int32 count = 1);
 
 bool IsProbablyText(BFile& file);
+void ShowTextStats(BTextView* textView);
 
 void SortLines(BTextView* textView, bool ascending = true, bool caseSensitive = true);
 void SortLinesByLength(BTextView* textView, bool ascending = true, bool caseSensitive = true);

@@ -99,6 +99,9 @@ CreateToolbar(BHandler* target)
 
 	toolbar->AddGlue();
 
+	toolbar->AddAction(new BMessage(M_SHOW_STATS), target, ResourceToBitmap("STATS_ICON"),
+		B_TRANSLATE("Show stats" B_UTF8_ELLIPSIS), "", false);
+	toolbar->AddSeparator();
 	toolbar->AddAction(new BMessage(M_SHOW_SETTINGS), target, ResourceToBitmap("SETTINGS_ICON"),
 		B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), "", false);
 	toolbar->AddAction(new BMessage(M_SHOW_HELP), target, ResourceToBitmap("HELP_ICON"),
