@@ -23,7 +23,6 @@
 #include <map>
 #include <unicode/brkiter.h>
 #include <unicode/unistr.h>
-#include "StatsWindow.h"
 
 
 int32 startSelection, endSelection; // For cursor position

@@ -4,14 +4,14 @@
  */
 
 #include "UndoableTextView.h"
-#include <Messenger.h>
+#include "Constants.h"
 #include <Application.h>
 #include <Message.h>
+#include <Messenger.h>
 #include <Window.h>
 
-enum {
-	M_COALESCE_TIMEOUT = '_cut'
-};
+enum { M_COALESCE_TIMEOUT = '_cut' };
+
 
 UndoableTextView::UndoableTextView(const char* name)
 	:
@@ -20,22 +20,25 @@ UndoableTextView::UndoableTextView(const char* name)
 	fRecording(true),
 	fTimer(nullptr)
 {
-rgb_color viewColor = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
-rgb_color textColor = ui_color(B_DOCUMENT_TEXT_COLOR);
+	rgb_color viewColor = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
+	rgb_color textColor = ui_color(B_DOCUMENT_TEXT_COLOR);
 
-SetViewColor(viewColor);
-SetLowColor(viewColor);
-SetHighColor(textColor);
-SetFontAndColor(nullptr, B_FONT_ALL, &textColor);
-
+	SetViewColor(viewColor);
+	SetLowColor(viewColor);
+	SetHighColor(textColor);
+	SetFontAndColor(nullptr, B_FONT_ALL, &textColor);
 }
+
 
 UndoableTextView::~UndoableTextView()
 {
 	delete fTimer;
 }
 
-void UndoableTextView::InsertText(const char* text, int32 length, int32 offset, const text_run_array* runs)
+
+void
+UndoableTextView::InsertText(const char* text, int32 length, int32 offset,
+	const text_run_array* runs)
 {
 	if (fRecording && !fCoalescing)
 		PushUndoSnapshot();
@@ -44,7 +47,9 @@ void UndoableTextView::InsertText(const char* text, int32 length, int32 offset, 
 	BTextView::InsertText(text, length, offset, runs);
 }
 
-void UndoableTextView::DeleteText(int32 start, int32 finish)
+
+void
+UndoableTextView::DeleteText(int32 start, int32 finish)
 {
 	if (fRecording && !fCoalescing)
 		PushUndoSnapshot();
@@ -53,17 +58,29 @@ void UndoableTextView::DeleteText(int32 start, int32 finish)
 	BTextView::DeleteText(start, finish);
 }
 
-void UndoableTextView::SetTextWithUndo(const BString& newText)
+
+void
+UndoableTextView::MouseDown(BPoint point)
+{
+	BTextView::MouseDown(point);
+	Window()->PostMessage(M_UPDATE_STATUSBAR);
+}
+
+
+void
+UndoableTextView::SetTextWithUndo(const BString& newText)
 {
 	fRecording = false;
 	PushUndoSnapshot();
 	SetText(newText.String());
-	Select(0, 0); // Or keep previous selection if desired
+	Select(0, 0);
 	StopCoalesceTimer();
 	fRecording = true;
 }
 
-void UndoableTextView::Undo()
+
+void
+UndoableTextView::Undo()
 {
 	if (fUndoStack.empty())
 		return;
@@ -82,7 +99,8 @@ void UndoableTextView::Undo()
 }
 
 
-void UndoableTextView::Redo()
+void
+UndoableTextView::Redo()
 {
 	if (fRedoStack.empty())
 		return;
@@ -101,7 +119,8 @@ void UndoableTextView::Redo()
 }
 
 
-void UndoableTextView::PushUndoSnapshot()
+void
+UndoableTextView::PushUndoSnapshot()
 {
 	TextSnapshot snapshot;
 	snapshot.text = Text();
@@ -126,7 +145,8 @@ void UndoableTextView::PushUndoSnapshot()
 }
 
 
-void UndoableTextView::StartCoalesceTimer()
+void
+UndoableTextView::StartCoalesceTimer()
 {
 	StopCoalesceTimer();
 	fCoalescing = true;
@@ -135,7 +155,9 @@ void UndoableTextView::StartCoalesceTimer()
 	fTimer = new BMessageRunner(BMessenger(this), &timeoutMsg, kCoalesceDelay, 1);
 }
 
-void UndoableTextView::StopCoalesceTimer()
+
+void
+UndoableTextView::StopCoalesceTimer()
 {
 	if (fTimer) {
 		delete fTimer;
@@ -143,6 +165,20 @@ void UndoableTextView::StopCoalesceTimer()
 	}
 	fCoalescing = false;
 }
+
+
+void
+UndoableTextView::KeyDown(const char* bytes, int32 numBytes)
+{
+	BTextView::KeyDown(bytes, numBytes);
+
+	// Arrow keys (← ↑ → ↓) are 0x1C–0x1F in Haiku
+	if ((bytes[0] >= B_LEFT_ARROW && bytes[0] <= B_DOWN_ARROW) || bytes[0] == B_HOME
+		|| bytes[0] == B_END) {
+		Window()->PostMessage(M_UPDATE_STATUSBAR);
+	}
+}
+
 
 void
 UndoableTextView::MessageReceived(BMessage* msg)
@@ -161,14 +197,16 @@ UndoableTextView::MessageReceived(BMessage* msg)
 }
 
 
-void UndoableTextView::AllAttached()
+void
+UndoableTextView::AllAttached()
 {
 	BTextView::AllAttached();
 	SetColorsFromTheme();
 }
 
 
-void UndoableTextView::SetColorsFromTheme()
+void
+UndoableTextView::SetColorsFromTheme()
 {
 	rgb_color viewColor = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
 	rgb_color textColor = ui_color(B_DOCUMENT_TEXT_COLOR);

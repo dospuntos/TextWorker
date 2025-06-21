@@ -35,6 +35,9 @@ private:
 	Sidebar* fSidebar;
 	void _UpdateStatusBar();
 	void _UpdateMessageBar(BString message);
+	void _UpdateToolbarState();
+	bool _ClipboardHasText() const;
+	bool _GetClipboardText(BString& outText) const;
 
 	bool fSaveTextOnExit;
 	bool fSaveFieldsOnExit;
@@ -64,6 +67,9 @@ private:
 	BMenuItem* fCopyItem;
 	BMenuItem* fPasteItem;
 	BMenuItem* fSelectAllItem;
+
+	BString fLastSavedText;
+	bool IsDocumentModified() const;
 };
 
 #endif

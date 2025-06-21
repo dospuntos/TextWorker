@@ -65,7 +65,7 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), target, ResourceToBitmap("LINE_WRAP_ICON"),
-		B_TRANSLATE("Word wrap"), "", true);
+		B_TRANSLATE("Word wrap"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));

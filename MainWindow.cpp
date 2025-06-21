@@ -51,6 +51,7 @@ MainWindow::MainWindow(void)
 		true, B_PLAIN_BORDER);
 
 	fToolbar = CreateToolbar(this);
+	fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
 	fSidebar = new Sidebar();
 
 	fStatusBar = new BStringView("StatusBar", "");
@@ -90,27 +91,11 @@ MainWindow::MainWindow(void)
 	}
 	MoveOnScreen();
 
-	// Use MessageRunner as temporary solution for status bar
-	BMessage* updateMessage = new BMessage(M_UPDATE_STATUSBAR);
-	fStatusUpdater = new BMessageRunner(this, updateMessage, 100000);
 
 	if (!fSaveTextOnExit && fInsertClipboard) {
-		// Get data from clipboard
-		BMessage* clipboard;
-		if (be_clipboard->Lock()) {
-			clipboard = be_clipboard->Data();
-			if (clipboard != nullptr) {
-				const char* text = nullptr;
-				ssize_t textLen;
-				if (clipboard->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen)
-						== B_OK
-					&& text != nullptr) {
-					// Only insert if the text is not empty
-					if (textLen > 0)
-						fTextView->SetText(text, textLen);
-				}
-			}
-			be_clipboard->Unlock();
+		BString clipboardText;
+		if (_GetClipboardText(clipboardText)) {
+			fTextView->SetText(clipboardText);
 		}
 	}
 }
@@ -151,6 +136,7 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_FILE_NEW:
 			fTextView->SetText("");
 			fFilePath = "";
+			fLastSavedText = "";
 			break;
 		case B_SIMPLE_DATA:
 		case B_REFS_RECEIVED:
@@ -185,6 +171,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_UPDATE_STATUSBAR:
 			_UpdateStatusBar();
+			_UpdateToolbarState();
 			break;
 		case M_SHOW_SETTINGS:
 		{
@@ -355,6 +342,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TOGGLE_WORD_WRAP:
 			fTextView->SetWordWrap(!fTextView->DoesWordWrap());
+			fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
 			break;
 		case B_ABOUT_REQUESTED:
 			be_app->AboutRequested();
@@ -368,8 +356,7 @@ MainWindow::MessageReceived(BMessage* msg)
 				"- Sort or clean up lines\n"
 				"- Adjust indentation\n\n"
 				"You can open text files via \"File → Open\" or by dragging them into the window.\n\n"
-				"Undo changes with \"Edit → Undo\" or Ctrl+Z.\n"
-				"Zoom text using Ctrl + Mouse Wheel.\n\n"
+				"Undo changes with \"Edit → Undo\" or Alt+Z.\n\n"
 				"Use \"Settings\" to configure font and save options.");
 			(new BAlert("Help", helpText.String(), B_TRANSLATE("OK")))->Go();
 			break;
@@ -384,6 +371,8 @@ MainWindow::MessageReceived(BMessage* msg)
 			BWindow::MessageReceived(msg);
 			break;
 	}
+	_UpdateStatusBar();
+	_UpdateToolbarState();
 	fSidebar->InvalidateLayout();
 	fSidebar->Invalidate();
 }
@@ -395,6 +384,9 @@ MainWindow::QuitRequested(void)
 	if (fSettingsWindow && fSettingsWindow->LockLooper()) {
 		fSettingsWindow->Quit();
 		fSettingsWindow = nullptr;
+	}
+	if (!fSaveTextOnExit && IsDocumentModified() == true) {
+		this->PostMessage(M_FILE_SAVE_AS);
 	}
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
@@ -409,6 +401,7 @@ MainWindow::_BuildMenu()
 	BMenu* subMenu;
 	BMenuItem* item;
 
+	fSaveMenuItem = new BMenuItem(B_TRANSLATE("Save"), new BMessage(M_FILE_SAVE), 'S');
 	fUndoItem = new BMenuItem(B_TRANSLATE("Undo"), new BMessage(B_UNDO), 'Z');
 	fRedoItem = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(B_REDO), 'Y');
 	fCutItem = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT), 'X');
@@ -442,7 +435,7 @@ MainWindow::_BuildMenu()
 		new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(M_FILE_OPEN), 'O'));
 	menu->AddSeparatorItem();
 
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Save"), new BMessage(M_FILE_SAVE), 'S'));
+	menu->AddItem(fSaveMenuItem);
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS),
 		new BMessage(M_FILE_SAVE_AS), 'S', B_SHIFT_KEY));
 
@@ -480,27 +473,22 @@ MainWindow::_BuildMenu()
 
 	BMenuItem* capitalizeItem
 		= new BMenuItem(B_TRANSLATE("Capitalize"), new BMessage(M_TRANSFORM_CAPITALIZE));
-	capitalizeItem->SetShortcut('c', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(capitalizeItem);
 
 	BMenuItem* titleCaseItem
 		= new BMenuItem(B_TRANSLATE("Title Case"), new BMessage(M_TRANSFORM_TITLE_CASE));
-	titleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(titleCaseItem);
 
 	BMenuItem* randomCaseItem
 		= new BMenuItem(B_TRANSLATE("RaNDoM caSE"), new BMessage(M_TRANSFORM_RANDOM_CASE));
-	randomCaseItem->SetShortcut('r', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(randomCaseItem);
 
 	BMenuItem* alternatingCaseItem = new BMenuItem(B_TRANSLATE("AlTeRnAtInG cAsE"),
 		new BMessage(M_TRANSFORM_ALTERNATING_CASE));
-	alternatingCaseItem->SetShortcut('a', B_COMMAND_KEY | B_OPTION_KEY);
 	textCaseMenu->AddItem(alternatingCaseItem);
 
 	BMenuItem* toggleCaseItem
 		= new BMenuItem(B_TRANSLATE("Toggle case"), new BMessage(M_TRANSFORM_TOGGLE_CASE));
-	toggleCaseItem->SetShortcut('t', B_COMMAND_KEY | B_OPTION_KEY | B_SHIFT_KEY);
 	textCaseMenu->AddItem(toggleCaseItem);
 
 	menuBar->AddItem(textCaseMenu);
@@ -557,6 +545,8 @@ MainWindow::_BuildMenu()
 	lineMenu->AddItem(removeEmptyLinesItem);
 
 	transformMenu->AddItem(lineMenu);
+
+	//
 
 	// Add the whole Transform menu to the menu bar
 	menuBar->AddItem(transformMenu);
@@ -748,6 +738,8 @@ MainWindow::_RestoreValues(BMessage& settings)
 		if (settings.FindBool("sortCase", &flag) == B_OK)
 			fSidebar->setCaseSortCheck(flag);
 	}
+	_UpdateStatusBar();
+	_UpdateToolbarState();
 }
 
 
@@ -850,6 +842,8 @@ MainWindow::OpenFile(const entry_ref& ref)
 	}
 
 	fTextView->SetText("");
+	fLastSavedText = fTextView->Text();
+
 	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
@@ -878,6 +872,7 @@ MainWindow::SaveFile(const char* path)
 		BNodeInfo nodeInfo(&file);
 		nodeInfo.SetType("text/plain");
 	}
+	fLastSavedText = fTextView->Text();
 }
 
 
@@ -926,10 +921,89 @@ MainWindow::MenusBeginning()
 	}
 
 	// Enable/disable menu items based on state
+	if (fSaveMenuItem)
+		fSaveMenuItem->SetEnabled(IsDocumentModified());
 	fCutItem->SetEnabled(hasTextView && hasSelection && textView->IsEditable());
 	fCopyItem->SetEnabled(hasTextView && hasSelection);
 	fPasteItem->SetEnabled(hasTextView && textView->IsEditable());
 	fSelectAllItem->SetEnabled(hasTextView);
 	fUndoItem->SetEnabled(fTextView->CanUndo());
 	fRedoItem->SetEnabled(fTextView->CanRedo());
+}
+
+
+void
+MainWindow::_UpdateToolbarState()
+{
+	if (!fToolbar || !fTextView)
+		return;
+
+	bool hasSelection = false;
+	int32 start = 0, end = 0;
+	fTextView->GetSelection(&start, &end);
+	hasSelection = (start != end);
+
+	// Update Undo/Redo buttons
+	fToolbar->SetActionEnabled(B_UNDO, fTextView->CanUndo());
+	fToolbar->SetActionEnabled(B_REDO, fTextView->CanRedo());
+
+	// Example: Enable "Save" only if document is dirty
+	fToolbar->SetActionEnabled(M_FILE_SAVE, IsDocumentModified());
+
+	fToolbar->SetActionEnabled(B_PASTE, _ClipboardHasText());
+	fToolbar->SetActionEnabled(B_COPY, hasSelection);
+	fToolbar->SetActionEnabled(B_CUT, hasSelection);
+
+	// You can continue adding other toolbar actions here
+}
+
+
+bool
+MainWindow::_ClipboardHasText() const
+{
+	BClipboard* clipboard = be_clipboard;
+	if (!clipboard)
+		return false;
+
+	BMessage* data = nullptr;
+	clipboard->Lock();
+	data = clipboard->Data();
+	bool hasText = data && data->HasData("text/plain", B_MIME_TYPE);
+	clipboard->Unlock();
+
+	return hasText;
+}
+
+
+bool
+MainWindow::_GetClipboardText(BString& outText) const
+{
+	if (!be_clipboard || !be_clipboard->Lock())
+		return false;
+
+	BMessage* data = be_clipboard->Data();
+	const char* text = nullptr;
+	ssize_t textLen = 0;
+
+	bool success = data
+		&& data->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &textLen) == B_OK
+		&& textLen > 0;
+
+	if (success)
+		outText.SetTo(text, textLen);
+
+	be_clipboard->Unlock();
+	return success;
+}
+
+
+
+bool
+MainWindow::IsDocumentModified() const
+{
+	if (!fTextView)
+		return false;
+
+	BString currentText = fTextView->Text();
+	return currentText != fLastSavedText;
 }

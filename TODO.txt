@@ -1,5 +1,4 @@
 - Re-organize menu
-- Enable save menu if file changed
 
 Coding:
 - HEX encode/decode
@@ -9,6 +8,3 @@ Coding:
 Other:
 - Regex
 - Word count by occurence
-- Live preview
-- Floating settings window?
-- Support "Open with" for text files

@@ -5,8 +5,8 @@
 #ifndef UNDOABLE_TEXT_VIEW_H
 #define UNDOABLE_TEXT_VIEW_H
 
-#include <TextView.h>
 #include <MessageRunner.h>
+#include <TextView.h>
 #include <stack>
 
 struct TextSnapshot {
@@ -21,8 +21,11 @@ public:
 	~UndoableTextView();
 	void MessageReceived(BMessage* msg) override;
 
-	void InsertText(const char* text, int32 length, int32 offset, const text_run_array* runs) override;
+	void InsertText(const char* text, int32 length, int32 offset,
+		const text_run_array* runs) override;
 	void DeleteText(int32 start, int32 finish) override;
+	void KeyDown(const char* bytes, int32 numBytes) override;
+	void MouseDown(BPoint point) override;
 
 	void AllAttached() override;
 	void SetColorsFromTheme();
