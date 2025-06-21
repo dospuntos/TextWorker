@@ -26,11 +26,11 @@ CreateToolbar(BHandler* target)
 	BToolBar* toolbar = new BToolBar(B_HORIZONTAL);
 
 	toolbar->AddAction(new BMessage(M_FILE_NEW), target, ResourceToBitmap("NEW_ICON"),
-		B_TRANSLATE("New file (Alt-N)"), "", false);
+		B_TRANSLATE("New file"), "", false);
 	toolbar->AddAction(new BMessage(M_FILE_OPEN), target, ResourceToBitmap("OPEN_ICON"),
-		B_TRANSLATE("Open file (Alt-O)"), "", false);
+		B_TRANSLATE("Open file" B_UTF8_ELLIPSIS), "", false);
 	toolbar->AddAction(new BMessage(M_FILE_SAVE), target, ResourceToBitmap("SAVE_ICON"),
-		B_TRANSLATE("Save file (Alt-S)"), "", false);
+		B_TRANSLATE("Save file"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -39,9 +39,9 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(B_UNDO), target, ResourceToBitmap("UNDO_ICON"),
-		B_TRANSLATE("Undo (Alt-Z)"), "", false);
+		B_TRANSLATE("Undo"), "", false);
 	toolbar->AddAction(new BMessage(B_REDO), target, ResourceToBitmap("REDO_ICON"),
-		B_TRANSLATE("Redo (Alt-Y)"), "", false);
+		B_TRANSLATE("Redo"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -50,13 +50,13 @@ CreateToolbar(BHandler* target)
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
 
 	toolbar->AddAction(new BMessage(B_CUT), target, ResourceToBitmap("CUT_ICON"),
-		B_TRANSLATE("Cut (Alt-X)"), "", true);
+		B_TRANSLATE("Cut"), "", true);
 
 	toolbar->AddAction(new BMessage(B_COPY), target, ResourceToBitmap("COPY_ICON"),
-		B_TRANSLATE("Copy (Alt-C)"), "", true);
+		B_TRANSLATE("Copy"), "", true);
 
 	toolbar->AddAction(new BMessage(B_PASTE), target, ResourceToBitmap("PASTE_ICON"),
-		B_TRANSLATE("Paste (Alt-V)"), "", true);
+		B_TRANSLATE("Paste"), "", true);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));

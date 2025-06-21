@@ -16,19 +16,19 @@
 #include <NodeInfo.h>
 #include <Path.h>
 #include <Resources.h>
+#include <Screen.h>
 #include <ScrollView.h>
 #include <TranslationUtils.h>
 #include <TranslatorRoster.h>
-#include <View.h>
 #include <Url.h>
+#include <View.h>
 #include <cctype>
-#include <Screen.h>
 
 #include "Constants.h"
+#include "IconMenuItem.h"
 #include "SettingsWindow.h"
 #include "TextUtils.h"
 #include "Toolbar.h"
-#include "IconMenuItem.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
 
@@ -45,7 +45,7 @@ MainWindow::MainWindow(void)
 
 	fTextView = new UndoableTextView("TextView");
 	fTextView->MakeEditable(true);
-	fTextView->SetInsets(5,5, 5, 5);
+	fTextView->SetInsets(5, 5, 5, 5);
 
 	fScrollView = new BScrollView("TextViewScroll", fTextView, B_WILL_DRAW | B_FRAME_EVENTS, true,
 		true, B_PLAIN_BORDER);
@@ -67,13 +67,13 @@ MainWindow::MainWindow(void)
 		.Add(fToolbar, 0)
 		.SetInsets(2)
 		.AddGroup(B_HORIZONTAL, 0)
-			.Add(fSidebar, 0)
-			.Add(fScrollView, 1)
-			.SetInsets(5, 5, 5, 5)
+		.Add(fSidebar, 0)
+		.Add(fScrollView, 1)
+		.SetInsets(5, 5, 5, 5)
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
-			.Add(fStatusBar, 0)
-			.Add(fMessageBar, 0)
+		.Add(fStatusBar, 0)
+		.Add(fMessageBar, 0)
 		.End();
 
 	BMessage settings;
@@ -94,9 +94,8 @@ MainWindow::MainWindow(void)
 
 	if (!fSaveTextOnExit && fInsertClipboard) {
 		BString clipboardText;
-		if (_GetClipboardText(clipboardText)) {
+		if (_GetClipboardText(clipboardText))
 			fTextView->SetText(clipboardText);
-		}
 	}
 }
 
@@ -244,16 +243,16 @@ MainWindow::MessageReceived(BMessage* msg)
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
 				RemoveLineBreaks(fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_ON) {
-				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(), fSidebar->getKeepDelimiterValue());
+				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(),
+					fSidebar->getKeepDelimiterValue());
 			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
 				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
 			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
 				InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
 					fSidebar->getSplitOnWords());
 			}
-			if (fClearSettingsAfterUse) {
+			if (fClearSettingsAfterUse)
 				fSidebar->setBreakModeInput("");
-			}
 			break;
 		case M_TRIM_LINES:
 			TrimLines(fTextView);
@@ -328,15 +327,15 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			fTextView->SetText(B_TRANSLATE("Haiku is an open-source operating system.\n"
-							  "It is fast, simple and elegant.\n"
-							  "Developers love its clean architecture.\n"
-							  "Users enjoy its intuitive interface.\n"
-							  "Start exploring the power of Haiku today."));
+										   "It is fast, simple and elegant.\n"
+										   "Developers love its clean architecture.\n"
+										   "Users enjoy its intuitive interface.\n"
+										   "Start exploring the power of Haiku today."));
 			break;
 		case M_TRANSFORM_WIP:
 			(new BAlert("Not implemented",
 				 B_TRANSLATE("Sorry, this functionality has not been implemented "
-				 "yet, but it is planned for the near future."),
+							 "yet, but it is planned for the near future."),
 				 B_TRANSLATE("OK")))
 				->Go();
 			break;
@@ -348,24 +347,27 @@ MainWindow::MessageReceived(BMessage* msg)
 			be_app->AboutRequested();
 			break;
 		case M_SHOW_HELP:
-			{
-			BString helpText = B_TRANSLATE("TextWorker Help\n\n"
-				"Use the tabs on the left to apply transformations such as:\n"
-				"- Search and replace\n"
-				"- Add/remove prefixes and suffixes\n"
-				"- Sort or clean up lines\n"
-				"- Adjust indentation\n\n"
-				"You can open text files via \"File → Open\" or by dragging them into the window.\n\n"
-				"Undo changes with \"Edit → Undo\" or Alt+Z.\n\n"
-				"Use \"Settings\" to configure font and save options.");
+		{
+			BString helpText
+				= B_TRANSLATE("TextWorker Help\n\n"
+							  "Use the tabs on the left to apply transformations such as:\n"
+							  "- Search and replace\n"
+							  "- Add/remove prefixes and suffixes\n"
+							  "- Sort or clean up lines\n"
+							  "- Adjust indentation\n\n"
+							  "You can open text files via \"File → Open\" or by dragging them "
+							  "into the window.\n\n"
+							  "Undo changes with \"Edit → Undo\" or Alt+Z.\n\n"
+							  "Use \"Settings\" to configure font and save options.");
 			(new BAlert("Help", helpText.String(), B_TRANSLATE("OK")))->Go();
 			break;
-			}
+		}
 		case M_SHOW_STATS:
 			ShowTextStats(fTextView);
 			break;
 		case M_REPORT_A_BUG:
-			BUrl("https://github.com/dospuntos/TextWorker/issues/", true).OpenWithPreferredApplication();
+			BUrl("https://github.com/dospuntos/TextWorker/issues/", true)
+				.OpenWithPreferredApplication();
 			break;
 		default:
 			BWindow::MessageReceived(msg);
@@ -385,9 +387,8 @@ MainWindow::QuitRequested(void)
 		fSettingsWindow->Quit();
 		fSettingsWindow = nullptr;
 	}
-	if (!fSaveTextOnExit && IsDocumentModified() == true) {
+	if (!fSaveTextOnExit && IsDocumentModified() == true)
 		this->PostMessage(M_FILE_SAVE_AS);
-	}
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }
@@ -423,8 +424,7 @@ MainWindow::_BuildMenu()
 	menu->AddSeparatorItem();
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 
-	IconMenuItem* iconMenu;
-	iconMenu = new IconMenuItem(menu, NULL, kApplicationSignature, B_MINI_ICON);
+	IconMenuItem* iconMenu = new IconMenuItem(menu, NULL, kApplicationSignature, B_MINI_ICON);
 	menuBar->AddItem(iconMenu);
 
 	// 'File' menu
@@ -458,95 +458,78 @@ MainWindow::_BuildMenu()
 
 	menuBar->AddItem(menu);
 
-	// === TEXT CASE MENU ===
+	// 'Text case' menu
 	BMenu* textCaseMenu = new BMenu(B_TRANSLATE("Text case"));
 
-	BMenuItem* uppercaseItem
-		= new BMenuItem(B_TRANSLATE("UPPERCASE"), new BMessage(M_TRANSFORM_UPPERCASE));
-	uppercaseItem->SetShortcut('u', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(uppercaseItem);
-
-	BMenuItem* lowercaseItem
-		= new BMenuItem(B_TRANSLATE("lowercase"), new BMessage(M_TRANSFORM_LOWERCASE));
-	lowercaseItem->SetShortcut('l', B_COMMAND_KEY | B_OPTION_KEY);
-	textCaseMenu->AddItem(lowercaseItem);
-
-	BMenuItem* capitalizeItem
-		= new BMenuItem(B_TRANSLATE("Capitalize"), new BMessage(M_TRANSFORM_CAPITALIZE));
-	textCaseMenu->AddItem(capitalizeItem);
-
-	BMenuItem* titleCaseItem
-		= new BMenuItem(B_TRANSLATE("Title Case"), new BMessage(M_TRANSFORM_TITLE_CASE));
-	textCaseMenu->AddItem(titleCaseItem);
-
-	BMenuItem* randomCaseItem
-		= new BMenuItem(B_TRANSLATE("RaNDoM caSE"), new BMessage(M_TRANSFORM_RANDOM_CASE));
-	textCaseMenu->AddItem(randomCaseItem);
-
-	BMenuItem* alternatingCaseItem = new BMenuItem(B_TRANSLATE("AlTeRnAtInG cAsE"),
-		new BMessage(M_TRANSFORM_ALTERNATING_CASE));
-	textCaseMenu->AddItem(alternatingCaseItem);
-
-	BMenuItem* toggleCaseItem
-		= new BMenuItem(B_TRANSLATE("Toggle case"), new BMessage(M_TRANSFORM_TOGGLE_CASE));
-	textCaseMenu->AddItem(toggleCaseItem);
+	textCaseMenu->AddItem(new BMenuItem(B_TRANSLATE("UPPERCASE"),
+		new BMessage(M_TRANSFORM_UPPERCASE), 'U', B_COMMAND_KEY));
+	textCaseMenu->AddItem(new BMenuItem(B_TRANSLATE("lowercase"),
+		new BMessage(M_TRANSFORM_LOWERCASE), 'L', B_COMMAND_KEY));
+	textCaseMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Capitalize"), new BMessage(M_TRANSFORM_CAPITALIZE)));
+	textCaseMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Title Case"), new BMessage(M_TRANSFORM_TITLE_CASE)));
+	textCaseMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("RaNDoM caSE"), new BMessage(M_TRANSFORM_RANDOM_CASE)));
+	textCaseMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("AlTeRnAtInG cAsE"), new BMessage(M_TRANSFORM_ALTERNATING_CASE)));
+	textCaseMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Toggle case"), new BMessage(M_TRANSFORM_TOGGLE_CASE)));
 
 	menuBar->AddItem(textCaseMenu);
 
-	// ====== Transform Menu Structure ======
+	// 'Transform' menu
 	BMenu* transformMenu = new BMenu(B_TRANSLATE("Transform"));
 
 	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Search and replace"), new BMessage(M_TRANSFORM_REPLACE)));
+		new BMenuItem(B_TRANSLATE("Search/replace"), new BMessage(M_TRANSFORM_REPLACE)), 'H');
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Add prefix/suffix"),
+		new BMessage(M_TRANSFORM_PREFIX_SUFFIX), 'P'));
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove prefix/suffix"),
+		new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX), 'P', B_SHIFT_KEY));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Indent lines"), new BMessage(M_INDENT_LINES), 'I'));
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Unindent lines"),
+		new BMessage(M_UNINDENT_LINES), 'I', B_SHIFT_KEY));
 
-	// === ENCODE/DECODE MENU ===
-	BMenu* encodeMenu = new BMenu(B_TRANSLATE("Encode/Decode"));
+	transformMenu->AddSeparatorItem();
 
-	BMenuItem* urlEncodeItem
-		= new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL));
-	encodeMenu->AddItem(urlEncodeItem);
-
-	BMenuItem* urlDecodeItem
-		= new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL));
-	encodeMenu->AddItem(urlDecodeItem);
-
-	BMenuItem* rot13Item
-		= new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13));
-	rot13Item->SetShortcut('m', B_COMMAND_KEY | B_OPTION_KEY);
-	encodeMenu->AddItem(rot13Item);
-
+	// 'Encode/decode' submenu
+	BMenu* encodeMenu = new BMenu(B_TRANSLATE("Encode/decode"));
+	encodeMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL)));
+	encodeMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL)));
+	encodeMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13)));
 	transformMenu->AddItem(encodeMenu);
 
-	// === LINE TOOLS MENU ===
-	BMenu* lineMenu = new BMenu(B_TRANSLATE("Line Tools"));
-
-	BMenuItem* removeLineBreaksItem
-		= new BMenuItem(B_TRANSLATE("Remove line breaks"), new BMessage(M_REMOVE_LINE_BREAKS));
-	removeLineBreaksItem->SetShortcut('b', B_COMMAND_KEY | B_OPTION_KEY);
-	lineMenu->AddItem(removeLineBreaksItem);
-
-	BMenuItem* insertLineBreaksItem = new BMenuItem(B_TRANSLATE("Insert line breaks (width)"),
-		new BMessage(M_INSERT_LINE_BREAKS));
-	insertLineBreaksItem->SetShortcut('i', B_COMMAND_KEY | B_OPTION_KEY);
-	lineMenu->AddItem(insertLineBreaksItem);
-
-	BMenuItem* breakOnDelimiterItem = new BMenuItem(B_TRANSLATE("Break lines on delimiter"),
-		new BMessage(M_BREAK_LINES_ON_DELIMITER));
-	breakOnDelimiterItem->SetShortcut('d', B_COMMAND_KEY | B_OPTION_KEY);
-	lineMenu->AddItem(breakOnDelimiterItem);
-
-	BMenuItem* trimItem = new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES));
-	trimItem->SetShortcut('w', B_COMMAND_KEY | B_OPTION_KEY);
-	lineMenu->AddItem(trimItem);
-
-	BMenuItem* removeEmptyLinesItem
-		= new BMenuItem(B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES));
-	removeEmptyLinesItem->SetShortcut('e', B_COMMAND_KEY | B_OPTION_KEY);
-	lineMenu->AddItem(removeEmptyLinesItem);
-
+	// 'Line tools' submenu
+	BMenu* lineMenu = new BMenu(B_TRANSLATE("Line tools"));
+	lineMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Remove line breaks"), new BMessage(M_REMOVE_LINE_BREAKS), 'B'));
+	lineMenu->AddItem(new BMenuItem(B_TRANSLATE("Replace line breaks"),
+		new BMessage(M_MODE_REPLACE_LINE_BREAKS), 'F'));
+	lineMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert line breaks (width)"),
+		new BMessage(M_INSERT_LINE_BREAKS), 'I'));
+	lineMenu->AddItem(new BMenuItem(B_TRANSLATE("Break lines on delimiter"),
+		new BMessage(M_BREAK_LINES_ON_DELIMITER), 'D'));
 	transformMenu->AddItem(lineMenu);
 
-	//
+	// 'Cleanup' submenu
+	BMenu* cleanMenu = new BMenu(B_TRANSLATE("Cleanup"));
+	cleanMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES), 'W'));
+	cleanMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES), 'T'));
+	cleanMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove duplicate lines"),
+		new BMessage(M_REMOVE_DUPLICATES), 'R'));
+	transformMenu->AddItem(cleanMenu);
+
+	transformMenu->AddSeparatorItem();
+
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Sort lines"), new BMessage(M_SORT_LINES), 'J'));
 
 	// Add the whole Transform menu to the menu bar
 	menuBar->AddItem(transformMenu);
@@ -943,18 +926,14 @@ MainWindow::_UpdateToolbarState()
 	fTextView->GetSelection(&start, &end);
 	hasSelection = (start != end);
 
-	// Update Undo/Redo buttons
 	fToolbar->SetActionEnabled(B_UNDO, fTextView->CanUndo());
 	fToolbar->SetActionEnabled(B_REDO, fTextView->CanRedo());
 
-	// Example: Enable "Save" only if document is dirty
 	fToolbar->SetActionEnabled(M_FILE_SAVE, IsDocumentModified());
 
 	fToolbar->SetActionEnabled(B_PASTE, _ClipboardHasText());
 	fToolbar->SetActionEnabled(B_COPY, hasSelection);
 	fToolbar->SetActionEnabled(B_CUT, hasSelection);
-
-	// You can continue adding other toolbar actions here
 }
 
 
@@ -995,7 +974,6 @@ MainWindow::_GetClipboardText(BString& outText) const
 	be_clipboard->Unlock();
 	return success;
 }
-
 
 
 bool
