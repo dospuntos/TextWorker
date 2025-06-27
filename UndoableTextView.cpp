@@ -15,7 +15,7 @@ enum { M_COALESCE_TIMEOUT = '_cut' };
 
 UndoableTextView::UndoableTextView(const char* name)
 	:
-	BTextView(name),
+	BTextView(name, B_WILL_DRAW | B_SCROLL_VIEW_AWARE),
 	fCoalescing(false),
 	fRecording(true),
 	fTimer(nullptr)

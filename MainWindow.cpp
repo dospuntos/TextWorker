@@ -38,7 +38,7 @@ static const char* kSettingsFile = "TextWorker_settings";
 
 MainWindow::MainWindow(void)
 	:
-	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_TITLED_WINDOW,
+	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_DOCUMENT_WINDOW,
 		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BMenuBar* menuBar = _BuildMenu();
@@ -74,11 +74,19 @@ MainWindow::MainWindow(void)
 		.AddGroup(B_HORIZONTAL, 0)
 		.Add(fStatusBar, 0)
 		.Add(fMessageBar, 0)
+		.SetInsets(5, 0, 20, 0)
 		.End();
 
 	BMessage settings;
 	_LoadSettings(settings);
 	_RestoreValues(settings);
+
+	// Set min size of main window
+	BSize toolbarSize = fToolbar->PreferredSize();
+	BSize sidebarSize = fSidebar->PreferredSize();
+	const float minWidth = toolbarSize.width + 20;
+	const float minHeight = sidebarSize.height + 100;
+	SetSizeLimits(minWidth, B_SIZE_UNLIMITED, minHeight, B_SIZE_UNLIMITED);
 
 	BMessenger messenger(this);
 	fOpenPanel = new BFilePanel(B_OPEN_PANEL, &messenger, NULL, B_FILE_NODE, false);
@@ -90,7 +98,6 @@ MainWindow::MainWindow(void)
 		ResizeTo(frame.Width(), frame.Height());
 	}
 	MoveOnScreen();
-
 
 	if (!fSaveTextOnExit && fInsertClipboard) {
 		BString clipboardText;
@@ -375,8 +382,8 @@ MainWindow::MessageReceived(BMessage* msg)
 	}
 	_UpdateStatusBar();
 	_UpdateToolbarState();
-	fSidebar->InvalidateLayout();
-	fSidebar->Invalidate();
+	// fSidebar->InvalidateLayout();
+	// fSidebar->Invalidate();
 }
 
 
@@ -673,6 +680,8 @@ MainWindow::_RestoreValues(BMessage& settings)
 
 	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
 		fTextView->SetText(text);
+	else
+		fTextView->SetText("");
 
 	if (fSidebar && fSaveFieldsOnExit) {
 		if (settings.FindInt32("activeTab", &number) == B_OK)
