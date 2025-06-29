@@ -12,8 +12,8 @@
 #include <SupportDefs.h>
 #include <TextControl.h>
 #include <TextView.h>
-#include <private/shared/ToolBar.h>
 #include <Window.h>
+#include <private/shared/ToolBar.h>
 
 class MainWindow : public BWindow {
 public:
@@ -45,6 +45,7 @@ private:
 	bool fClearSettingsAfterUse;
 	int32 fFontSize;
 	BString fFontFamily;
+	bool fApplyToSelection;
 	status_t _LoadSettings(BMessage& settings);
 	status_t _SaveSettings();
 	void _RestoreValues(BMessage& settings);

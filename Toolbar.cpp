@@ -66,6 +66,8 @@ CreateToolbar(BHandler* target)
 
 	toolbar->AddAction(new BMessage(M_TOGGLE_WORD_WRAP), target, ResourceToBitmap("LINE_WRAP_ICON"),
 		B_TRANSLATE("Word wrap"), "", false);
+	toolbar->AddAction(new BMessage(M_TOGGLE_APPLY_TO_SELECTION), target,
+		ResourceToBitmap("APPLY_TO_SELECTION_ICON"), B_TRANSLATE("Apply to selection only"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
@@ -81,8 +83,6 @@ CreateToolbar(BHandler* target)
 		ResourceToBitmap("TITLECASE_ICON"), B_TRANSLATE("Title Case"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_CAPITALIZE), target,
 		ResourceToBitmap("CAPITALIZE_ICON"), B_TRANSLATE("Capitalize"), "", false);
-	toolbar->AddAction(new BMessage(M_TRANSFORM_TOGGLE_CASE), target,
-		ResourceToBitmap("TOGGLE_ICON"), B_TRANSLATE("Toggle case"), "", false);
 
 	toolbar->GroupLayout()->AddItem(
 		BSpaceLayoutItem::CreateHorizontalStrut(B_USE_HALF_ITEM_SPACING));
