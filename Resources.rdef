@@ -98,3 +98,4 @@ resource(17, "CUT_ICON") #'VICN' import "icons/edit cut.hvif";
 resource(18, "COPY_ICON") #'VICN' import "icons/edit copy.hvif";
 resource(19, "PASTE_ICON") #'VICN' import "icons/edit paste.hvif";
 resource(20, "STATS_ICON") #'VICN' import "icons/chart.hvif";
+resource(21, "APPLY_TO_SELECTION_ICON") #'VICN' import "icons/apply-to-selection.hvif";

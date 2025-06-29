@@ -13,6 +13,7 @@
 #include <TextControl.h>
 #include <algorithm>
 #include <cctype>
+#include <map>
 #include <set>
 #include <sstream>
 #include <unicode/brkiter.h>
@@ -20,12 +21,10 @@
 #include <unicode/locid.h>
 #include <unicode/unistr.h>
 #include <vector>
-#include <map>
-#include <unicode/brkiter.h>
-#include <unicode/unistr.h>
 
 
 int32 startSelection, endSelection; // For cursor position
+int32 selStart, selEnd; // For selected text
 
 
 BString
@@ -51,6 +50,53 @@ GetTextFromTextView(BTextView* textView)
 }
 
 
+BString
+GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly, bool isLineBased)
+{
+	selStart = 0;
+	selEnd = 0;
+
+	if (textView == nullptr)
+		return BString("");
+
+	int32 textLength = textView->TextLength();
+	if (textLength == 0)
+		return BString("");
+
+	if (!applyToSelectionOnly) {
+		selStart = 0;
+		selEnd = textLength;
+	} else {
+		textView->GetSelection(&selStart, &selEnd);
+
+		if (isLineBased) {
+			const char* fullText = textView->Text();
+
+			// Extend selStartOut to beginning of line
+			while (selStart > 0 && fullText[selStart - 1] != '\n')
+				selStart--;
+
+			// Extend selEndOut to end of line (but don’t go past final \n)
+			while (selEnd < textLength && fullText[selEnd] != '\n')
+				selEnd++;
+			// Don't add one unless we're not already at a linebreak
+			if (selEnd < textLength && fullText[selEnd] == '\n')
+				selEnd++;
+		}
+	}
+
+	char* buffer = new char[selEnd - selStart + 1];
+	textView->GetText(selStart, selEnd, buffer);
+	buffer[selEnd - selStart] = '\0';
+
+	BString result(buffer);
+	delete[] buffer;
+
+	SaveCursorPosition(textView);
+	return result;
+}
+
+
 void
 SaveCursorPosition(BTextView* textView)
 {
@@ -66,11 +112,9 @@ RestoreCursorPosition(BTextView* textView)
 
 
 void
-ConvertToUppercase(BTextView* textView)
+ConvertToUppercase(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return; // Nothing to convert
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
 	unicodeText.toUpper();
@@ -79,17 +123,16 @@ ConvertToUppercase(BTextView* textView)
 	std::string utf8Text;
 	unicodeText.toUTF8String(utf8Text);
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(utf8Text.c_str());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, utf8Text.c_str(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-ConvertToLowercase(BTextView* textView)
+ConvertToLowercase(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return; // Nothing to convert
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
 	unicodeText.toLower();
@@ -98,17 +141,16 @@ ConvertToLowercase(BTextView* textView)
 	std::string utf8Text;
 	unicodeText.toUTF8String(utf8Text);
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(utf8Text.c_str());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, utf8Text.c_str(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-ConvertToTitlecase(BTextView* textView)
+ConvertToTitlecase(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
 	unicodeText.toLower(); // normalize first
@@ -130,26 +172,19 @@ ConvertToTitlecase(BTextView* textView)
 		}
 	}
 
-	std::string result;
-	unicodeText.toUTF8String(result);
+	std::string utf8Text;
+	unicodeText.toUTF8String(utf8Text);
 
-	if (result.empty()) {
-		printf("Manual titlecase result is empty!\n");
-		return;
-	}
-
-	BString bResult(result.c_str());
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(bResult.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, utf8Text.c_str(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-Capitalize(BTextView* textView)
+Capitalize(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return; // Nothing to convert
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	bool capitalizeNext = true; // Keep track whether to capitalize next character
 
@@ -164,17 +199,17 @@ Capitalize(BTextView* textView)
 			capitalizeNext = true;
 		}
 	}
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-ConvertToRandomCase(BTextView* textView)
+ConvertToRandomCase(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	srand(time(nullptr)); // Seed random number generator
 
@@ -190,17 +225,16 @@ ConvertToRandomCase(BTextView* textView)
 		}
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-ConvertToAlternatingCase(BTextView* textView)
+ConvertToAlternatingCase(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	bool uppercase = !(std::isupper(text.ByteAt(0)));
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -216,17 +250,16 @@ ConvertToAlternatingCase(BTextView* textView)
 		}
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-ToggleCase(BTextView* textView)
+ToggleCase(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	for (int32 i = 0; i < text.Length(); ++i) {
 		char currentChar = text.ByteAt(i);
@@ -237,32 +270,30 @@ ToggleCase(BTextView* textView)
 		text.SetByteAt(i, currentChar);
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-RemoveLineBreaks(BTextView* textView, BString replacement)
+RemoveLineBreaks(BTextView* textView, BString replacement, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	text.ReplaceAll("\n", replacement);
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 // Note: The ROT-13 algorithm is symmetrical, the same function will encode and decode the text.
 void
-ConvertToROT13(BTextView* textView)
+ConvertToROT13(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	for (int32 i = 0; i < text.Length(); ++i) {
 		char currentChar = text.ByteAt(i);
@@ -276,17 +307,16 @@ ConvertToROT13(BTextView* textView)
 		text.SetByteAt(i, currentChar);
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-URLEncode(BTextView* textView)
+URLEncode(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	BString encoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -311,17 +341,16 @@ URLEncode(BTextView* textView)
 		}
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(encoded.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, encoded.String(), encoded.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-URLDecode(BTextView* textView)
+URLDecode(BTextView* textView, bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
 
 	BString decoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -346,17 +375,17 @@ URLDecode(BTextView* textView)
 		}
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(decoded.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, decoded.String(), decoded.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString)
+AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString,
+	bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 
@@ -376,17 +405,17 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 		updatedText << startString << line << endString;
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BString& suffix)
+RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BString& suffix,
+	bool applyToSelection)
 {
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 	int32 start = 0;
@@ -420,17 +449,16 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 		updatedText << line;
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
+InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty() || maxLength <= 0)
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 
@@ -461,17 +489,17 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 		}
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter)
+BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter,
+	bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty() || delimiter.Length() <= 0)
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 
@@ -481,7 +509,8 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDe
 	while ((delimiterPosition = text.FindFirst(delimiter, start)) >= 0) {
 		if (keepDelimiter) {
 			// Include the delimiter in the line
-			updatedText.Append(text.String() + start, delimiterPosition - start + delimiter.Length());
+			updatedText.Append(text.String() + start,
+				delimiterPosition - start + delimiter.Length());
 		} else {
 			// Exclude the delimiter from the line
 			updatedText.Append(text.String() + start, delimiterPosition - start);
@@ -490,22 +519,19 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDe
 		start = delimiterPosition + delimiter.Length();
 	}
 
-	if (start < text.Length()) {
+	if (start < text.Length())
 		updatedText.Append(text.String() + start, text.Length() - start);
-	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
-
 void
-TrimLines(BTextView* textView)
+TrimWhitespace(BTextView* textView, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 	int32 start = 0;
@@ -524,17 +550,16 @@ TrimLines(BTextView* textView)
 		updatedText << line << "\n";
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-TrimEmptyLines(BTextView* textView)
+TrimEmptyLines(BTextView* textView, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	int32 start = 0;
 	int32 end;
@@ -556,7 +581,8 @@ TrimEmptyLines(BTextView* textView)
 			updatedText.Append(lastLine);
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
@@ -572,10 +598,11 @@ IsFullWord(const BString& text, int32 pos, int32 length)
 
 void
 ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
-	bool fullWordsOnly)
+	bool fullWordsOnly, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty() || find.IsEmpty())
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+
+	if (find.IsEmpty())
 		return;
 
 	int32 pos = 0;
@@ -598,17 +625,16 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 		pos += replaceWith.Length();
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(text.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, text.String(), text.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-SortLines(BTextView* textView, bool ascending, bool caseSensitive)
+SortLines(BTextView* textView, bool ascending, bool caseSensitive, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -631,11 +657,6 @@ SortLines(BTextView* textView, bool ascending, bool caseSensitive)
 	UErrorCode status = U_ZERO_ERROR;
 	std::unique_ptr<icu::Collator> collator(
 		icu::Collator::createInstance(icu::Locale::getDefault(), status));
-
-	if (U_FAILURE(status) || !collator) {
-		printf("Failed to create ICU Collator: %s\n", u_errorName(status));
-		return;
-	}
 
 	collator->setStrength(
 		caseSensitive ? icu::Collator::TERTIARY // case-sensitive, accent-sensitive
@@ -662,17 +683,16 @@ SortLines(BTextView* textView, bool ascending, bool caseSensitive)
 			updatedText << '\n';
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
+SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -720,17 +740,16 @@ SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
 			updatedText << '\n';
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
+RemoveDuplicateLines(BTextView* textView, bool caseSensitive, bool applyToSelection)
 {
-	BString text(GetTextFromTextView(textView));
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -766,27 +785,26 @@ RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
 	}
 
 	// Reconstruct unique lines into a single string
-	BString result;
+	BString updatedText;
 	for (size_t i = 0; i < uniqueLines.size(); ++i) {
-		result << uniqueLines[i];
+		updatedText << uniqueLines[i];
 		if (i != uniqueLines.size() - 1)
-			result << '\n';
+			updatedText << '\n';
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(result.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-IndentLines(BTextView* textView, bool useTabs, int32 count)
+IndentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelection)
 {
 	if (count <= 0)
 		return;
 
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 	BString indent;
@@ -815,20 +833,19 @@ IndentLines(BTextView* textView, bool useTabs, int32 count)
 		updatedText << indent << line;
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
 
 void
-UnindentLines(BTextView* textView, bool useTabs, int32 count)
+UnindentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelection)
 {
 	if (count <= 0)
 		return;
 
-	BString text = GetTextFromTextView(textView);
-	if (text.IsEmpty())
-		return;
+	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 	BString indent;
@@ -886,7 +903,8 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count)
 		updatedText << line;
 	}
 
-	static_cast<UndoableTextView*>(textView)->SetTextWithUndo(updatedText.String());
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	RestoreCursorPosition(textView);
 }
 
@@ -904,7 +922,7 @@ ShowTextStats(BTextView* textView)
 	BString statsMsg;
 
 	int32 charCount = unicodeText.countChar32();
-	int32 lineCount = 0; //text.CountChars('\n') + 1;
+	int32 lineCount = 0;
 	int32 maxLineLength = 0;
 	int32 totalWordLength = 0;
 	int32 wordCount = 0;
@@ -933,18 +951,19 @@ ShowTextStats(BTextView* textView)
 	wordIter->setText(unicodeText);
 
 	int32_t startWord = wordIter->first();
-	for (int32_t endWord = wordIter->next(); endWord != icu::BreakIterator::DONE; startWord = endWord, endWord = wordIter->next()) {
+	for (int32_t endWord = wordIter->next(); endWord != icu::BreakIterator::DONE;
+		startWord = endWord, endWord = wordIter->next()) {
 		icu::UnicodeString word = unicodeText.tempSubStringBetween(startWord, endWord);
-		if (word.trim().isEmpty()) continue;
+		if (word.trim().isEmpty())
+			continue;
 		if (word.char32At(0) >= 0x30 && u_isalnum(word.char32At(0))) {
 			wordCount++;
 			totalWordLength += word.countChar32();
 			word.toLower();
 			std::string utf8;
 			word.toUTF8String(utf8);
-			if (utf8.length() > 2) {
+			if (utf8.length() > 2)
 				wordFrequency[utf8]++;
-			}
 		}
 	}
 
@@ -953,34 +972,35 @@ ShowTextStats(BTextView* textView)
 		icu::BreakIterator::createSentenceInstance(icu::Locale::getDefault(), status));
 	sentIter->setText(unicodeText);
 
-	for (int32_t boundary = sentIter->first(); boundary != icu::BreakIterator::DONE; boundary = sentIter->next())
+	for (int32_t boundary = sentIter->first(); boundary != icu::BreakIterator::DONE;
+		boundary = sentIter->next()) {
 		sentenceCount++;
+	}
 
 	// Most common words
 	std::vector<std::pair<BString, int>> sortedWords;
-	for (const auto& entry : wordFrequency) {
+	for (const auto& entry : wordFrequency)
 		sortedWords.emplace_back(BString(entry.first.c_str()), entry.second);
-	}
 	std::sort(sortedWords.begin(), sortedWords.end(),
 		[](const auto& a, const auto& b) { return b.second > a.second; });
 
-	statsMsg.SetToFormat(
-		"STATISTICS FOR CURRENT TEXT\n\n"
-		"Characters: %d\n"
-		"Words: %d\n"
-		"Lines: %d\n"
-		"Sentences: %d\n"
-		"Longest line: %d chars\n"
-		"Average word length: %.2f\n\n"
-		"Most used words:\n",
+	statsMsg.SetToFormat("STATISTICS FOR CURRENT TEXT\n\n"
+						 "Characters: %d\n"
+						 "Words: %d\n"
+						 "Lines: %d\n"
+						 "Sentences: %d\n"
+						 "Longest line: %d chars\n"
+						 "Average word length: %.2f\n\n"
+						 "Most used words:\n",
 		charCount, wordCount, lineCount, sentenceCount, maxLineLength,
 		wordCount > 0 ? (float)totalWordLength / wordCount : 0.0);
 
 	int shown = 0;
 	for (const auto& [word, freq] : sortedWords) {
 		statsMsg << "  " << word << ": " << freq << '\n';
-		if (++shown == 5) break;
+		if (++shown == 5)
+			break;
 	}
-	(new BAlert("Stats", statsMsg.String(), "OK", NULL, NULL, B_WIDTH_AS_USUAL, B_IDEA_ALERT))->Go();
-
+	(new BAlert("Stats", statsMsg.String(), "OK", NULL, NULL, B_WIDTH_AS_USUAL, B_IDEA_ALERT))
+		->Go();
 }

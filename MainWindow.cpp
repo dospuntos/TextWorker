@@ -39,7 +39,8 @@ static const char* kSettingsFile = "TextWorker_settings";
 MainWindow::MainWindow(void)
 	:
 	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_DOCUMENT_WINDOW,
-		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE),
+	fApplyToSelection(false)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -226,48 +227,48 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
-			ConvertToUppercase(fTextView);
+			ConvertToUppercase(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_LOWERCASE:
-			ConvertToLowercase(fTextView);
+			ConvertToLowercase(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_CAPITALIZE:
-			Capitalize(fTextView);
+			Capitalize(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_TITLE_CASE:
-			ConvertToTitlecase(fTextView);
+			ConvertToTitlecase(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_RANDOM_CASE:
-			ConvertToRandomCase(fTextView);
+			ConvertToRandomCase(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_ALTERNATING_CASE:
-			ConvertToAlternatingCase(fTextView);
+			ConvertToAlternatingCase(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_TOGGLE_CASE:
-			ToggleCase(fTextView);
+			ToggleCase(fTextView, fApplyToSelection);
 			break;
 		case M_REMOVE_LINE_BREAKS:
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
-				RemoveLineBreaks(fTextView);
+				RemoveLineBreaks(fTextView, "", fApplyToSelection);
 			} else if (fSidebar->getBreakMode() == BREAK_ON) {
 				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(),
-					fSidebar->getKeepDelimiterValue());
+					fSidebar->getKeepDelimiterValue(), fApplyToSelection);
 			} else if (fSidebar->getBreakMode() == BREAK_REPLACE) {
-				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput());
+				RemoveLineBreaks(fTextView, fSidebar->getBreakModeInput(), fApplyToSelection);
 			} else if (fSidebar->getBreakMode() == BREAK_AFTER_CHARS) {
 				InsertLineBreaks(fTextView, fSidebar->getBreakOnCharsSpinner(),
-					fSidebar->getSplitOnWords());
+					fSidebar->getSplitOnWords(), fApplyToSelection);
 			}
 			if (fClearSettingsAfterUse)
 				fSidebar->setBreakModeInput("");
 			break;
 		case M_TRIM_LINES:
-			TrimLines(fTextView);
-			_UpdateMessageBar(B_TRANSLATE("Removed 12 empty lines"));
+			TrimWhitespace(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_REPLACE:
 			ReplaceAll(fTextView, fSidebar->getSearchText(), fSidebar->getReplaceText(),
-				fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords());
+				fSidebar->getReplaceCaseSensitive(), fSidebar->getReplaceFullWords(),
+				fApplyToSelection);
 			if (fClearSettingsAfterUse) {
 				fSidebar->setSearchText("");
 				fSidebar->setReplaceText("");
@@ -276,10 +277,11 @@ MainWindow::MessageReceived(BMessage* msg)
 			}
 			break;
 		case M_TRIM_EMPTY_LINES:
-			TrimEmptyLines(fTextView);
+			TrimEmptyLines(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_PREFIX_SUFFIX:
-			AddStringsToEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText());
+			AddStringsToEachLine(fTextView, fSidebar->getPrefixText(), fSidebar->getSuffixText(),
+				fApplyToSelection);
 			if (fClearSettingsAfterUse) {
 				fSidebar->setPrefixText("");
 				fSidebar->setSuffixText("");
@@ -287,20 +289,20 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRANSFORM_REMOVE_PREFIX_SUFFIX:
 			RemoveStringsFromEachLine(fTextView, fSidebar->getPrefixText(),
-				fSidebar->getSuffixText());
+				fSidebar->getSuffixText(), fApplyToSelection);
 			if (fClearSettingsAfterUse) {
 				fSidebar->setPrefixText("");
 				fSidebar->setSuffixText("");
 			}
 			break;
 		case M_TRANSFORM_ROT13:
-			ConvertToROT13(fTextView);
+			ConvertToROT13(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_ENCODE_URL:
-			URLEncode(fTextView);
+			URLEncode(fTextView, fApplyToSelection);
 			break;
 		case M_TRANSFORM_DECODE_URL:
-			URLDecode(fTextView);
+			URLDecode(fTextView, fApplyToSelection);
 			break;
 		case M_SORT_LINES:
 		{
@@ -309,18 +311,20 @@ MainWindow::MessageReceived(BMessage* msg)
 			bool caseSensitive = fSidebar->getCaseSortCheck();
 
 			if (sortAlphabetically)
-				SortLines(fTextView, sortAscending, caseSensitive);
+				SortLines(fTextView, sortAscending, caseSensitive, fApplyToSelection);
 			else
-				SortLinesByLength(fTextView, sortAscending, caseSensitive);
+				SortLinesByLength(fTextView, sortAscending, caseSensitive, fApplyToSelection);
 			break;
 		}
 		case M_INDENT_LINES:
 		case M_UNINDENT_LINES:
 		{
 			if (msg->what == M_INDENT_LINES)
-				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
+				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner(),
+					fApplyToSelection);
 			else
-				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
+				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner(),
+					fApplyToSelection);
 			break;
 		}
 		case M_MODE_REMOVE_ALL:
@@ -330,7 +334,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			fSidebar->MessageReceived(msg);
 			break;
 		case M_REMOVE_DUPLICATES:
-			RemoveDuplicateLines(fTextView);
+			RemoveDuplicateLines(fTextView, fApplyToSelection);
 			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			fTextView->SetText(B_TRANSLATE("Haiku is an open-source operating system.\n"
@@ -349,6 +353,10 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_TOGGLE_WORD_WRAP:
 			fTextView->SetWordWrap(!fTextView->DoesWordWrap());
 			fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
+			break;
+		case M_TOGGLE_APPLY_TO_SELECTION:
+			fApplyToSelection = !fApplyToSelection;
+			fToolbar->SetActionPressed(M_TOGGLE_APPLY_TO_SELECTION, fApplyToSelection);
 			break;
 		case B_ABOUT_REQUESTED:
 			be_app->AboutRequested();
@@ -592,6 +600,8 @@ MainWindow::_SaveSettings()
 	settings.AddBool("clearAfterUse", fClearSettingsAfterUse);
 	settings.AddInt32("fontSize", fFontSize);
 	settings.AddString("fontFamily", fFontFamily);
+	settings.AddBool("wrapLines", fTextView->DoesWordWrap());
+	settings.AddBool("applyToSelection", fApplyToSelection);
 
 	// Save textView
 	if (fTextView && fSaveTextOnExit)
@@ -668,6 +678,12 @@ MainWindow::_RestoreValues(BMessage& settings)
 	if (settings.FindString("fontFamily", &text) == B_OK)
 		fFontFamily = text;
 
+	if (settings.FindBool("wrapLines", &flag) == B_OK)
+		fTextView->SetWordWrap(flag);
+
+	if (settings.FindBool("applyToSelection", &flag) == B_OK)
+		fApplyToSelection = flag;
+
 	// Apply the restored font settings to textView
 	BFont font;
 	if (fFontFamily == "System default")
@@ -708,7 +724,6 @@ MainWindow::_RestoreValues(BMessage& settings)
 			fSidebar->setSplitOnWords(flag);
 		if (settings.FindBool("keepDelimiter", &flag) == B_OK)
 			fSidebar->setKeepDelimiterValue(flag);
-		// Todo: enable/disable corresponding fields for restored breakMode
 
 		// Prefix/suffix
 		if (settings.FindString("prefixInput", &text) == B_OK)
@@ -943,6 +958,9 @@ MainWindow::_UpdateToolbarState()
 	fToolbar->SetActionEnabled(B_PASTE, _ClipboardHasText());
 	fToolbar->SetActionEnabled(B_COPY, hasSelection);
 	fToolbar->SetActionEnabled(B_CUT, hasSelection);
+
+	fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
+	fToolbar->SetActionPressed(M_TOGGLE_APPLY_TO_SELECTION, fApplyToSelection);
 }
 
 
