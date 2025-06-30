@@ -183,8 +183,9 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_SHOW_SETTINGS:
 		{
 			if (!fSettingsWindow) {
-				fSettingsWindow = new SettingsWindow(fSaveTextOnExit, fSaveFieldsOnExit,
-					fInsertClipboard, fClearSettingsAfterUse, fFontSize, fFontFamily);
+				fSettingsWindow
+					= new SettingsWindow(fSaveTextOnExit, fSaveFieldsOnExit, fInsertClipboard,
+						fClearSettingsAfterUse, fApplyToSelection, fFontSize, fFontFamily);
 				fSettingsWindow->CenterIn(Frame());
 				fSettingsWindow->Show();
 			} else {
@@ -210,6 +211,9 @@ MainWindow::MessageReceived(BMessage* msg)
 
 			if (msg->FindBool("clearSettings", &flag) == B_OK)
 				fClearSettingsAfterUse = flag;
+
+			if (msg->FindBool("applyToSelection", &flag) == B_OK)
+				fApplyToSelection = flag;
 
 			if (msg->FindInt32("fontSize", &number) == B_OK)
 				fFontSize = number;

@@ -16,8 +16,9 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "Settings"
 
-SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize,
-	BString fontFamily)
+
+SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings,
+	bool applyToSelection, int32 fontSize, BString fontFamily)
 	:
 	BWindow(BRect(200, 200, 500, 400), B_TRANSLATE("Settings"), B_TITLED_WINDOW,
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS
@@ -35,6 +36,9 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 	fClearSettingsAfterUse = new BCheckBox("ClearSettings", B_TRANSLATE("Clear field values after use"),
 		new BMessage(M_APPLY_SETTINGS));
 	fClearSettingsAfterUse->SetValue(clearSettings ? B_CONTROL_ON : B_CONTROL_OFF);
+	fApplyToSelectionOnly = new BCheckBox("ApplyToSelection",
+		B_TRANSLATE("Apply to selection only"), new BMessage(M_APPLY_SETTINGS));
+	fApplyToSelectionOnly->SetValue(applyToSelection ? B_CONTROL_ON : B_CONTROL_OFF);
 
 	BPopUpMenu* fontMenu = new BPopUpMenu("FontFamily");
 	PopulateFontMenu(fontMenu);
@@ -58,6 +62,7 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 		.Add(fSaveTextCheck)
 		.Add(fSaveFieldsCheck)
 		.Add(fClearSettingsAfterUse)
+		.Add(fApplyToSelectionOnly)
 		.Add(fFontFamilyField)
 		.Add(fFontSizeSlider)
 		.AddGlue()
@@ -104,6 +109,7 @@ SettingsWindow::MessageReceived(BMessage* message)
 			applyMsg.AddBool("saveSettings", fSaveFieldsCheck->Value() == B_CONTROL_ON);
 			applyMsg.AddBool("insertClipboard", fInsertClipboard->Value() == B_CONTROL_ON);
 			applyMsg.AddBool("clearSettings", fClearSettingsAfterUse->Value() == B_CONTROL_ON);
+			applyMsg.AddBool("applyToSelection", fApplyToSelectionOnly->Value() == B_CONTROL_ON);
 			applyMsg.AddInt32("fontSize", fFontSizeSlider->Value());
 			applyMsg.AddString("fontFamily", fontFamily);
 
@@ -121,6 +127,13 @@ SettingsWindow::MessageReceived(BMessage* message)
 			BWindow::MessageReceived(message);
 			break;
 	}
+}
+
+
+void
+SettingsWindow::SetApplyToSelectionValue(bool value)
+{
+	fApplyToSelectionOnly->SetValue(value ? B_CONTROL_ON : B_CONTROL_OFF);
 }
 
 

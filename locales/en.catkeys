@@ -1,4 +1,4 @@
-1	English	application/x-vnd.jpw-TextWorker	3178633723
+1	English	application/x-vnd.jpw-TextWorker	2096805832
 Remove duplicate lines	MainView		Remove duplicate lines
 %i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
 Open file…	Toolbar		Open file…
@@ -154,6 +154,7 @@ Indent lines	MainView		Indent lines
 Select all	MainView		Select all
 OK	MainView		OK
 RaNDoM caSE	MainView		RaNDoM caSE
+Apply to selection only	Settings		Apply to selection only
 Capitalize	MainView		Capitalize
 Cut	Toolbar		Cut
 Paste	Toolbar		Paste

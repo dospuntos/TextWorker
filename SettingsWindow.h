@@ -17,9 +17,10 @@
 
 class SettingsWindow : public BWindow {
 public:
-	SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize,
-		BString fontFamily);
+	SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings,
+		bool applyToSelection, int32 fontSize, BString fontFamily);
 	virtual void MessageReceived(BMessage* message);
+	void SetApplyToSelectionValue(bool value);
 	bool QuitRequested();
 
 private:
@@ -27,6 +28,7 @@ private:
 	BCheckBox* fSaveFieldsCheck;
 	BCheckBox* fInsertClipboard;
 	BCheckBox* fClearSettingsAfterUse;
+	BCheckBox* fApplyToSelectionOnly;
 	BMenuField* fFontFamilyField;
 	BString fFontFamily;
 	BSlider* fFontSizeSlider;
