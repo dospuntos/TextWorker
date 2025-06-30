@@ -29,6 +29,7 @@
 
 int32 startSelection, endSelection; // For cursor position
 int32 selStart, selEnd; // For selected text
+bool appliedToSelection = false;
 
 
 BString
@@ -36,6 +37,7 @@ GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly, bool
 {
 	selStart = 0;
 	selEnd = 0;
+	appliedToSelection = applyToSelectionOnly;
 
 	if (textView == nullptr)
 		return BString("");
@@ -53,6 +55,7 @@ GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly, bool
 		if (selStart == selEnd) {
 			selStart = 0;
 			selEnd = textLength;
+			appliedToSelection = false;
 		} else if (isLineBased) {
 			const char* fullText = textView->Text();
 
@@ -114,7 +117,7 @@ ConvertToUppercase(BTextView* textView, bool applyToSelection)
 
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("%i characters changed to uppercase in selection"),
 			changedCount);
 	} else {
@@ -144,7 +147,7 @@ ConvertToLowercase(BTextView* textView, bool applyToSelection)
 	textView->Insert(selStart, text, text.Length());
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("%i characters changed to lowercase in selection"),
 			changedCount);
 	} else {
@@ -190,7 +193,7 @@ ConvertToTitlecase(BTextView* textView, bool applyToSelection)
 	textView->Insert(selStart, text, text.Length());
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("%i characters changed in selection"), changedCount);
 	else
 		status.SetToFormat(B_TRANSLATE("%i characters changed in entire text"), changedCount);
@@ -234,7 +237,7 @@ Capitalize(BTextView* textView, bool applyToSelection)
 
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("%i characters changed in selection"), changedCount);
 	else
 		status.SetToFormat(B_TRANSLATE("%i characters changed in entire text"), changedCount);
@@ -267,7 +270,7 @@ ConvertToRandomCase(BTextView* textView, bool applyToSelection)
 	textView->Insert(selStart, text.String(), text.Length());
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("%i characters changed in selection"), changedCount);
 	else
 		status.SetToFormat(B_TRANSLATE("%i characters changed in entire text"), changedCount);
@@ -300,7 +303,7 @@ ConvertToAlternatingCase(BTextView* textView, bool applyToSelection)
 	textView->Insert(selStart, text.String(), text.Length());
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("%i characters changed in selection"), changedCount);
 	else
 		status.SetToFormat(B_TRANSLATE("%i characters changed in entire text"), changedCount);
@@ -328,7 +331,7 @@ ToggleCase(BTextView* textView, bool applyToSelection)
 	textView->Insert(selStart, text.String(), text.Length());
 	BString status;
 	int32 changedCount = _CountCharChanges(original, text);
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("%i characters changed in selection"), changedCount);
 	else
 		status.SetToFormat(B_TRANSLATE("%i characters changed in entire text"), changedCount);
@@ -354,12 +357,12 @@ RemoveLineBreaks(BTextView* textView, BString replacement, bool applyToSelection
 
 	BString status;
 	if (replacement.IsEmpty()) {
-		if (applyToSelection)
+		if (appliedToSelection)
 			status.SetToFormat(B_TRANSLATE("%i line breaks removed in selection"), count);
 		else
 			status.SetToFormat(B_TRANSLATE("%i line breaks removed in entire text"), count);
 	} else {
-		if (applyToSelection)
+		if (appliedToSelection)
 			status.SetToFormat(B_TRANSLATE("%i line breaks replaced in selection"), count);
 		else
 			status.SetToFormat(B_TRANSLATE("%i line breaks replaced in entire text"), count);
@@ -392,7 +395,7 @@ ConvertToROT13(BTextView* textView, bool applyToSelection)
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, text.String(), text.Length());
 	BString status;
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("ROT13 applied to %i characters in selection"), count);
 	else
 		status.SetToFormat(B_TRANSLATE("ROT13 applied to %i characters in entire text"), count);
@@ -432,7 +435,7 @@ URLEncode(BTextView* textView, bool applyToSelection)
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, encoded.String(), encoded.Length());
 	BString status;
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.Append(B_TRANSLATE("Selected text URL-encoded"));
 	else
 		status.Append(B_TRANSLATE("Entire text URL-encoded"));
@@ -472,7 +475,7 @@ URLDecode(BTextView* textView, bool applyToSelection)
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, decoded.String(), decoded.Length());
 	BString status;
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.Append(B_TRANSLATE("Selected text URL-decoded"));
 	else
 		status.Append(B_TRANSLATE("Entire text URL-decoded"));
@@ -510,7 +513,7 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString status;
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("Prefix/suffix added to %i lines in selection"), lineCount);
 	} else {
 		status.SetToFormat(B_TRANSLATE("Prefix/suffix added to %i lines in entire text"),
@@ -565,7 +568,7 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString status;
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("Prefix/suffix removed from %i lines in selection"),
 			lineCount);
 	} else {
@@ -616,7 +619,7 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool a
 	BString status;
 	BString breakType
 		= breakOnWords ? B_TRANSLATE("breaking on words") : B_TRANSLATE("breaking anywhere");
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("Line breaks inserted in selection (max length: %d, %s)"),
 			maxLength, breakType.String());
 	} else {
@@ -660,7 +663,7 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDe
 	BString status;
 	BString keepStr = keepDelimiter ? B_TRANSLATE("kept") : B_TRANSLATE("removed");
 
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("Lines broken on delimiter \"%s\" (%s) in selection"),
 			delimiter.String(), keepStr.String());
 	} else {
@@ -698,7 +701,7 @@ TrimWhitespace(BTextView* textView, bool applyToSelection)
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString status;
-	if (applyToSelection)
+	if (appliedToSelection)
 		status.SetToFormat(B_TRANSLATE("Whitespace trimmed from lines in selection"));
 	else
 		status.SetToFormat(B_TRANSLATE("Whitespace trimmed from lines in entire text"));
@@ -741,7 +744,7 @@ TrimEmptyLines(BTextView* textView, bool applyToSelection)
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString status;
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("%d empty lines removed from selection"), removedLineCount);
 	} else {
 		status.SetToFormat(B_TRANSLATE("%d empty lines removed from entire text"),
@@ -796,7 +799,7 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 	textView->Insert(selStart, text.String(), text.Length());
 	BString status;
 
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("%d occurrences of \"%s\" replaced in selection"),
 			replacementCount, find.String());
 	} else {
@@ -866,7 +869,7 @@ SortLines(BTextView* textView, bool ascending, bool caseSensitive, bool applyToS
 	BString order = ascending ? B_TRANSLATE("ascending") : B_TRANSLATE("descending");
 
 	BString statusMsg;
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		statusMsg.SetToFormat(
 			B_TRANSLATE("%zu lines sorted alphabetically in %s order in selection"), lines.size(),
 			order.String());
@@ -936,7 +939,7 @@ SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive, bool 
 	BString order = ascending ? B_TRANSLATE("ascending") : B_TRANSLATE("descending");
 
 	BString statusMsg;
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		statusMsg.SetToFormat(
 			B_TRANSLATE("%zu lines sorted by line length in %s order in selection"), lines.size(),
 			order.String());
@@ -1001,7 +1004,7 @@ RemoveDuplicateLines(BTextView* textView, bool caseSensitive, bool applyToSelect
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString statusMsg;
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		statusMsg.SetToFormat(B_TRANSLATE("%i duplicated lines removed from selection"),
 			linesRemoved);
 	} else {
@@ -1055,7 +1058,7 @@ IndentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelectio
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString statusMsg;
 	BString indentationType = useTabs ? B_TRANSLATE("tabs") : B_TRANSLATE("spaces");
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		statusMsg.SetToFormat(B_TRANSLATE("%i selected lines indented by %i %s"), lineCount, count,
 			indentationType.String());
 	} else {
@@ -1140,7 +1143,7 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelect
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 	BString statusMsg;
 	BString indentationType = useTabs ? B_TRANSLATE("tabs") : B_TRANSLATE("spaces");
-	if (applyToSelection) {
+	if (appliedToSelection) {
 		statusMsg.SetToFormat(B_TRANSLATE("%i selected lines unindented by %i %s"), lineCount,
 			count, indentationType.String());
 	} else {
