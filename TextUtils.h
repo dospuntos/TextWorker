@@ -10,7 +10,6 @@
 
 BString GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly,
 	bool isLineBased);
-BString GetTextFromTextView(BTextView* textView);
 void SaveCursorPosition(BTextView* textView);
 void RestoreCursorPosition(BTextView* textView);
 void ConvertToUppercase(BTextView* textView, bool applyToSelection);
@@ -47,11 +46,13 @@ void UnindentLines(BTextView* textView, bool useTabs = true, int32 count = 1,
 	bool applyToSelection = false);
 
 bool IsProbablyText(BFile& file);
-void ShowTextStats(BTextView* textView);
+void ShowTextStats(BTextView* textView, bool applyToSelection);
 
 void SortLines(BTextView* textView, bool ascending = true, bool caseSensitive = true,
 	bool applyToSelection = false);
 void SortLinesByLength(BTextView* textView, bool ascending = true, bool caseSensitive = true,
 	bool applyToSelection = false);
+void SendStatusMessage(const BString& text);
+int32 _CountCharChanges(const BString& original, const BString& transformed);
 
 #endif // TEXT_UTILS_H

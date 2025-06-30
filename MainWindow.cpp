@@ -223,7 +223,7 @@ MainWindow::MessageReceived(BMessage* msg)
 				newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
 			newFont.SetSize(fFontSize);
 			fTextView->SetFontAndColor(&newFont);
-			_UpdateMessageBar("Settings updated");
+			_UpdateStatusMessage("Settings updated");
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
@@ -378,7 +378,17 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		}
 		case M_SHOW_STATS:
-			ShowTextStats(fTextView);
+			ShowTextStats(fTextView, fApplyToSelection);
+			break;
+		case M_SHOW_STATUS: {
+			BString text;
+			if (msg->FindString("text", &text) == B_OK)
+				_UpdateStatusMessage(text);
+			break;
+		}
+		case M_CLEAR_STATUS:
+			if (fMessageBar)
+				fMessageBar->SetText("");
 			break;
 		case M_REPORT_A_BUG:
 			BUrl("https://github.com/dospuntos/TextWorker/issues/", true)
@@ -390,8 +400,6 @@ MainWindow::MessageReceived(BMessage* msg)
 	}
 	_UpdateStatusBar();
 	_UpdateToolbarState();
-	// fSidebar->InvalidateLayout();
-	// fSidebar->Invalidate();
 }
 
 
@@ -785,14 +793,28 @@ MainWindow::_UpdateStatusBar()
 	statusText.SetToFormat(B_TRANSLATE_COMMENT("%d:%d | Chars: %d | Words: %d",
 							   "Statusbar text - only change Chars and Words"),
 		row, col, charCount, wordCount);
+	if (IsDocumentModified())
+		statusText << " | " << B_TRANSLATE("Modified");
 	fStatusBar->SetText(statusText.String());
 }
 
 
 void
-MainWindow::_UpdateMessageBar(BString message)
+MainWindow::_UpdateStatusMessage(BString message)
 {
-	fMessageBar->SetText(message);
+	if (fStatusBar) {
+		fMessageBar->SetText(message.String());
+
+		// Cancel previous timer if any
+		if (fStatusClearRunner) {
+			delete fStatusClearRunner;
+			fStatusClearRunner = nullptr;
+		}
+
+		// Set up 5-second timer to clear message
+		BMessage* clearMsg = new BMessage(M_CLEAR_STATUS);
+		fStatusClearRunner = new BMessageRunner(BMessenger(this), clearMsg, 5000000, 1);
+	}
 }
 
 

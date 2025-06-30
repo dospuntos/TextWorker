@@ -34,7 +34,7 @@ private:
 	BToolBar* fToolbar;
 	Sidebar* fSidebar;
 	void _UpdateStatusBar();
-	void _UpdateMessageBar(BString message);
+	void _UpdateStatusMessage(BString message);
 	void _UpdateToolbarState();
 	bool _ClipboardHasText() const;
 	bool _GetClipboardText(BString& outText) const;
@@ -55,6 +55,7 @@ private:
 	BStringView* fStatusBar;
 	BStringView* fMessageBar;
 	BMessageRunner* fStatusUpdater;
+	BMessageRunner* fStatusClearRunner = nullptr;
 
 	BMenuItem* fSaveMenuItem;
 	BFilePanel* fOpenPanel;
