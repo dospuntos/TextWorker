@@ -54,5 +54,8 @@ void SortLinesByLength(BTextView* textView, bool ascending = true, bool caseSens
 	bool applyToSelection = false);
 void SendStatusMessage(const BString& text);
 int32 _CountCharChanges(const BString& original, const BString& transformed);
+int32 CountLines(const BString& text);
+int32 CountWords(const BString& text);
+int32 CountSentences(const BString& text);
 
 #endif // TEXT_UTILS_H

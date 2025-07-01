@@ -11,8 +11,8 @@ resource app_version {
 
 	internal = 1,
 
-	short_info = "Clean and transform text easily with this lightweight tool.",
-	long_info = "TextWorker is a Haiku-native utility that helps you clean, format, and transform plain text. It supports operations like case conversion, line sorting, trimming, prefix/suffix edits, and more."
+	short_info = "A small and powerfull utility for text transformations",
+	long_info = "TextWorker is a lightweight Haiku-native utility that performs various transformations on text. It supports operations like case conversion, line sorting, trimming, prefix/suffix edits, and more."
 };
 
 resource file_types message

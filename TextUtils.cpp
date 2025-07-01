@@ -583,42 +583,71 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 void
 InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool applyToSelection)
 {
+	bool appliedToSelection = false;
 	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
 
 	BString updatedText;
 
-	int32 start = 0;
-	while (start < text.Length()) {
-		int32 segmentEnd = start + maxLength;
+	int32 lineStart = 0;
+	while (lineStart < text.Length()) {
+		// Find the end of the current line
+		int32 lineEnd = text.FindFirst('\n', lineStart);
+		bool isLastLine = false;
 
-		if (segmentEnd >= text.Length()) {
-			updatedText.Append(text.String() + start, text.Length() - start);
-			break;
+		if (lineEnd == B_ERROR) {
+			lineEnd = text.Length();
+			isLastLine = true;
 		}
 
-		if (breakOnWords) {
-			int32 nearestSpace = text.FindLast(' ', segmentEnd);
-			if (nearestSpace >= start)
-				segmentEnd = nearestSpace;
+		BString line;
+		text.CopyInto(line, lineStart, lineEnd - lineStart);
+
+		// Process line if needed
+		int32 pos = 0;
+		while (pos < line.Length()) {
+			int32 segmentEnd = pos + maxLength;
+			if (segmentEnd >= line.Length()) {
+				updatedText.Append(line.String() + pos, line.Length() - pos);
+				break;
+			}
+
+			if (breakOnWords) {
+				int32 nearestSpace = line.FindLast(' ', segmentEnd);
+				if (nearestSpace >= pos) {
+					segmentEnd = nearestSpace;
+				} else {
+					// No space found: fallback to hard break at maxLength
+					segmentEnd = pos + maxLength;
+				}
+			}
+
+			// Append the segment and break
+			updatedText.Append(line.String() + pos, segmentEnd - pos);
+			updatedText.Append("\n");
+
+			// Advance past this segment
+			if (segmentEnd < line.Length() && line[segmentEnd] == ' ')
+				pos = segmentEnd + 1; // skip space
+			else
+				pos = segmentEnd;
+
 		}
 
-		// Append the segment and add line break
-		updatedText.Append(text.String() + start, segmentEnd - start);
-		updatedText.Append("\n");
+		// If line was already short and unbroken, add newline
+		if (line.Length() <= maxLength)
+			updatedText.Append("\n");
 
-		if (!breakOnWords && segmentEnd == start + maxLength) {
-			start = segmentEnd;
-		} else {
-			// Move past the space or to the next segment
-			start = segmentEnd + 1;
-		}
+		lineStart = lineEnd + 1;
 	}
 
 	textView->Delete(selStart, selEnd);
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
+
 	BString status;
-	BString breakType
-		= breakOnWords ? B_TRANSLATE("breaking on words") : B_TRANSLATE("breaking anywhere");
+	BString breakType = breakOnWords
+		? B_TRANSLATE("breaking on words")
+		: B_TRANSLATE("breaking anywhere");
+
 	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("Line breaks inserted in selection (max length: %d, %s)"),
 			maxLength, breakType.String());
@@ -629,6 +658,7 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool a
 	SendStatusMessage(status);
 	RestoreCursorPosition(textView);
 }
+
 
 
 void
@@ -1168,11 +1198,11 @@ ShowTextStats(BTextView* textView, bool applyToSelection)
 	BString statsMsg;
 
 	int32 charCount = unicodeText.countChar32();
-	int32 lineCount = 0;
+	int32 lineCount = CountLines(text);
 	int32 maxLineLength = 0;
 	int32 totalWordLength = 0;
-	int32 wordCount = 0;
-	int32 sentenceCount = 0;
+	int32 wordCount = CountWords(text);
+	int32 sentenceCount = CountSentences(text);
 
 	std::map<std::string, int> wordFrequency;
 
@@ -1190,6 +1220,7 @@ ShowTextStats(BTextView* textView, bool applyToSelection)
 			maxLineLength = lineLen;
 	}
 
+
 	// ICU word iterator
 	UErrorCode status = U_ZERO_ERROR;
 	std::unique_ptr<icu::BreakIterator> wordIter(
@@ -1203,7 +1234,6 @@ ShowTextStats(BTextView* textView, bool applyToSelection)
 		if (word.trim().isEmpty())
 			continue;
 		if (word.char32At(0) >= 0x30 && u_isalnum(word.char32At(0))) {
-			wordCount++;
 			totalWordLength += word.countChar32();
 			word.toLower();
 			std::string utf8;
@@ -1213,22 +1243,16 @@ ShowTextStats(BTextView* textView, bool applyToSelection)
 		}
 	}
 
-	// ICU sentence iterator
-	std::unique_ptr<icu::BreakIterator> sentIter(
-		icu::BreakIterator::createSentenceInstance(icu::Locale::getDefault(), status));
-	sentIter->setText(unicodeText);
-
-	for (int32_t boundary = sentIter->first(); boundary != icu::BreakIterator::DONE;
-		boundary = sentIter->next()) {
-		sentenceCount++;
-	}
-
 	// Most common words
 	std::vector<std::pair<BString, int>> sortedWords;
 	for (const auto& entry : wordFrequency)
 		sortedWords.emplace_back(BString(entry.first.c_str()), entry.second);
-	std::sort(sortedWords.begin(), sortedWords.end(),
-		[](const auto& a, const auto& b) { return b.second > a.second; });
+	std::sort(sortedWords.begin(), sortedWords.end(), [](const auto& a, const auto& b) {
+		if (a.second != b.second)
+			return a.second > b.second; // Highest frequency first
+		return a.first.ICompare(b.first) < 0; // Alphabetical for tie-breaking
+	});
+
 
 	statsMsg.SetToFormat(B_TRANSLATE("STATISTICS FOR CURRENT TEXT\n\n"
 									 "Characters: %d\n"
@@ -1244,7 +1268,7 @@ ShowTextStats(BTextView* textView, bool applyToSelection)
 	int shown = 0;
 	for (const auto& [word, freq] : sortedWords) {
 		statsMsg << "  " << word << ": " << freq << '\n';
-		if (++shown == 5)
+		if (++shown == 10)
 			break;
 	}
 	(new BAlert("Stats", statsMsg.String(), B_TRANSLATE("OK"), NULL, NULL, B_WIDTH_AS_USUAL,
@@ -1275,6 +1299,88 @@ _CountCharChanges(const BString& original, const BString& transformed)
 
 	for (int32 i = 0; i < len; i++) {
 		if (original[i] != transformed[i])
+			count++;
+	}
+
+	return count;
+}
+
+
+int32
+CountLines(const BString& text)
+{
+	if (text.Length() == 0)
+		return 0;
+
+	int32 lineCount = 0;
+	for (int32 i = 0; i < text.Length(); i++) {
+		if (text[i] == '\n')
+			lineCount++;
+	}
+
+	// Add one more if the text doesn't end in a newline
+	if (text[text.Length() - 1] != '\n')
+		lineCount++;
+
+	return lineCount;
+}
+
+
+int32
+CountWords(const BString& text)
+{
+	UErrorCode status = U_ZERO_ERROR;
+	icu::UnicodeString utext(text.String());
+
+	std::unique_ptr<icu::BreakIterator> bi(
+		icu::BreakIterator::createWordInstance(icu::Locale::getDefault(), status));
+
+	if (U_FAILURE(status) || !bi)
+		return 0;
+
+	bi->setText(utext);
+
+	int32_t count = 0;
+	for (int32_t start = bi->first(), end = bi->next(); end != icu::BreakIterator::DONE;
+		start = end, end = bi->next()) {
+
+		// Check if the boundary is a word (letters or numbers)
+		icu::UnicodeString word = utext.tempSubStringBetween(start, end);
+		if (word.trim().length() > 0
+			&& u_getIntPropertyValue(word.char32At(0), UCHAR_GENERAL_CATEGORY)
+				!= U_SPACE_SEPARATOR) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
+
+int32
+CountSentences(const BString& text)
+{
+	if (text.IsEmpty())
+		return 0;
+
+	UErrorCode status = U_ZERO_ERROR;
+	icu::UnicodeString unicodeText(text.String());
+
+	std::unique_ptr<icu::BreakIterator> sentIter(
+		icu::BreakIterator::createSentenceInstance(icu::Locale::getDefault(), status));
+
+	if (U_FAILURE(status) || !sentIter)
+		return 0;
+
+	sentIter->setText(unicodeText);
+
+	int32 count = 0;
+	for (int32_t start = sentIter->first(), end = sentIter->next(); end != icu::BreakIterator::DONE;
+		start = end, end = sentIter->next()) {
+
+		icu::UnicodeString segment = unicodeText.tempSubStringBetween(start, end);
+		segment.trim();
+		if (!segment.isEmpty())
 			count++;
 	}
 

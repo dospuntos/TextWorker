@@ -323,12 +323,13 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_INDENT_LINES:
 		case M_UNINDENT_LINES:
 		{
-			if (msg->what == M_INDENT_LINES)
+			if (msg->what == M_INDENT_LINES) {
 				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner(),
 					fApplyToSelection);
-			else
+			} else {
 				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner(),
 					fApplyToSelection);
+			}
 			break;
 		}
 		case M_MODE_REMOVE_ALL:
@@ -384,7 +385,8 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_SHOW_STATS:
 			ShowTextStats(fTextView, fApplyToSelection);
 			break;
-		case M_SHOW_STATUS: {
+		case M_SHOW_STATUS:
+		{
 			BString text;
 			if (msg->FindString("text", &text) == B_OK)
 				_UpdateStatusMessage(text);
@@ -770,33 +772,22 @@ MainWindow::_UpdateStatusBar()
 	fTextView->GetSelection(&start, &end);
 	BString textBuffer = fTextView->Text();
 
+	int32 lineCount = CountLines(textBuffer);
+	int32 wordCount = CountWords(textBuffer);
+	int32 charCount = textBuffer.Length();
+
 	int32 row = 1;
-	for (int32 i = 0; i < start; ++i) {
+	for (int32 i = 0; i < start; i++) {
 		if (textBuffer[i] == '\n')
 			row++;
 	}
 	int col = start - textBuffer.FindLast('\n', start);
 
-	// Calculate character count and word count
-	textBuffer.ReplaceAll('\n', ' ');
-	textBuffer.ReplaceAll('\t', ' ');
-	int32 charCount = fTextView->TextLength();
-	int32 wordCount = 0;
-	bool inWord = false;
-	for (int32 i = 0; i < charCount; ++i) {
-		if (std::isspace(textBuffer[i])) {
-			inWord = false;
-		} else if (!inWord) {
-			inWord = true;
-			wordCount++;
-		}
-	}
-
 	// Update the status bar text
 	BString statusText;
-	statusText.SetToFormat(B_TRANSLATE_COMMENT("%d:%d | Chars: %d | Words: %d",
-							   "Statusbar text - only change Chars and Words"),
-		row, col, charCount, wordCount);
+	statusText.SetToFormat(B_TRANSLATE_COMMENT("%d:%d | Chars: %d | Words: %d | Lines: %d",
+							   "Statusbar text - only change Chars, Words and Lines"),
+		row, col, charCount, wordCount, lineCount);
 	if (IsDocumentModified())
 		statusText << " | " << B_TRANSLATE("Modified");
 	fStatusBar->SetText(statusText.String());
