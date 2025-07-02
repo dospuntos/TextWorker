@@ -8,9 +8,10 @@
 
 #include <TextView.h>
 
-BString GetRelevantTextFromTextView(BTextView* textView, bool isLineBased);
+BString GetText(BTextView* textView, bool isLineBased);
 void SaveCursorPosition(BTextView* textView);
 void RestoreCursorPosition(BTextView* textView);
+void RestoreCursorPosition(BTextView* textView, int32 textLength);
 void ConvertToUppercase(BTextView* textView);
 void ConvertToLowercase(BTextView* textView);
 void ConvertToTitlecase(BTextView* textView);

@@ -33,7 +33,7 @@ bool appliedToSelection = true;
 
 
 BString
-GetRelevantTextFromTextView(BTextView* textView, bool isLineBased)
+GetText(BTextView* textView, bool isLineBased)
 {
 	selStart = 0;
 	selEnd = 0;
@@ -48,7 +48,7 @@ GetRelevantTextFromTextView(BTextView* textView, bool isLineBased)
 
 	textView->GetSelection(&selStart, &selEnd);
 
-	if (selStart == selEnd) {
+	if (selStart == selEnd) { // No selection
 		selStart = 0;
 		selEnd = textLength;
 		appliedToSelection = false;
@@ -94,9 +94,16 @@ RestoreCursorPosition(BTextView* textView)
 
 
 void
+RestoreCursorPosition(BTextView* textView, int32 textLength)
+{
+	textView->Select(selStart, selStart + textLength);
+}
+
+
+void
 ConvertToUppercase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	BString original = text;
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
@@ -127,7 +134,7 @@ ConvertToUppercase(BTextView* textView)
 void
 ConvertToLowercase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	BString original = text;
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
@@ -157,7 +164,7 @@ ConvertToLowercase(BTextView* textView)
 void
 ConvertToTitlecase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	BString original = text;
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
@@ -200,7 +207,7 @@ ConvertToTitlecase(BTextView* textView)
 void
 Capitalize(BTextView* textView)
 {
-	BString rawText = GetRelevantTextFromTextView(textView, false);
+	BString rawText = GetText(textView, false);
 	BString original = rawText;
 
 	icu::UnicodeString utext = icu::UnicodeString::fromUTF8(rawText.String());
@@ -244,7 +251,7 @@ Capitalize(BTextView* textView)
 void
 ConvertToRandomCase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	BString original = text;
 
 	srand(time(nullptr)); // Seed random number generator
@@ -277,7 +284,7 @@ ConvertToRandomCase(BTextView* textView)
 void
 ConvertToAlternatingCase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	BString original = text;
 
 	bool uppercase = !(std::isupper(text.ByteAt(0)));
@@ -310,7 +317,7 @@ ConvertToAlternatingCase(BTextView* textView)
 void
 ToggleCase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	BString original = text;
 
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -338,7 +345,7 @@ ToggleCase(BTextView* textView)
 void
 RemoveLineBreaks(BTextView* textView, BString replacement)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	int32 count = 0;
 	for (int32 i = 0; i < text.Length(); i++) {
@@ -363,7 +370,7 @@ RemoveLineBreaks(BTextView* textView, BString replacement)
 			status.SetToFormat(B_TRANSLATE("%i line breaks replaced in entire text"), count);
 	}
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, text.Length());
 }
 
 
@@ -371,7 +378,7 @@ RemoveLineBreaks(BTextView* textView, BString replacement)
 void
 ConvertToROT13(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	int32 count = 0;
 
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -402,7 +409,7 @@ ConvertToROT13(BTextView* textView)
 void
 URLEncode(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 
 	BString encoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -435,14 +442,14 @@ URLEncode(BTextView* textView)
 	else
 		status.Append(B_TRANSLATE("Entire text URL-encoded"));
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, encoded.Length());
 }
 
 
 void
 URLDecode(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 
 	BString decoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -475,14 +482,14 @@ URLDecode(BTextView* textView)
 	else
 		status.Append(B_TRANSLATE("Entire text URL-decoded"));
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, decoded.Length());
 }
 
 
 void
 AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 	int32 lineCount = 0;
 	BString updatedText;
 
@@ -514,14 +521,14 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 			lineCount);
 	}
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BString& suffix)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	BString updatedText;
 	int32 start = 0;
@@ -569,7 +576,7 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 			lineCount);
 	}
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
@@ -577,7 +584,7 @@ void
 InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 {
 	bool appliedToSelection = false;
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	BString updatedText;
 
@@ -606,19 +613,14 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 
 			if (breakOnWords) {
 				int32 nearestSpace = line.FindLast(' ', segmentEnd);
-				if (nearestSpace >= pos) {
+				if (nearestSpace >= pos)
 					segmentEnd = nearestSpace;
-				} else {
-					// No space found: fallback to hard break at maxLength
+				else
 					segmentEnd = pos + maxLength;
-				}
 			}
-
-			// Append the segment and break
 			updatedText.Append(line.String() + pos, segmentEnd - pos);
 			updatedText.Append("\n");
 
-			// Advance past this segment
 			if (segmentEnd < line.Length() && line[segmentEnd] == ' ')
 				pos = segmentEnd + 1; // skip space
 			else
@@ -647,14 +649,14 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 			maxLength, breakType.String());
 	}
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	BString updatedText;
 
@@ -691,14 +693,14 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDe
 	}
 
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 TrimWhitespace(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	BString updatedText;
 	int32 start = 0;
@@ -725,14 +727,14 @@ TrimWhitespace(BTextView* textView)
 	else
 		status.SetToFormat(B_TRANSLATE("Whitespace trimmed from lines in entire text"));
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 TrimEmptyLines(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	int32 start = 0;
 	int32 end;
@@ -770,7 +772,7 @@ TrimEmptyLines(BTextView* textView)
 			removedLineCount);
 	}
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
@@ -787,7 +789,7 @@ void
 ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
 	bool fullWordsOnly)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	int32 replacementCount = 0;
 
 	if (find.IsEmpty())
@@ -827,14 +829,14 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 	}
 
 	SendStatusMessage(status);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, text.Length());
 }
 
 
 void
 SortLines(BTextView* textView, bool ascending, bool caseSensitive)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -898,14 +900,14 @@ SortLines(BTextView* textView, bool ascending, bool caseSensitive)
 			order.String());
 	}
 	SendStatusMessage(statusMsg);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -968,14 +970,14 @@ SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
 			order.String());
 	}
 	SendStatusMessage(statusMsg);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
 {
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -1041,7 +1043,7 @@ IndentLines(BTextView* textView, bool useTabs, int32 count)
 	if (count <= 0)
 		return;
 
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	BString updatedText;
 	BString indent;
@@ -1085,7 +1087,7 @@ IndentLines(BTextView* textView, bool useTabs, int32 count)
 			indentationType.String());
 	}
 	SendStatusMessage(statusMsg);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
@@ -1095,7 +1097,7 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count)
 	if (count <= 0)
 		return;
 
-	BString text = GetRelevantTextFromTextView(textView, true);
+	BString text = GetText(textView, true);
 
 	BString updatedText;
 	BString indent;
@@ -1170,14 +1172,14 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count)
 			indentationType.String());
 	}
 	SendStatusMessage(statusMsg);
-	RestoreCursorPosition(textView);
+	RestoreCursorPosition(textView, updatedText.Length());
 }
 
 
 void
 ShowTextStats(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, false);
+	BString text = GetText(textView, false);
 	if (text.IsEmpty()) {
 		SendStatusMessage(B_TRANSLATE("No text selected"));
 		return;

@@ -1,4 +1,4 @@
-1	English	application/x-vnd.jpw-TextWorker	2096805832
+1	English	application/x-vnd.jpw-TextWorker	862010569
 Remove duplicate lines	MainView		Remove duplicate lines
 %i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
 Open file…	Toolbar		Open file…
@@ -113,7 +113,6 @@ Show stats…	Toolbar		Show stats…
 %i characters changed in selection	Text utilities		%i characters changed in selection
 Save	MainView		Save
 Save text on exit	Settings		Save text on exit
-Apply to selection only	Toolbar		Apply to selection only
 %i selected lines indented by %i %s	Text utilities		%i selected lines indented by %i %s
 %d empty lines removed from selection	Text utilities		%d empty lines removed from selection
 %d occurrences of \"%s\" replaced in selection	Text utilities		%d occurrences of \"%s\" replaced in selection
@@ -121,7 +120,6 @@ Remove duplicate lines	Sidebar		Remove duplicate lines
 %i line breaks replaced in entire text	Text utilities		%i line breaks replaced in entire text
 %zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu lines sorted alphabetically in %s order in entire text
 About…	MainView		About…
-%d:%d | Chars: %d | Words: %d	MainView	Statusbar text - only change Chars and Words	%d:%d | Chars: %d | Words: %d
 Prefix/suffix added to %i lines in entire text	Text utilities		Prefix/suffix added to %i lines in entire text
 Replace:	Sidebar		Replace:
 Prefix:	Sidebar		Prefix:
@@ -154,7 +152,6 @@ Indent lines	MainView		Indent lines
 Select all	MainView		Select all
 OK	MainView		OK
 RaNDoM caSE	MainView		RaNDoM caSE
-Apply to selection only	Settings		Apply to selection only
 Capitalize	MainView		Capitalize
 Cut	Toolbar		Cut
 Paste	Toolbar		Paste
@@ -172,4 +169,5 @@ Sort lines	Sidebar		Sort lines
 %i line breaks removed in entire text	Text utilities		%i line breaks removed in entire text
 Prefix/suffix removed from %i lines in selection	Text utilities		Prefix/suffix removed from %i lines in selection
 Line breaks inserted in selection (max length: %d, %s)	Text utilities		Line breaks inserted in selection (max length: %d, %s)
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Chars: %d | Words: %d | Lines: %d
 %i duplicated lines removed from selection	Text utilities		%i duplicated lines removed from selection
