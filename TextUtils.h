@@ -8,50 +8,43 @@
 
 #include <TextView.h>
 
-BString GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly,
-	bool isLineBased);
+BString GetRelevantTextFromTextView(BTextView* textView, bool isLineBased);
 void SaveCursorPosition(BTextView* textView);
 void RestoreCursorPosition(BTextView* textView);
-void ConvertToUppercase(BTextView* textView, bool applyToSelection);
-void ConvertToLowercase(BTextView* textView, bool applyToSelection);
-void ConvertToTitlecase(BTextView* textView, bool applyToSelection);
-void ConvertToAlternatingCase(BTextView* textView, bool applyToSelection);
-void ConvertToRandomCase(BTextView* textView, bool applyToSelection);
-void Capitalize(BTextView* textView, bool applyToSelection);
-void ToggleCase(BTextView* textView, bool applyToSelection);
+void ConvertToUppercase(BTextView* textView);
+void ConvertToLowercase(BTextView* textView);
+void ConvertToTitlecase(BTextView* textView);
+void ConvertToAlternatingCase(BTextView* textView);
+void ConvertToRandomCase(BTextView* textView);
+void Capitalize(BTextView* textView);
+void ToggleCase(BTextView* textView);
 
-void RemoveLineBreaks(BTextView* textView, BString replacement = "", bool applyToSelection = false);
-void InsertLineBreaks(BTextView* textView, int32 maxWidth, bool breakOnWords = false,
-	bool applyToSelection = false);
+void RemoveLineBreaks(BTextView* textView, BString replacement = "");
+void InsertLineBreaks(BTextView* textView, int32 maxWidth, bool breakOnWords = false);
 BString ProcessLineWithBreaks(const BString& line, int32 maxLength, bool KeepWordsIntact);
-void BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter = true,
-	bool applyToSelection = false);
-void TrimWhitespace(BTextView* textView, bool applyToSelection);
-void TrimEmptyLines(BTextView* textView, bool applyToSelection);
-void RemoveDuplicateLines(BTextView* textView, bool caseSensitive = true,
-	bool applyToSelection = false);
+void BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter,
+	bool keepDelimiter = true);
+void TrimWhitespace(BTextView* textView);
+void TrimEmptyLines(BTextView* textView);
+void RemoveDuplicateLines(BTextView* textView, bool caseSensitive = true);
 void ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
-	bool fullWordsOnly, bool applyToSelection = false);
+	bool fullWordsOnly);
 
-void URLEncode(BTextView* textView, bool applyToSelection);
-void URLDecode(BTextView* textView, bool applyToSelection);
-void ConvertToROT13(BTextView* textView, bool applyToSelection);
-void AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString,
-	bool applyToSelection);
+void URLEncode(BTextView* textView);
+void URLDecode(BTextView* textView);
+void ConvertToROT13(BTextView* textView);
+void AddStringsToEachLine(BTextView* textView, const BString& startString,
+	const BString& endString);
 void RemoveStringsFromEachLine(BTextView* textView, const BString& startString,
-	const BString& endString, bool applyToSelection = false);
-void IndentLines(BTextView* textView, bool useTabs = true, int32 count = 1,
-	bool applyToSelection = false);
-void UnindentLines(BTextView* textView, bool useTabs = true, int32 count = 1,
-	bool applyToSelection = false);
+	const BString& endString);
+void IndentLines(BTextView* textView, bool useTabs = true, int32 count = 1);
+void UnindentLines(BTextView* textView, bool useTabs = true, int32 count = 1);
 
 bool IsProbablyText(BFile& file);
-void ShowTextStats(BTextView* textView, bool applyToSelection);
+void ShowTextStats(BTextView* textView);
 
-void SortLines(BTextView* textView, bool ascending = true, bool caseSensitive = true,
-	bool applyToSelection = false);
-void SortLinesByLength(BTextView* textView, bool ascending = true, bool caseSensitive = true,
-	bool applyToSelection = false);
+void SortLines(BTextView* textView, bool ascending = true, bool caseSensitive = true);
+void SortLinesByLength(BTextView* textView, bool ascending = true, bool caseSensitive = true);
 void SendStatusMessage(const BString& text);
 int32 _CountCharChanges(const BString& original, const BString& transformed);
 int32 CountLines(const BString& text);

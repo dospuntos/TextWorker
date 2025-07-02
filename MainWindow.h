@@ -45,7 +45,6 @@ private:
 	bool fClearSettingsAfterUse;
 	int32 fFontSize;
 	BString fFontFamily;
-	bool fApplyToSelection;
 	status_t _LoadSettings(BMessage& settings);
 	status_t _SaveSettings();
 	void _RestoreValues(BMessage& settings);

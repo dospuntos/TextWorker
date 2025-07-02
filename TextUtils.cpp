@@ -29,15 +29,14 @@
 
 int32 startSelection, endSelection; // For cursor position
 int32 selStart, selEnd; // For selected text
-bool appliedToSelection = false;
+bool appliedToSelection = true;
 
 
 BString
-GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly, bool isLineBased)
+GetRelevantTextFromTextView(BTextView* textView, bool isLineBased)
 {
 	selStart = 0;
 	selEnd = 0;
-	appliedToSelection = applyToSelectionOnly;
 
 	if (textView == nullptr)
 		return BString("");
@@ -46,30 +45,26 @@ GetRelevantTextFromTextView(BTextView* textView, bool applyToSelectionOnly, bool
 	if (textLength == 0)
 		return BString("");
 
-	if (!applyToSelectionOnly) {
+
+	textView->GetSelection(&selStart, &selEnd);
+
+	if (selStart == selEnd) {
 		selStart = 0;
 		selEnd = textLength;
-	} else {
-		textView->GetSelection(&selStart, &selEnd);
+		appliedToSelection = false;
+	} else if (isLineBased) {
+		const char* fullText = textView->Text();
 
-		if (selStart == selEnd) {
-			selStart = 0;
-			selEnd = textLength;
-			appliedToSelection = false;
-		} else if (isLineBased) {
-			const char* fullText = textView->Text();
+		// Extend selStartOut to beginning of line
+		while (selStart > 0 && fullText[selStart - 1] != '\n')
+			selStart--;
 
-			// Extend selStartOut to beginning of line
-			while (selStart > 0 && fullText[selStart - 1] != '\n')
-				selStart--;
-
-			// Extend selEndOut to end of line (but don’t go past final \n)
-			while (selEnd < textLength && fullText[selEnd] != '\n')
-				selEnd++;
-			// Don't add one unless we're not already at a linebreak
-			if (selEnd < textLength && fullText[selEnd] == '\n')
-				selEnd++;
-		}
+		// Extend selEndOut to end of line (but don’t go past final \n)
+		while (selEnd < textLength && fullText[selEnd] != '\n')
+			selEnd++;
+		// Don't add one unless we're not already at a linebreak
+		if (selEnd < textLength && fullText[selEnd] == '\n')
+			selEnd++;
 	}
 
 	char* buffer = new char[selEnd - selStart + 1];
@@ -99,9 +94,9 @@ RestoreCursorPosition(BTextView* textView)
 
 
 void
-ConvertToUppercase(BTextView* textView, bool applyToSelection)
+ConvertToUppercase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	BString original = text;
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
@@ -130,9 +125,9 @@ ConvertToUppercase(BTextView* textView, bool applyToSelection)
 
 
 void
-ConvertToLowercase(BTextView* textView, bool applyToSelection)
+ConvertToLowercase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	BString original = text;
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
@@ -160,9 +155,9 @@ ConvertToLowercase(BTextView* textView, bool applyToSelection)
 
 
 void
-ConvertToTitlecase(BTextView* textView, bool applyToSelection)
+ConvertToTitlecase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	BString original = text;
 
 	icu::UnicodeString unicodeText = icu::UnicodeString::fromUTF8(text.String());
@@ -203,9 +198,9 @@ ConvertToTitlecase(BTextView* textView, bool applyToSelection)
 
 
 void
-Capitalize(BTextView* textView, bool applyToSelection)
+Capitalize(BTextView* textView)
 {
-	BString rawText = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString rawText = GetRelevantTextFromTextView(textView, false);
 	BString original = rawText;
 
 	icu::UnicodeString utext = icu::UnicodeString::fromUTF8(rawText.String());
@@ -247,9 +242,9 @@ Capitalize(BTextView* textView, bool applyToSelection)
 
 
 void
-ConvertToRandomCase(BTextView* textView, bool applyToSelection)
+ConvertToRandomCase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	BString original = text;
 
 	srand(time(nullptr)); // Seed random number generator
@@ -280,9 +275,9 @@ ConvertToRandomCase(BTextView* textView, bool applyToSelection)
 
 
 void
-ConvertToAlternatingCase(BTextView* textView, bool applyToSelection)
+ConvertToAlternatingCase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	BString original = text;
 
 	bool uppercase = !(std::isupper(text.ByteAt(0)));
@@ -313,9 +308,9 @@ ConvertToAlternatingCase(BTextView* textView, bool applyToSelection)
 
 
 void
-ToggleCase(BTextView* textView, bool applyToSelection)
+ToggleCase(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	BString original = text;
 
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -341,9 +336,9 @@ ToggleCase(BTextView* textView, bool applyToSelection)
 
 
 void
-RemoveLineBreaks(BTextView* textView, BString replacement, bool applyToSelection)
+RemoveLineBreaks(BTextView* textView, BString replacement)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	int32 count = 0;
 	for (int32 i = 0; i < text.Length(); i++) {
@@ -374,9 +369,9 @@ RemoveLineBreaks(BTextView* textView, BString replacement, bool applyToSelection
 
 // Note: The ROT-13 algorithm is symmetrical, the same function will encode and decode the text.
 void
-ConvertToROT13(BTextView* textView, bool applyToSelection)
+ConvertToROT13(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	int32 count = 0;
 
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -405,9 +400,9 @@ ConvertToROT13(BTextView* textView, bool applyToSelection)
 
 
 void
-URLEncode(BTextView* textView, bool applyToSelection)
+URLEncode(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 
 	BString encoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -445,9 +440,9 @@ URLEncode(BTextView* textView, bool applyToSelection)
 
 
 void
-URLDecode(BTextView* textView, bool applyToSelection)
+URLDecode(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 
 	BString decoded;
 	for (int32 i = 0; i < text.Length(); ++i) {
@@ -485,10 +480,9 @@ URLDecode(BTextView* textView, bool applyToSelection)
 
 
 void
-AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString,
-	bool applyToSelection)
+AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 	int32 lineCount = 0;
 	BString updatedText;
 
@@ -525,10 +519,9 @@ AddStringsToEachLine(BTextView* textView, const BString& startString, const BStr
 
 
 void
-RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BString& suffix,
-	bool applyToSelection)
+RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BString& suffix)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	BString updatedText;
 	int32 start = 0;
@@ -581,10 +574,10 @@ RemoveStringsFromEachLine(BTextView* textView, const BString& prefix, const BStr
 
 
 void
-InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool applyToSelection)
+InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords)
 {
 	bool appliedToSelection = false;
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	BString updatedText;
 
@@ -630,7 +623,6 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool a
 				pos = segmentEnd + 1; // skip space
 			else
 				pos = segmentEnd;
-
 		}
 
 		// If line was already short and unbroken, add newline
@@ -644,9 +636,8 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool a
 	textView->Insert(selStart, updatedText.String(), updatedText.Length());
 
 	BString status;
-	BString breakType = breakOnWords
-		? B_TRANSLATE("breaking on words")
-		: B_TRANSLATE("breaking anywhere");
+	BString breakType
+		= breakOnWords ? B_TRANSLATE("breaking on words") : B_TRANSLATE("breaking anywhere");
 
 	if (appliedToSelection) {
 		status.SetToFormat(B_TRANSLATE("Line breaks inserted in selection (max length: %d, %s)"),
@@ -660,12 +651,10 @@ InsertLineBreaks(BTextView* textView, int32 maxLength, bool breakOnWords, bool a
 }
 
 
-
 void
-BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter,
-	bool applyToSelection)
+BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDelimiter)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	BString updatedText;
 
@@ -707,9 +696,9 @@ BreakLinesOnDelimiter(BTextView* textView, const BString& delimiter, bool keepDe
 
 
 void
-TrimWhitespace(BTextView* textView, bool applyToSelection)
+TrimWhitespace(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	BString updatedText;
 	int32 start = 0;
@@ -741,9 +730,9 @@ TrimWhitespace(BTextView* textView, bool applyToSelection)
 
 
 void
-TrimEmptyLines(BTextView* textView, bool applyToSelection)
+TrimEmptyLines(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	int32 start = 0;
 	int32 end;
@@ -796,9 +785,9 @@ IsFullWord(const BString& text, int32 pos, int32 length)
 
 void
 ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSensitive,
-	bool fullWordsOnly, bool applyToSelection)
+	bool fullWordsOnly)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	int32 replacementCount = 0;
 
 	if (find.IsEmpty())
@@ -843,9 +832,9 @@ ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool caseSens
 
 
 void
-SortLines(BTextView* textView, bool ascending, bool caseSensitive, bool applyToSelection)
+SortLines(BTextView* textView, bool ascending, bool caseSensitive)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -914,9 +903,9 @@ SortLines(BTextView* textView, bool ascending, bool caseSensitive, bool applyToS
 
 
 void
-SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive, bool applyToSelection)
+SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -984,9 +973,9 @@ SortLinesByLength(BTextView* textView, bool ascending, bool caseSensitive, bool 
 
 
 void
-RemoveDuplicateLines(BTextView* textView, bool caseSensitive, bool applyToSelection)
+RemoveDuplicateLines(BTextView* textView, bool caseSensitive)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	// Split text into lines
 	std::vector<BString> lines;
@@ -1047,12 +1036,12 @@ RemoveDuplicateLines(BTextView* textView, bool caseSensitive, bool applyToSelect
 
 
 void
-IndentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelection)
+IndentLines(BTextView* textView, bool useTabs, int32 count)
 {
 	if (count <= 0)
 		return;
 
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	BString updatedText;
 	BString indent;
@@ -1101,12 +1090,12 @@ IndentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelectio
 
 
 void
-UnindentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelection)
+UnindentLines(BTextView* textView, bool useTabs, int32 count)
 {
 	if (count <= 0)
 		return;
 
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, true);
+	BString text = GetRelevantTextFromTextView(textView, true);
 
 	BString updatedText;
 	BString indent;
@@ -1186,9 +1175,9 @@ UnindentLines(BTextView* textView, bool useTabs, int32 count, bool applyToSelect
 
 
 void
-ShowTextStats(BTextView* textView, bool applyToSelection)
+ShowTextStats(BTextView* textView)
 {
-	BString text = GetRelevantTextFromTextView(textView, applyToSelection, false);
+	BString text = GetRelevantTextFromTextView(textView, false);
 	if (text.IsEmpty()) {
 		SendStatusMessage(B_TRANSLATE("No text selected"));
 		return;
