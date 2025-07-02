@@ -171,12 +171,7 @@ void
 UndoableTextView::KeyDown(const char* bytes, int32 numBytes)
 {
 	BTextView::KeyDown(bytes, numBytes);
-
-	// Arrow keys (← ↑ → ↓) are 0x1C–0x1F in Haiku
-	if ((bytes[0] >= B_LEFT_ARROW && bytes[0] <= B_DOWN_ARROW) || bytes[0] == B_HOME
-		|| bytes[0] == B_END) {
-		Window()->PostMessage(M_UPDATE_STATUSBAR);
-	}
+	Window()->PostMessage(M_UPDATE_STATUSBAR);
 }
 
 
