@@ -31,6 +31,8 @@
 #include "Toolbar.h"
 
 static const char* kSettingsFile = "TextWorker_settings";
+static const char* kIssueTracker = "https://github.com/dospuntos/TextWorker/issues/";
+
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "MainView"
@@ -48,7 +50,7 @@ MainWindow::MainWindow(void)
 	fTextView->SetInsets(5, 5, 5, 5);
 
 	fScrollView = new BScrollView("TextViewScroll", fTextView, B_WILL_DRAW | B_FRAME_EVENTS, true,
-		true, B_PLAIN_BORDER);
+		true, B_FANCY_BORDER);
 
 	fToolbar = CreateToolbar(this);
 	fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
@@ -65,11 +67,11 @@ MainWindow::MainWindow(void)
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar, 0)
 		.Add(fToolbar, 0)
-		.SetInsets(2)
-		.AddGroup(B_HORIZONTAL, 0)
+		.SetInsets(0, 0, 0, 2)
+		.AddGroup(B_HORIZONTAL, -2)
 		.Add(fSidebar, 0)
 		.Add(fScrollView, 1)
-		.SetInsets(5, 5, 5, 5)
+		.SetInsets(-2, 5, -2, 5)
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
 		.Add(fStatusBar, 0)
