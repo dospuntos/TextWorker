@@ -22,7 +22,7 @@
 #include <TranslatorRoster.h>
 #include <Url.h>
 #include <View.h>
-#include <cctype>
+#include <string>
 
 #include "Constants.h"
 #include "IconMenuItem.h"
@@ -385,9 +385,12 @@ MainWindow::MessageReceived(BMessage* msg)
 				fMessageBar->SetText("");
 			break;
 		case M_REPORT_A_BUG:
-			BUrl("https://github.com/dospuntos/TextWorker/issues/", true)
-				.OpenWithPreferredApplication();
+		{
+			std::string uri = "https://github.com/dospuntos/TextWorker/issues/";
+			BUrl url = uri.c_str();
+			url.OpenWithPreferredApplication();
 			break;
+		}
 		default:
 			BWindow::MessageReceived(msg);
 			break;
