@@ -64,20 +64,22 @@ MainWindow::MainWindow(void)
 	fSettingsWindow = nullptr;
 
 	// Layout
+	// clang-format off
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar, 0)
 		.Add(fToolbar, 0)
 		.SetInsets(0, 0, 0, 2)
 		.AddGroup(B_HORIZONTAL, -2)
-		.Add(fSidebar, 0)
-		.Add(fScrollView, 1)
-		.SetInsets(-2, 5, -2, 5)
+			.Add(fSidebar, 0)
+			.Add(fScrollView, 1)
+			.SetInsets(-2, 5, -2, 5)
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
-		.Add(fStatusBar, 0)
-		.Add(fMessageBar, 0)
-		.SetInsets(5, 0, 20, 0)
+			.Add(fStatusBar, 0)
+			.Add(fMessageBar, 0)
+			.SetInsets(5, 0, 20, 0)
 		.End();
+	// clang-format on
 
 	BMessage settings;
 	_LoadSettings(settings);
