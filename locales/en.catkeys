@@ -1,9 +1,9 @@
-1	English	application/x-vnd.jpw-TextWorker	862010569
+1	English	application/x-vnd.jpw-TextWorker	686205747
 Remove duplicate lines	MainView		Remove duplicate lines
 %i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
 Open file…	Toolbar		Open file…
+Split on words	Sidebar	As short as possible	Split on words
 Tabs	Sidebar		Tabs
-	MainView		
 Whitespace trimmed from lines in selection	Text utilities		Whitespace trimmed from lines in selection
 Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Lines broken on delimiter \"%s\" (%s) in entire text
 Prefix/suffix each line	Sidebar		Prefix/suffix each line
@@ -18,17 +18,15 @@ Capitalize	Toolbar		Capitalize
 Cleanup	Sidebar		Cleanup
 New	MainView		New
 Insert example text	MainView		Insert example text
-Lines	Sidebar		Lines
-Split on words	Sidebar		Split on words
 Selected text URL-encoded	Text utilities		Selected text URL-encoded
-Add	Sidebar		Add
+Suffix:	Sidebar	As short as possible	Suffix:
 Selected text URL-decoded	Text utilities		Selected text URL-decoded
-Prefix/suffix	Sidebar		Prefix/suffix
 Remove empty lines	MainView		Remove empty lines
 URL encode	MainView		URL encode
 Prefix/suffix removed from %i lines in entire text	Text utilities		Prefix/suffix removed from %i lines in entire text
 Remove line breaks	MainView		Remove line breaks
 Close	Settings		Close
+Prefix/suffix	Sidebar	As short as possible	Prefix/suffix
 Modified	MainView		Modified
 Add prefix/suffix	MainView		Add prefix/suffix
 URL encode	Toolbar		URL encode
@@ -45,7 +43,8 @@ Quit	MainView		Quit
 File	MainView		File
 Remove all	Sidebar		Remove all
 Text case	MainView		Text case
-Unindent	Sidebar		Unindent
+Chars:	Sidebar	As short as possible	Chars:
+Remove duplicate lines	Sidebar	As short as possible	Remove duplicate lines
 Font family:	Settings		Font family:
 Sort order:	Sidebar		Sort order:
 Settings…	MainView		Settings…
@@ -55,8 +54,7 @@ AlTeRnAtInG cAsE	MainView		AlTeRnAtInG cAsE
 TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.
 Copy	Toolbar		Copy
 Descending	Sidebar		Descending
-Indent	Sidebar		Indent
-Keep delimiter	Sidebar		Keep delimiter
+Remove	Sidebar	As short as possible	Remove
 STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n
 spaces	Text utilities		spaces
 ROT13 applied to %i characters in entire text	Text utilities		ROT13 applied to %i characters in entire text
@@ -69,13 +67,13 @@ Save as…	MainView		Save as…
 %i characters changed to uppercase in entire text	Text utilities		%i characters changed to uppercase in entire text
 ROT13 encode/decode	Toolbar		ROT13 encode/decode
 Help…	MainView		Help…
-Search:	Sidebar		Search:
 Title Case	MainView		Title Case
 Open…	MainView		Open…
 %i duplicated lines removed from entire text	Text utilities		%i duplicated lines removed from entire text
 Paste clipboard contents on open	Settings		Paste clipboard contents on open
 ROT13 applied to %i characters in selection	Text utilities		ROT13 applied to %i characters in selection
 TextWorker	System name		TextWorker
+Replace:	Sidebar	As short as possible	Replace:
 Save field values on exit	Settings		Save field values on exit
 Break lines on delimiter	MainView		Break lines on delimiter
 Search/replace	MainView		Search/replace
@@ -88,7 +86,6 @@ Title Case	Toolbar		Title Case
 Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Sorry, this functionality has not been implemented yet, but it is planned for the near future.
 Report a bug…	MainView		Report a bug…
 %zu lines sorted by line length in %s order in entire text	Text utilities		%zu lines sorted by line length in %s order in entire text
-Suffix:	Sidebar		Suffix:
 Encode/decode	MainView		Encode/decode
 URL decode	Toolbar		URL decode
 URL decode	MainView		URL decode
@@ -106,6 +103,7 @@ lowercase	MainView		lowercase
 Insert line breaks (width)	MainView		Insert line breaks (width)
 ROT-13 encode/decode	MainView		ROT-13 encode/decode
 Copy	MainView		Copy
+Indent	Sidebar	As short as possible	Indent
 Save file	Toolbar		Save file
 Ascending	Sidebar		Ascending
 Toggle case	MainView		Toggle case
@@ -116,14 +114,10 @@ Save text on exit	Settings		Save text on exit
 %i selected lines indented by %i %s	Text utilities		%i selected lines indented by %i %s
 %d empty lines removed from selection	Text utilities		%d empty lines removed from selection
 %d occurrences of \"%s\" replaced in selection	Text utilities		%d occurrences of \"%s\" replaced in selection
-Remove duplicate lines	Sidebar		Remove duplicate lines
 %i line breaks replaced in entire text	Text utilities		%i line breaks replaced in entire text
 %zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu lines sorted alphabetically in %s order in entire text
 About…	MainView		About…
 Prefix/suffix added to %i lines in entire text	Text utilities		Prefix/suffix added to %i lines in entire text
-Replace:	Sidebar		Replace:
-Prefix:	Sidebar		Prefix:
-Remove empty lines	Sidebar		Remove empty lines
 Help…	Toolbar		Help…
 Replace	Sidebar		Replace
 %i selected lines unindented by %i %s	Text utilities		%i selected lines unindented by %i %s
@@ -138,6 +132,7 @@ Settings	Settings		Settings
 Sort	Sidebar		Sort
 Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Line breaks inserted in entire text (max length: %d, %s)
 Alphabetical	Sidebar		Alphabetical
+Keep delimiter	Sidebar	As short as possible	Keep delimiter
 breaking on words	Text utilities		breaking on words
 Sort lines	MainView		Sort lines
 Apply	Sidebar		Apply
@@ -145,9 +140,10 @@ Replace line breaks	MainView		Replace line breaks
 Sort type:	Sidebar		Sort type:
 Redo	Toolbar		Redo
 Prefix/suffix added to %i lines in selection	Text utilities		Prefix/suffix added to %i lines in selection
-Remove	Sidebar		Remove
+Search:	Sidebar	As short as possible	Search:
 Indent/unindent lines	Sidebar		Indent/unindent lines
-Chars:	Sidebar		Chars:
+Prefix:	Sidebar	As short as possible	Prefix:
+Remove empty lines	Sidebar	As short as possible	Remove empty lines
 Indent lines	MainView		Indent lines
 Select all	MainView		Select all
 OK	MainView		OK
@@ -156,18 +152,22 @@ Capitalize	MainView		Capitalize
 Cut	Toolbar		Cut
 Paste	Toolbar		Paste
 ascending	Text utilities		ascending
+Unindent	Sidebar	As short as possible	Unindent
 Whitespace trimmed from lines in entire text	Text utilities		Whitespace trimmed from lines in entire text
 By line length	Sidebar		By line length
+Lines	Sidebar	As short as possible	Lines
 Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Lines broken on delimiter \"%s\" (%s) in selection
 Break on…	Sidebar		Break on…
+Sort lines	Sidebar	As short as possible	Sort lines
 Replace with…	Sidebar		Replace with…
 Undo	MainView		Undo
-Trim whitespace	Sidebar		Trim whitespace
 %i characters changed in entire text	Text utilities		%i characters changed in entire text
 Redo	MainView		Redo
 Sort lines	Sidebar		Sort lines
 %i line breaks removed in entire text	Text utilities		%i line breaks removed in entire text
 Prefix/suffix removed from %i lines in selection	Text utilities		Prefix/suffix removed from %i lines in selection
+Trim whitespace	Sidebar	As short as possible	Trim whitespace
 Line breaks inserted in selection (max length: %d, %s)	Text utilities		Line breaks inserted in selection (max length: %d, %s)
 %d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Chars: %d | Words: %d | Lines: %d
 %i duplicated lines removed from selection	Text utilities		%i duplicated lines removed from selection
+Add	Sidebar	As short as possible	Add

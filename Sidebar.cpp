@@ -104,9 +104,11 @@ Sidebar::_BuildLineTab()
 	// Grid layout
 	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid1.Add(new BStringView(NULL, B_TRANSLATE("Search:")),		0, 0, 1)
+	grid1.Add(new BStringView(NULL, B_TRANSLATE_COMMENT(
+						"Search:", "As short as possible")), 	0, 0, 1)
 		.Add(fSearchInput,										1, 0, 1)
-		.Add(new BStringView(NULL, B_TRANSLATE("Replace:")),	0, 1, 1)
+		.Add(new BStringView(NULL, B_TRANSLATE_COMMENT(
+						"Replace:", "As short as possible")),	0, 1, 1)
 		.Add(fReplaceInput,                    				   	1, 1, 1)
 		.Add(fCaseCheck,            							0, 2, 1)
 		.Add(fWholeWordCheck,                					1, 2, 1)
@@ -146,14 +148,16 @@ Sidebar::_BuildLineTab()
 	fBreakInput->SetEnabled(false);
 	fBreakInput->SetExplicitMinSize(BSize(100, B_SIZE_UNSET));
 
-	fBreakOnChars = new BSpinner("BreakOn", B_TRANSLATE("Chars:"), nullptr);
+	fBreakOnChars = new BSpinner("BreakOn", B_TRANSLATE_COMMENT("Chars:", "As short as possible"), nullptr);
 	fBreakOnChars->SetMinValue(1);
 	fBreakOnChars->SetEnabled(false);
 
-	fWordWrapCheck = new BCheckBox("SplitWords", B_TRANSLATE("Split on words"), NULL);
+	fWordWrapCheck = new BCheckBox("SplitWords", B_TRANSLATE_COMMENT(
+									"Split on words", "As short as possible"), NULL);
 	fWordWrapCheck->SetEnabled(false);
 
-	fKeepDelimiterCheck = new BCheckBox("KeepDelimiter", B_TRANSLATE("Keep delimiter"), NULL);
+	fKeepDelimiterCheck = new BCheckBox("KeepDelimiter", B_TRANSLATE_COMMENT(
+									"Keep delimiter", "As short as possible"), NULL);
 	fKeepDelimiterCheck->SetEnabled(false);
 
 	BButton* applyBtn = new BButton("ApplyBtn", B_TRANSLATE("Apply"), new BMessage(M_REMOVE_LINE_BREAKS));
@@ -184,14 +188,14 @@ Sidebar::_BuildLineTab()
 
 	// Layout for Cleanup Box
 	BButton* trimLinesBtn
-		= new BButton("TrimLinesBtn", B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES));
+		= new BButton("TrimLinesBtn", B_TRANSLATE_COMMENT("Trim whitespace", "As short as possible"), new BMessage(M_TRIM_LINES));
 	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
 	BButton* trimEmptyLinesBtn
-		= new BButton("TrimEmptyLinesBtn", B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES));
+		= new BButton("TrimEmptyLinesBtn", B_TRANSLATE_COMMENT("Remove empty lines", "As short as possible"), new BMessage(M_TRIM_EMPTY_LINES));
 	trimEmptyLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
-	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn", B_TRANSLATE("Remove duplicate lines"),
+	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn", B_TRANSLATE_COMMENT("Remove duplicate lines", "As short as possible"),
 		new BMessage(M_REMOVE_DUPLICATES));
 	removeDuplicates->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
@@ -211,15 +215,15 @@ Sidebar::_BuildLineTab()
 
 	BTab* lineOperationsTab = new BTab();
 	AddTab(lineOperationsView, lineOperationsTab);
-	lineOperationsTab->SetLabel(B_TRANSLATE("Lines"));
+	lineOperationsTab->SetLabel(B_TRANSLATE_COMMENT("Lines", "As short as possible"));
 }
 
 
 void
 Sidebar::_BuildPrefixTab()
 {
-	fPrefixInput = new BTextControl("PrefixInput", B_TRANSLATE("Prefix:"), "", nullptr);
-	fSuffixInput = new BTextControl("SuffixInput", B_TRANSLATE("Suffix:"), "", nullptr);
+	fPrefixInput = new BTextControl("PrefixInput", B_TRANSLATE_COMMENT("Prefix:", "As short as possible"), "", nullptr);
+	fSuffixInput = new BTextControl("SuffixInput", B_TRANSLATE_COMMENT("Suffix:", "As short as possible"), "", nullptr);
 
 	BGroupView* prefixSuffixView = new BGroupView(B_VERTICAL, 5);
 
@@ -234,9 +238,11 @@ Sidebar::_BuildPrefixTab()
 		.Add(fPrefixInput)
 		.Add(fSuffixInput)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton("addPrefixSuffixBtn", B_TRANSLATE("Add"), new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
+			.Add(new BButton("addPrefixSuffixBtn", B_TRANSLATE_COMMENT("Add",
+								"As short as possible"), new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
 			.AddGlue()
-			.Add(new BButton("removePrefixSuffixBtn", B_TRANSLATE("Remove"), new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX)))
+			.Add(new BButton("removePrefixSuffixBtn", B_TRANSLATE_COMMENT("Remove",
+								"As short as possible"), new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX)))
 		.End()
 		.SetInsets(10, 12, 10, 10);
 	// clang-format on
@@ -264,9 +270,11 @@ Sidebar::_BuildPrefixTab()
 	indentModeGroup->AddChild(fSpacesRadio);
 
 	// Buttons
-	BButton* indentButton = new BButton("IndentBtn", B_TRANSLATE("Indent"), new BMessage(M_INDENT_LINES));
+	BButton* indentButton = new BButton("IndentBtn", B_TRANSLATE_COMMENT("Indent",
+										"As short as possible"), new BMessage(M_INDENT_LINES));
 	BButton* unindentButton
-		= new BButton("UnindentBtn", B_TRANSLATE("Unindent"), new BMessage(M_UNINDENT_LINES));
+		= new BButton("UnindentBtn", B_TRANSLATE_COMMENT("Unindent", "As short as possible"),
+						new BMessage(M_UNINDENT_LINES));
 
 	// clang-format off
 	BLayoutBuilder::Group<>(indentGroup)
@@ -289,7 +297,7 @@ Sidebar::_BuildPrefixTab()
 
 	BTab* prefixSuffixTab = new BTab();
 	AddTab(prefixSuffixView, prefixSuffixTab);
-	prefixSuffixTab->SetLabel(B_TRANSLATE("Prefix/suffix"));
+	prefixSuffixTab->SetLabel(B_TRANSLATE_COMMENT("Prefix/suffix", "As short as possible"));
 }
 
 
@@ -351,7 +359,7 @@ Sidebar::_BuildSortTab()
 
 	BTab* sortTab = new BTab();
 	AddTab(sortView, sortTab);
-	sortTab->SetLabel(B_TRANSLATE("Sort lines"));
+	sortTab->SetLabel(B_TRANSLATE_COMMENT("Sort lines", "As short as possible"));
 }
 
 

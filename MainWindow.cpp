@@ -431,7 +431,7 @@ MainWindow::_BuildMenu()
 	fSelectAllItem = new BMenuItem(B_TRANSLATE("Select all"), new BMessage(B_SELECT_ALL), 'A');
 
 	// App menu
-	menu = new BMenu(B_TRANSLATE(""));
+	menu = new BMenu("");
 	menu->AddItem(
 		new BMenuItem(B_TRANSLATE("About" B_UTF8_ELLIPSIS), new BMessage(B_ABOUT_REQUESTED)));
 	menu->AddItem(
