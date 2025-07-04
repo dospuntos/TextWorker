@@ -1,87 +1,173 @@
-1	Norwegian	application/x-vnd.jpw-TextWorker	2873519941
-lowercase	MainView		små bokstaver
-Trim whitespace	MainView		Fjern mellomrom
-Insert line breaks (width)	MainView		Insert line breaks (width)
-Copy	MainView		Kopier
-ROT-13 encode/decode	MainView		ROT-13 koding/dekoding
-Tabs	Sidebar		Tabulatur
-Line Tools	MainView		Linjeverktøy
-Ascending	Sidebar		Stigende
-Toggle case	MainView		Bytt store/små bokstaver
-Prefix/suffix each line	Sidebar		Prefiks/suffiks hver linje
-Save	MainView		Lagre
-Save text on exit	Settings		Lagre tekst ved avslutning
-Indent size:	Sidebar		Innryksstørrelse:
-The selected file is not a recognized text file.	MainView		Den valgte filen er ikke gjenkjent som en tekstfil.
-Clear field values after use	Settings		Tøm felt etter bruk
-Case sensitive	Sidebar		Skill mellom store og små bokstaver
-Remove duplicate lines	Sidebar		Fjern dupliserte linjer
+1	Norwegian	application/x-vnd.jpw-TextWorker	686205747
+%d empty lines removed from entire text	Text utilities		%d tomme linjer fjernet fra hele teksten
+%d empty lines removed from selection	Text utilities		%d tomme linjer fjernet fra utvalg
+%d occurrences of \"%s\" replaced in entire text	Text utilities		%d forekomster av \"%s\" erstattet i hele teksten
+%d occurrences of \"%s\" replaced in selection	Text utilities		%d forekomster av \"%s\" erstattet i utvalg
+%i characters changed in entire text	Text utilities		%i tegn endret i hele teksten
+%i characters changed in selection	Text utilities		%i tegn endret i utvalg
+%i characters changed to lowercase in entire text	Text utilities		%i tegn endret til små bokstaver i hele teksten
+%i characters changed to lowercase in selection	Text utilities		%i tegn endret til små bokstaver i utvalg
+%i characters changed to uppercase in entire text	Text utilities		%i tegn endret til store bokstaver i hele teksten
+%i characters changed to uppercase in selection	Text utilities		%i tegn endret til store bokstaver i utvalg
+%i duplicated lines removed from entire text	Text utilities		%i dupliserte linjer fjernet fra hele teksten
+%i duplicated lines removed from selection	Text utilities		%i dupliserte linjer fjernet fra utvalg
+%i line breaks removed in entire text	Text utilities		%i linjeskift fjernet fra hele teksten
+%i line breaks removed in selection	Text utilities		%i linjeskift fjernet fra utvalg
+%i line breaks replaced in entire text	Text utilities		%i linjeskift fjernet fra hele teksten
+%i line breaks replaced in selection	Text utilities		%i linjeskift erstattet i utvalg
+%i lines indented by %i %s	Text utilities		%i linjer rykket inn med %i %s
+%i lines unindented by %i %s	Text utilities		%i linjer rykket ut med %i %s
+%i selected lines indented by %i %s	Text utilities		%i utvalgte linjer rykket inn med %i %s
+%i selected lines unindented by %i %s	Text utilities		%i utvalgte linjer rykket ut med %i %s
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu linjer sortert alfabetisk i %s rekkefølge i hele teksten
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu linjer sortert alfabetisk i %s rekkefølge i utvalg
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu linjer sortert etter lengde i %s rekkefølge i hele teksten
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu linjer sortert etter lengde i %s rekkefølge i utvalg
+ascending	Text utilities		stigende
+breaking anywhere	Text utilities		bryter hvor som helst
+breaking on words	Text utilities		bryter etter hele ord
+descending	Text utilities		synkende
+Entire text URL-decoded	Text utilities		Hele teksten URL-kodet
+Entire text URL-encoded	Text utilities		Hele teksten URL-dekodet
+kept	Text utilities		beholdt
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Linjeskift satt inn i hele teksten (maks lengde: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Linjeskift satt inn i utvalg (maks lengde: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Linjeskift satt inn ved skilletegn \"%s\" (%s) i hele teksten
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Linjeskift satt inn ved skilletegn \"%s\" (%s) i utvalg
+No text selected	Text utilities		Ingen tekst valgt
+OK	Text utilities		OK
+Prefix/suffix added to %i lines in entire text	Text utilities		Prefiks/suffiks lagt til i %i linjer i hele teksten
+Prefix/suffix added to %i lines in selection	Text utilities		Prefiks/suffiks lagt til i %i linjer i utvalg
+Prefix/suffix removed from %i lines in entire text	Text utilities		Prefiks/suffiks fjernet fra %i linjer i hele teksten
+Prefix/suffix removed from %i lines in selection	Text utilities		Prefiks/suffiks fjernet fra %i linjer i utvalg
+removed	Text utilities		fjernet
+ROT13 applied to %i characters in entire text	Text utilities		ROT13 brukt på %i tegn i hele teksten
+ROT13 applied to %i characters in selection	Text utilities		ROT13 brukt på %i tegn i utvalg
+Selected text URL-decoded	Text utilities		Valgt tekst URL-dekodet
+Selected text URL-encoded	Text utilities		Valgt tekst URL-kodet
+spaces	Text utilities		mellomrom
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		STATISTIKK FOR DENNE TEKSTEN\n\nTegn: %d\nOrd: %d\nLinjer: %d\nSetninger: %d\nLengste linje: %d tegn\nGjennomsnittlig ordlengde: %.2f\n\nMest brukte ord:\n
+tabs	Text utilities		tabulator
+Whitespace trimmed from lines in entire text	Text utilities		Mellomrom fjernet fra linjer i hele teksten
+Whitespace trimmed from lines in selection	Text utilities		Mellomrom fjernet fra linjer i utvalg
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Tegn: %d | Ord: %d | Linjer: %d
 About…	MainView		Om…
-%d:%d | Chars: %d | Words: %d	MainView	Statusbar text - only change Chars and Words	%d:%d | Tegn: %d | Ord: %d
-Text Case	MainView		Store/små bokstaver
-Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.
-Replace:	Sidebar		Erstatt:
-Prefix:	Sidebar		Prefiks:
-Remove empty lines	Sidebar		Fjern tomme linjer
-Cleanup	Sidebar		Opprydning
-Insert example text	MainView		Sett inn eksempeltekst
-New…	MainView		Ny…
-Lines	Sidebar		Linjer
-Replace	Sidebar		Erstatt
-Split on words	Sidebar		Del etter ord
-Add	Sidebar		Legg til
-Prefix/suffix	Sidebar		Prefiks/suffiks
-Remove empty lines	MainView		Fjern tomme linjer
-Not implemented	MainView		Ikke implementert
-URL encode	MainView		URL-kodet
-Settings	Settings		Innstillinger
-Sort	Sidebar		Sortér
-Remove line breaks	MainView		Fjern linjeskift
-Close	Settings		Lukk
-Alphabetical	Sidebar		Alfabetisk
+Add prefix/suffix	MainView		Legg til prefiks/suffiks
+AlTeRnAtInG cAsE	MainView		VeKsLeNdE sToRe/SmÅ
+Break lines on delimiter	MainView		Bryt linjer på skilletegn
+Capitalize	MainView		Stor forbokstav
+Cleanup	MainView		Rydd opp
+Copy	MainView		Kopier
 Cut	MainView		Klipp ut
-Apply	Sidebar		Bruk
-Transform	MainView		Transformér
-Font size:	Settings		Skriftstørrelse:
-Paste	MainView		Lim inn
-Sort type:	Sidebar		Sorteringsmåte:
-Quit	MainView		Avslutt
-Remove all	Sidebar		Fjern alle
-Unindent	Sidebar		Fjern innrykk
-Font family:	Settings		Skrifttype:
-Sort order:	Sidebar		Sortér etter:
-Settings…	MainView		Innstillinger…
-Remove	Sidebar		Fjern
-AlTeRnAtInG cAsE	MainView		VeKsLeNdE
-Break after X characters…	Sidebar		Linjeskift etter X bokstaver…
-Descending	Sidebar		Synkende
-Indent/unindent lines	Sidebar		Legg til/fjern innrykk
-Indent	Sidebar		Innrykk
-Select all	MainView		Velg alt
-Chars:	Sidebar		Tegn:
+Edit	MainView		Rediger
+Encode/decode	MainView		Koding/dekoding
+File	MainView		Fil
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku er et operativsystem med åpen kildekode.\nDet er raskt, enkelt og elegant.\nUtviklere elsker den rene arkitekturen.\nBrukere setter pris på det intuitive grensesnittet.\nBegynn å utforske kraften til Haiku i dag.
+Help…	MainView		Hjelp…
+Indent lines	MainView		Linjeinnrykk
+Insert example text	MainView		Sett inn eksempeltekst
+Insert line breaks (width)	MainView		Bryt linjer (bredde)
+Line tools	MainView		Linjeverktøy
+lowercase	MainView		små bokstaver
+Modified	MainView		Endret
+New	MainView		Ny
 OK	MainView		OK
-RaNDoM caSE	MainView		TiLFeldIG
-Keep delimiter	Sidebar		Behold skilletekst
-Capitalize	MainView		Setningsformat
-Encode/Decode	MainView		Kode/dekode
-By line length	Sidebar		Etter linjelengde
-Save as…	MainView		Lagre som…
-Line break options	Sidebar		Valg for linjeskift
-Title Case	MainView		Tittelformat
 Open…	MainView		Åpne…
-Break on…	Sidebar		Bryt på…
-Find:	Sidebar		Finn:
-Paste clipboard contents on open	Settings		Lim inn fra utklippstavle ved oppstart
+Paste	MainView		Lim inn
+Quit	MainView		Avslutt
+RaNDoM caSE	MainView		TiLFelDig
+Redo	MainView		Gjør igjen
+Remove duplicate lines	MainView		Fjern dupliserte linjer
+Remove empty lines	MainView		Fjern tomme linjer
+Remove line breaks	MainView		Fjern linjeskift
+Remove prefix/suffix	MainView		Fjern prefiks/suffiks
+Replace line breaks	MainView		Erstatt linjeskift
+Report a bug…	MainView		Rapporter en feil…
+ROT-13 encode/decode	MainView		ROT-13 koding/dekoding
+Save	MainView		Lagre
+Save as…	MainView		Lagre som…
+Search/replace	MainView		Finn/erstatt
+Select all	MainView		Velg alle
+Settings…	MainView		Innstillinger…
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Beklager, denne funksjonaliteten er ikke implementert ennå, men den er planlagt for nær fremtid.
+Sort lines	MainView		Sortér linjer
+Text case	MainView		Store/små bokstaver
+TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		TextWorker Hjelp\n\nBruk fanene til venstre for å utføre transformasjoner som:\n- Finn og erstatt\n- Legg til/fjern prefikser og suffikser\n- Sortér eller rydd opp i linjer\n- Justér innrykk\n\nDu kan åpne tekstfiler via "Fil → Åpne" eller ved å dra dem inn i vinduet.\n\nAngre endringer med "Rediger → Angre" eller Alt+Z.\n\nBruk "Innstillinger" for å konfigurere skrifttype og lagringsvalg.
+The selected file is not a recognized text file.	MainView		Den valgte filen er ikke gjenkjent som en tekstfil.
+Title Case	MainView		Stor forbokstav i hvert ord
+Toggle case	MainView		Bytt store/små bokstaver
+Transform	MainView		Transformer
+Trim whitespace	MainView		Fjern mellomrom
 Undo	MainView		Angre
-Replace with…	Sidebar		Erstatt med…
-Save field values on exit	Settings		Lagre feltverdier ved avslutning
-Trim whitespace	Sidebar		Fjern mellomrom
-Break lines on delimiter	MainView		Linjeskift på skilletekst
-Redo	MainView		Gjenta
-Sort lines	Sidebar		Sortér linjer
-Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Sorry, this functionality has not been implemented yet, but it is planned for the near future.
-Suffix:	Sidebar		Suffiks:
-URL decode	MainView		URL dekoding
-Search and replace	Sidebar		Søk og ersatt
-Spaces	Sidebar		Mellomrom
+Unindent lines	MainView		Reduser innrykk
 UPPERCASE	MainView		STORE BOKSTAVER
+URL decode	MainView		URL-dekoding
+URL encode	MainView		URL-koding
+Add	Sidebar	As short as possible	Legg til
+Alphabetical	Sidebar		Alfabetisk
+Apply	Sidebar		Bruk
+Ascending	Sidebar		Stigende
+Break after X characters…	Sidebar		Linjeskift etter X tegn…
+Break on…	Sidebar		Linjeskift på…
+By line length	Sidebar		Etter linjelengde
+Case sensitive	Sidebar		Skill mellom store/små bokst.
+Chars:	Sidebar	As short as possible	Tegn:
+Cleanup	Sidebar		Rydd opp
+Descending	Sidebar		Synkende
+Indent	Sidebar	As short as possible	Øk innrykk
+Indent size:	Sidebar		Innrykksstørrelse:
+Indent/unindent lines	Sidebar		Øk/reduser innrykk
+Keep delimiter	Sidebar	As short as possible	Behold skilletegn
+Line break options	Sidebar		Valg for linjeskift
+Lines	Sidebar	As short as possible	Linjer
+Prefix:	Sidebar	As short as possible	Prefiks:
+Prefix/suffix	Sidebar	As short as possible	Prefiks/suffiks
+Prefix/suffix each line	Sidebar		Prefiks/suffiks hver linje
+Remove	Sidebar	As short as possible	Fjern
+Remove all	Sidebar		Fjern alle
+Remove duplicate lines	Sidebar	As short as possible	Fjern dupliserte linjer
+Remove empty lines	Sidebar	As short as possible	Fjern tomme linjer
+Replace	Sidebar		Erstatt
+Replace with…	Sidebar		Erstatt med…
+Replace:	Sidebar	As short as possible	Erstatt:
+Search and replace	Sidebar		Finn og erstatt
+Search:	Sidebar	As short as possible	Finn:
+Sort	Sidebar		Sortér
+Sort lines	Sidebar		Sortér linjer
+Sort lines	Sidebar	As short as possible	Sortér linjer
+Sort order:	Sidebar		Rekkefølge:
+Sort type:	Sidebar		Sorteringstype:
+Spaces	Sidebar		Mellomrom
+Split on words	Sidebar	As short as possible	Del etter ord
+Suffix:	Sidebar	As short as possible	Suffiks:
+Tabs	Sidebar		Tabulator
+Trim whitespace	Sidebar	As short as possible	Fjern mellomrom
+Unindent	Sidebar	As short as possible	Redusér innrykk
+Capitalize	Toolbar		Stor forbokstav
+Copy	Toolbar		Kopier
+Cut	Toolbar		Klipp ut
+Help…	Toolbar		Hjelp…
+lowercase	Toolbar		små bokstaver
+New file	Toolbar		Ny fil
+Open file…	Toolbar		Åpne fil…
+Paste	Toolbar		Lim inn
+Redo	Toolbar		Gjør igjen
+ROT13 encode/decode	Toolbar		ROT13 koding/dekoding
+Save file	Toolbar		Lagre fil
+Settings…	Toolbar		Innstillinger…
+Show stats…	Toolbar		Vis statistikk…
+Title Case	Toolbar		Stor forbokstav i hvert ord
+Undo	Toolbar		Angre
+UPPERCASE	Toolbar		STORE BOKSTAVER
+URL decode	Toolbar		URL-koding
+URL encode	Toolbar		URL-dekoding
+Word wrap	Toolbar		Ordbryting
+Clear field values after use	Settings		Tøm felter etter bruk
+Close	Settings		Lukk
+Font family:	Settings		Skrifttype:
+Font size:	Settings		Skriftstørrelse
+Paste clipboard contents on open	Settings		Lim inn utklippstavlen ved oppstart
+Save field values on exit	Settings		Lagre feltverdier når programmet lukkes
+Save text on exit	Settings		Lagre tekst når programmet lukkes
+Settings	Settings		Innstillinger
+TextWorker	System name		TextWorker

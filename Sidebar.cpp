@@ -23,6 +23,7 @@
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "Sidebar"
 
+
 Sidebar::Sidebar()
 	:
 	BTabView("Sidebar")
@@ -90,11 +91,13 @@ Sidebar::_BuildLineTab()
 
 	fSearchInput = new BTextControl("SearchString", nullptr, "", nullptr);
 	fReplaceInput = new BTextControl("ReplaceString", nullptr, "", nullptr);
-	fCaseCheck = new BCheckBox("ReplaceCaseSensitiveCheckbox", "Case sensitive", nullptr);
-	fWholeWordCheck = new BCheckBox("ReplaceFullWordsCheckbox", "Full words", nullptr);
+	fCaseCheck = new BCheckBox("ReplaceCaseSensitiveCheckbox",
+		B_TRANSLATE_COMMENT("Case sensitive", "As short as possible"), nullptr);
+	fWholeWordCheck = new BCheckBox("ReplaceFullWordsCheckbox",
+		B_TRANSLATE_COMMENT("Full words", "As short as possible"), nullptr);
 
-	BButton* searchReplaceBtn
-		= new BButton("SearchReplaceBtn", B_TRANSLATE("Replace"), new BMessage(M_TRANSFORM_REPLACE));
+	BButton* searchReplaceBtn = new BButton("SearchReplaceBtn", B_TRANSLATE("Replace"),
+		new BMessage(M_TRANSFORM_REPLACE));
 	searchReplaceBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
 	// Set consistent minimum widths for text fields
@@ -133,9 +136,10 @@ Sidebar::_BuildLineTab()
 
 	fBreakMenu = new BMenu("linebreaks");
 	fBreakMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove all"), new BMessage(M_MODE_REMOVE_ALL)));
+	fBreakMenu->AddItem(new BMenuItem(B_TRANSLATE("Replace with" B_UTF8_ELLIPSIS),
+		new BMessage(M_MODE_REPLACE_LINE_BREAKS)));
 	fBreakMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Replace with" B_UTF8_ELLIPSIS), new BMessage(M_MODE_REPLACE_LINE_BREAKS)));
-	fBreakMenu->AddItem(new BMenuItem(B_TRANSLATE("Break on" B_UTF8_ELLIPSIS), new BMessage(M_MODE_BREAK_ON)));
+		new BMenuItem(B_TRANSLATE("Break on" B_UTF8_ELLIPSIS), new BMessage(M_MODE_BREAK_ON)));
 	fBreakMenu->AddItem(new BMenuItem(B_TRANSLATE("Break after X characters" B_UTF8_ELLIPSIS),
 		new BMessage(M_MODE_BREAK_AFTER_CHARS)));
 	fBreakMenu->SetLabelFromMarked(true);
@@ -148,19 +152,21 @@ Sidebar::_BuildLineTab()
 	fBreakInput->SetEnabled(false);
 	fBreakInput->SetExplicitMinSize(BSize(100, B_SIZE_UNSET));
 
-	fBreakOnChars = new BSpinner("BreakOn", B_TRANSLATE_COMMENT("Chars:", "As short as possible"), nullptr);
+	fBreakOnChars
+		= new BSpinner("BreakOn", B_TRANSLATE_COMMENT("Chars:", "As short as possible"), nullptr);
 	fBreakOnChars->SetMinValue(1);
 	fBreakOnChars->SetEnabled(false);
 
-	fWordWrapCheck = new BCheckBox("SplitWords", B_TRANSLATE_COMMENT(
-									"Split on words", "As short as possible"), NULL);
+	fWordWrapCheck = new BCheckBox("SplitWords",
+		B_TRANSLATE_COMMENT("Split on words", "As short as possible"), NULL);
 	fWordWrapCheck->SetEnabled(false);
 
-	fKeepDelimiterCheck = new BCheckBox("KeepDelimiter", B_TRANSLATE_COMMENT(
-									"Keep delimiter", "As short as possible"), NULL);
+	fKeepDelimiterCheck = new BCheckBox("KeepDelimiter",
+		B_TRANSLATE_COMMENT("Keep delimiter", "As short as possible"), NULL);
 	fKeepDelimiterCheck->SetEnabled(false);
 
-	BButton* applyBtn = new BButton("ApplyBtn", B_TRANSLATE("Apply"), new BMessage(M_REMOVE_LINE_BREAKS));
+	BButton* applyBtn
+		= new BButton("ApplyBtn", B_TRANSLATE("Apply"), new BMessage(M_REMOVE_LINE_BREAKS));
 	applyBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
 	// Layout grid
@@ -187,15 +193,17 @@ Sidebar::_BuildLineTab()
 	cleanupBox->AddChild(cleanGroup);
 
 	// Layout for Cleanup Box
-	BButton* trimLinesBtn
-		= new BButton("TrimLinesBtn", B_TRANSLATE_COMMENT("Trim whitespace", "As short as possible"), new BMessage(M_TRIM_LINES));
+	BButton* trimLinesBtn = new BButton("TrimLinesBtn",
+		B_TRANSLATE_COMMENT("Trim whitespace", "As short as possible"), new BMessage(M_TRIM_LINES));
 	trimLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
-	BButton* trimEmptyLinesBtn
-		= new BButton("TrimEmptyLinesBtn", B_TRANSLATE_COMMENT("Remove empty lines", "As short as possible"), new BMessage(M_TRIM_EMPTY_LINES));
+	BButton* trimEmptyLinesBtn = new BButton("TrimEmptyLinesBtn",
+		B_TRANSLATE_COMMENT("Remove empty lines", "As short as possible"),
+		new BMessage(M_TRIM_EMPTY_LINES));
 	trimEmptyLinesBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
-	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn", B_TRANSLATE_COMMENT("Remove duplicate lines", "As short as possible"),
+	BButton* removeDuplicates = new BButton("RemoveDuplicatesBtn",
+		B_TRANSLATE_COMMENT("Remove duplicate lines", "As short as possible"),
 		new BMessage(M_REMOVE_DUPLICATES));
 	removeDuplicates->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
@@ -222,8 +230,10 @@ Sidebar::_BuildLineTab()
 void
 Sidebar::_BuildPrefixTab()
 {
-	fPrefixInput = new BTextControl("PrefixInput", B_TRANSLATE_COMMENT("Prefix:", "As short as possible"), "", nullptr);
-	fSuffixInput = new BTextControl("SuffixInput", B_TRANSLATE_COMMENT("Suffix:", "As short as possible"), "", nullptr);
+	fPrefixInput = new BTextControl("PrefixInput",
+		B_TRANSLATE_COMMENT("Prefix:", "As short as possible"), "", nullptr);
+	fSuffixInput = new BTextControl("SuffixInput",
+		B_TRANSLATE_COMMENT("Suffix:", "As short as possible"), "", nullptr);
 
 	BGroupView* prefixSuffixView = new BGroupView(B_VERTICAL, 5);
 
@@ -233,19 +243,18 @@ Sidebar::_BuildPrefixTab()
 	BGroupView* addGroup = new BGroupView(B_VERTICAL, 5);
 	prefixSuffixBox->AddChild(addGroup);
 
-	// clang-format off
 	BLayoutBuilder::Group<>(addGroup)
 		.Add(fPrefixInput)
 		.Add(fSuffixInput)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton("addPrefixSuffixBtn", B_TRANSLATE_COMMENT("Add",
-								"As short as possible"), new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
-			.AddGlue()
-			.Add(new BButton("removePrefixSuffixBtn", B_TRANSLATE_COMMENT("Remove",
-								"As short as possible"), new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX)))
+		.Add(new BButton("addPrefixSuffixBtn", B_TRANSLATE_COMMENT("Add", "As short as possible"),
+			new BMessage(M_TRANSFORM_PREFIX_SUFFIX)))
+		.AddGlue()
+		.Add(new BButton("removePrefixSuffixBtn",
+			B_TRANSLATE_COMMENT("Remove", "As short as possible"),
+			new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX)))
 		.End()
 		.SetInsets(10, 12, 10, 10);
-	// clang-format on
 
 	// === Indent/Unindent Box ===
 	BBox* indentBox = new BBox("IndentBox");
@@ -270,11 +279,10 @@ Sidebar::_BuildPrefixTab()
 	indentModeGroup->AddChild(fSpacesRadio);
 
 	// Buttons
-	BButton* indentButton = new BButton("IndentBtn", B_TRANSLATE_COMMENT("Indent",
-										"As short as possible"), new BMessage(M_INDENT_LINES));
-	BButton* unindentButton
-		= new BButton("UnindentBtn", B_TRANSLATE_COMMENT("Unindent", "As short as possible"),
-						new BMessage(M_UNINDENT_LINES));
+	BButton* indentButton = new BButton("IndentBtn",
+		B_TRANSLATE_COMMENT("Indent", "As short as possible"), new BMessage(M_INDENT_LINES));
+	BButton* unindentButton = new BButton("UnindentBtn",
+		B_TRANSLATE_COMMENT("Unindent", "As short as possible"), new BMessage(M_UNINDENT_LINES));
 
 	// clang-format off
 	BLayoutBuilder::Group<>(indentGroup)
@@ -317,7 +325,8 @@ Sidebar::_BuildSortTab()
 	// --- Sorting method group ---
 	BGroupView* sortTypeGroup = new BGroupView(B_VERTICAL, 5);
 	fAlphaSortRadio = new BRadioButton("radio_sort_alpha", B_TRANSLATE("Alphabetical"), nullptr);
-	fLengthSortRadio = new BRadioButton("radio_sort_length", B_TRANSLATE("By line length"), nullptr);
+	fLengthSortRadio
+		= new BRadioButton("radio_sort_length", B_TRANSLATE("By line length"), nullptr);
 
 	BLayoutBuilder::Group<>(sortTypeGroup)
 		.Add(new BStringView(nullptr, B_TRANSLATE("Sort type:")))

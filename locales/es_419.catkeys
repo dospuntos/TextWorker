@@ -1,0 +1,173 @@
+1	Spanish (Latin American)	application/x-vnd.jpw-TextWorker	686205747
+%d empty lines removed from entire text	Text utilities		%d líneas vacías eliminadas de todo el texto
+%d empty lines removed from selection	Text utilities		%d líneas vacías eliminadas de la selección
+%d occurrences of \"%s\" replaced in entire text	Text utilities		%d ocurrencias de \"%s\" reemplazadas en todo el texto
+%d occurrences of \"%s\" replaced in selection	Text utilities		%d ocurrencias de \"%s\" reemplazadas en la selección
+%i characters changed in entire text	Text utilities		%i caracteres modificados en todo el texto
+%i characters changed in selection	Text utilities		%i caracteres modificados en la selección
+%i characters changed to lowercase in entire text	Text utilities		%i caracteres convertidos a minúsculas en todo el texto
+%i characters changed to lowercase in selection	Text utilities		%i caracteres convertidos a minúsculas en la selección
+%i characters changed to uppercase in entire text	Text utilities		%i caracteres convertidos a mayúsculas en todo el texto
+%i characters changed to uppercase in selection	Text utilities		%i caracteres convertidos a mayúsculas en la selección
+%i duplicated lines removed from entire text	Text utilities		%i líneas duplicadas eliminadas de todo el texto
+%i duplicated lines removed from selection	Text utilities		%i líneas duplicadas eliminadas de la selección
+%i line breaks removed in entire text	Text utilities		%i saltos de línea eliminados en todo el texto
+%i line breaks removed in selection	Text utilities		%i saltos de línea eliminados en la selección
+%i line breaks replaced in entire text	Text utilities		%i saltos de línea reemplazados en todo el texto
+%i line breaks replaced in selection	Text utilities		%i saltos de línea reemplazados en la selección
+%i lines indented by %i %s	Text utilities		%i líneas indentadas con %i %s
+%i lines unindented by %i %s	Text utilities		%i líneas desindentadas con %i %s
+%i selected lines indented by %i %s	Text utilities		%i líneas seleccionadas indentadas con %i %s
+%i selected lines unindented by %i %s	Text utilities		%i líneas seleccionadas desindentadas con %i %s
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu líneas ordenadas alfabéticamente en orden %s en todo el texto
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu líneas ordenadas alfabéticamente en orden %s en la selección
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu líneas ordenadas por longitud en orden %s en todo el texto
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu líneas ordenadas por longitud en orden %s en la selección
+ascending	Text utilities		orden ascendente
+breaking anywhere	Text utilities		dividir en cualquier parte
+breaking on words	Text utilities		dividir por palabras
+descending	Text utilities		orden descendente
+Entire text URL-decoded	Text utilities		Codificación de URL aplicado a todo el texto
+Entire text URL-encoded	Text utilities		Decodificación de URL aplicado a todo el texto
+kept	Text utilities		mantenido
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Saltos de línea insertados en todo el texto (largo máximo: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Saltos de línea insertados en la selección (largo máximo: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Líneas divididas por el delimitador \"%s\" (%s) en todo el texto
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Líneas divididas por el delimitador \"%s\" (%s) en la selección
+No text selected	Text utilities		Ningún texto seleccionado
+OK	Text utilities		Aceptar
+Prefix/suffix added to %i lines in entire text	Text utilities		Prefijo/sufijo agregado a %i líneas en todo el texto
+Prefix/suffix added to %i lines in selection	Text utilities		Prefijo/sufijo agregado a %i líneas en la selección
+Prefix/suffix removed from %i lines in entire text	Text utilities		Prefijo/sufijo eliminado de %i líneas en todo el texto
+Prefix/suffix removed from %i lines in selection	Text utilities		Prefijo/sufijo eliminado de %i líneas en la selección
+removed	Text utilities		eliminado
+ROT13 applied to %i characters in entire text	Text utilities		ROT13 aplicado a %i caracteres en todo el texto
+ROT13 applied to %i characters in selection	Text utilities		ROT13 aplicado a %i caracteres en la selección
+Selected text URL-decoded	Text utilities		Decodificación de URL aplicado al texto seleccionado
+Selected text URL-encoded	Text utilities		Codificación de URL aplicado al texto seleccionado
+spaces	Text utilities		espacios
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		ESTADÍSTICAS DEL TEXTO ACTUAL\n\nCaracteres: %d\nPalabras: %d\nLíneas: %d\nOraciones: %d\nLínea más larga: %d caracteres\nLongitud promedio de palabra: %.2f\n\nPalabras más utilizadas:\n
+tabs	Text utilities		tabulaciones
+Whitespace trimmed from lines in entire text	Text utilities		Espacios en blanco eliminados de las líneas en todo el texto
+Whitespace trimmed from lines in selection	Text utilities		Espacios en blanco eliminados de las líneas en la selección
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Letras: %d | Palabras: %d | Líneas: %d
+About…	MainView		Acerca de…
+Add prefix/suffix	MainView		Agregar prefijo/sufijo
+AlTeRnAtInG cAsE	MainView		InTeRcAlAdO
+Break lines on delimiter	MainView		Dividir líneas por delimitador
+Capitalize	MainView		Mayúscula inicial
+Cleanup	MainView		Limpiar
+Copy	MainView		Copiar
+Cut	MainView		Cortar
+Edit	MainView		Editar
+Encode/decode	MainView		Codificar/decodificar
+File	MainView		Archivo
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku es un sistema operativo de código abierto.\nEs rápido, simple y elegante.\nA los desarrolladores les encanta su arquitectura limpia.\nLos usuarios disfrutan de su interfaz intuitiva.\nComienza a explorar el poder de Haiku hoy.
+Help…	MainView		Ayuda…
+Indent lines	MainView		Incrementar sangría
+Insert example text	MainView		Insertar text de ejemplo
+Insert line breaks (width)	MainView		Insertar saltos de línea (ancho)
+Line tools	MainView		Líneas
+lowercase	MainView		minúsculas
+Modified	MainView		Modificado
+New	MainView		Nuevo
+OK	MainView		Aceptar
+Open…	MainView		Abrir…
+Paste	MainView		Pegar
+Quit	MainView		Salir
+RaNDoM caSE	MainView		ALeaToRio
+Redo	MainView		Rehacer
+Remove duplicate lines	MainView		Eliminar líneas duplicadas
+Remove empty lines	MainView		Eliminar líneas vacias
+Remove line breaks	MainView		Eliminar saltos de línea
+Remove prefix/suffix	MainView		Eliminar prefijo/sufijo
+Replace line breaks	MainView		Reemplazar saltos de línea
+Report a bug…	MainView		Reportar un error…
+ROT-13 encode/decode	MainView		Codificador/decodificador ROT13
+Save	MainView		Guardar
+Save as…	MainView		Guardar como…
+Search/replace	MainView		Buscar/reemplazar
+Select all	MainView		Seleccionar todo
+Settings…	MainView		Ajustes…
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Lo sentimos, esta funcionalidad aún no se ha implementado, pero está planificada para el futuro cercano.
+Sort lines	MainView		Ordenar líneas
+Text case	MainView		Mayúsculas y minúsculas
+TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		Ayuda de TextWorker\n\nUsa las pestañas a la izquierda para aplicar transformaciones como:\n- Buscar y reemplazar\n- Agregar/quitar prefijos y sufijos\n- Ordenar o limpiar líneas\n- Ajustar la indentación\n\nPuedes abrir archivos de texto desde "Archivo → Abrir" o arrastrándolos a la ventana.\n\nDeshaz los cambios con "Editar → Deshacer" o Alt+Z.\n\nUsa "Configuración" para ajustar la fuente y las opciones de guardado.
+The selected file is not a recognized text file.	MainView		El archivo seleccionado no es un archivo de texto reconocido.
+Title Case	MainView		Mayúscula en cada palabra
+Toggle case	MainView		Alternar mayúsculas y minúsculas
+Transform	MainView		Transformar
+Trim whitespace	MainView		Eliminar espacios sobrantes
+Undo	MainView		Deshacer
+Unindent lines	MainView		Reducir sangría
+UPPERCASE	MainView		MAYÚSCULAS
+URL decode	MainView		Decodificación de URL
+URL encode	MainView		Codificación de URL
+Add	Sidebar	As short as possible	Agregar
+Alphabetical	Sidebar		Orden alfabético
+Apply	Sidebar		Aplicar
+Ascending	Sidebar		Ascendiendo
+Break after X characters…	Sidebar		Dividir después de X caracteres…
+Break on…	Sidebar		Dividir en…
+By line length	Sidebar		Por longitud de línea
+Case sensitive	Sidebar		Distingue mayúsculas
+Chars:	Sidebar	As short as possible	Letras:
+Cleanup	Sidebar		Limpiar
+Descending	Sidebar		Descendiendo
+Indent	Sidebar	As short as possible	Indentar
+Indent size:	Sidebar		Tamaño:
+Indent/unindent lines	Sidebar		Agregar/quitar sangría
+Keep delimiter	Sidebar	As short as possible	Mantener separador
+Line break options	Sidebar		Opciones de salto de línea
+Lines	Sidebar	As short as possible	Líneas
+Prefix:	Sidebar	As short as possible	Prefijo:
+Prefix/suffix	Sidebar	As short as possible	Prefijo/sufijo
+Prefix/suffix each line	Sidebar		Prefijo/sufijo en cada línea
+Remove	Sidebar	As short as possible	Eliminar
+Remove all	Sidebar		Eliminar todos
+Remove duplicate lines	Sidebar	As short as possible	Eliminar líneas duplicadas
+Remove empty lines	Sidebar	As short as possible	Eliminar líneas vacias
+Replace	Sidebar		Reemplazar
+Replace with…	Sidebar		Reemplazar con…
+Replace:	Sidebar	As short as possible	Reemplazar:
+Search and replace	Sidebar		Buscar y reemplazar
+Search:	Sidebar	As short as possible	Buscar:
+Sort	Sidebar		Ordenar
+Sort lines	Sidebar		Ordenar líneas
+Sort lines	Sidebar	As short as possible	Ordenar líneas
+Sort order:	Sidebar		Orden:
+Sort type:	Sidebar		Tipo:
+Spaces	Sidebar		Espacios
+Split on words	Sidebar	As short as possible	Dividir por palabras
+Suffix:	Sidebar	As short as possible	Sufijo:
+Tabs	Sidebar		Tabulación
+Trim whitespace	Sidebar	As short as possible	Eliminar espacios sobrantes
+Unindent	Sidebar	As short as possible	Desindentar
+Capitalize	Toolbar		Mayúscula inicial
+Copy	Toolbar		Copiar
+Cut	Toolbar		Cortar
+Help…	Toolbar		Ayuda…
+lowercase	Toolbar		minúscula
+New file	Toolbar		Nuevo
+Open file…	Toolbar		Abrir…
+Paste	Toolbar		Pegar
+Redo	Toolbar		Rehacer
+ROT13 encode/decode	Toolbar		Codificar/decodificar ROT13
+Save file	Toolbar		Guardar
+Settings…	Toolbar		Ajustes…
+Show stats…	Toolbar		Ver estadísticas…
+Title Case	Toolbar		Título
+Undo	Toolbar		Deshacer
+UPPERCASE	Toolbar		MAYÚSCULAS
+URL decode	Toolbar		Decodificar URL
+URL encode	Toolbar		Codificar URL
+Word wrap	Toolbar		Ajuste de línea
+Clear field values after use	Settings		Borrar valores después de usar
+Close	Settings		Cerrar
+Font family:	Settings		Fuente:
+Font size:	Settings		Tamaño:
+Paste clipboard contents on open	Settings		Pegar portapapeles al iniciar
+Save field values on exit	Settings		Guardar valores al salir
+Save text on exit	Settings		Guardar texto al salir
+Settings	Settings		Ajustes
+TextWorker	System name		TextWorker

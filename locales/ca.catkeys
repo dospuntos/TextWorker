@@ -1,0 +1,173 @@
+1	Catalan	application/x-vnd.jpw-TextWorker	686205747
+%d empty lines removed from entire text	Text utilities		S'han suprimit %d línies buides de tot el text.
+%d empty lines removed from selection	Text utilities		S'han suprimit %d línies buides de la selecció.
+%d occurrences of \"%s\" replaced in entire text	Text utilities		S'han substituït %d ocurrències de \"%s\" en tot el text.
+%d occurrences of \"%s\" replaced in selection	Text utilities		S'han substituït %d ocurrències de \"%s\" a la selecció.
+%i characters changed in entire text	Text utilities		S'han canviat %i caràcters en tot el text.
+%i characters changed in selection	Text utilities		S'han canviat %i caràcters a la selecció.
+%i characters changed to lowercase in entire text	Text utilities		S'han canviat %i caràcters a minúscules en tot el text.
+%i characters changed to lowercase in selection	Text utilities		S'han canviat %i caràcters a minúscules a la selecció.
+%i characters changed to uppercase in entire text	Text utilities		S'han canviat %i caràcters a majúscules en tot el text.
+%i characters changed to uppercase in selection	Text utilities		S'han canviat %i caràcters a majúscules a la selecció.
+%i duplicated lines removed from entire text	Text utilities		S'han suprimit %i línies duplicades de tot el text.
+%i duplicated lines removed from selection	Text utilities		S'han suprimit %i línies duplicades de la selecció.
+%i line breaks removed in entire text	Text utilities		S'han suprimit %i salts de línia de tot el text.
+%i line breaks removed in selection	Text utilities		S'han suprimit %i salts de línia de la selecció.
+%i line breaks replaced in entire text	Text utilities		S'han substituït %i salts de línia en tot el text.
+%i line breaks replaced in selection	Text utilities		S'han substituït %i salts de línia a la selecció.
+%i lines indented by %i %s	Text utilities		%i línies amb sagnat per %i %s
+%i lines unindented by %i %s	Text utilities		%i línies sense sagnat per %i %s
+%i selected lines indented by %i %s	Text utilities		%i línies seleccionades amb sagnat per %i %s
+%i selected lines unindented by %i %s	Text utilities		%i línies seleccionades sense sagnat per %i %s
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu línies ordenades alfabèticament en ordre %s en tot el text
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu línies ordenades alfabèticament en ordre %s a la selecció
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu línies ordenades per longitud de línia en ordre %s en tot el text
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu línies ordenades per longitud de línia en ordre %s a la selecció
+ascending	Text utilities		ascendent
+breaking anywhere	Text utilities		trencament a qualsevol lloc
+breaking on words	Text utilities		trencament a les paraules
+descending	Text utilities		descendent
+Entire text URL-decoded	Text utilities		Text complet descodificat per URL
+Entire text URL-encoded	Text utilities		Text complet codificat per URL
+kept	Text utilities		mantingudes
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Salts de línia inserits en tot el text (longitud màxima: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Salts de línia inserits a la selecció (longitud màxima: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Línies trencades al delimitador "%s" (%s) en tot el text
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Línies trencades al delimitador \"%s\" (%s) a la selecció
+No text selected	Text utilities		No s'ha seleccionat cap text.
+OK	Text utilities		D'acord
+Prefix/suffix added to %i lines in entire text	Text utilities		Prefix / sufix afegit a %i línies de tot el text
+Prefix/suffix added to %i lines in selection	Text utilities		Prefix / sufix afegit a %i línies de la selecció
+Prefix/suffix removed from %i lines in entire text	Text utilities		Prefix / sufix suprimit de %i línies de tot el text
+Prefix/suffix removed from %i lines in selection	Text utilities		Prefix / sufix suprimit de %i línies de la selecció
+removed	Text utilities		suprimides
+ROT13 applied to %i characters in entire text	Text utilities		S'ha aplicat ROT13 a %i caràcters de tot el text.
+ROT13 applied to %i characters in selection	Text utilities		S'ha aplicat ROT13 a %i caràcters de la selecció.
+Selected text URL-decoded	Text utilities		Text seleccionat descodificat per URL
+Selected text URL-encoded	Text utilities		Text seleccionat codificat per URL
+spaces	Text utilities		espais
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		ESTADÍSTIQUES DEL TEXT ACTUAL\n\nCaràcters: %d\nParaules: %d\nLínies: %d\nFrases: %d\nLínia més llarga: %d caràcters\nLongitud mitjana de la paraula: %.2f\n\nParaules més usades:\n
+tabs	Text utilities		tabulacions
+Whitespace trimmed from lines in entire text	Text utilities		Espai en blanc retallat de les línies de tot el text
+Whitespace trimmed from lines in selection	Text utilities		Espai en blanc retallat de les línies de la selecció
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Caràcters: %d | Paraules: %d | Línies: %d
+About…	MainView		Quant a...
+Add prefix/suffix	MainView		Afegiu un prefix / sufix
+AlTeRnAtInG cAsE	MainView		CaIxA AlTeRnAnT
+Break lines on delimiter	MainView		Línies de trencament al delimitador
+Capitalize	MainView		Posa en majúscules
+Cleanup	MainView		Neteja
+Copy	MainView		Copia
+Cut	MainView		Retalla
+Edit	MainView		Edita
+Encode/decode	MainView		Codifica / descodifica
+File	MainView		Fitxer
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		El Haiku és un sistema operatiu de codi obert.\nÉs ràpid, senzill i elegant.\nAls desenvolupadors els n'encanta l'arquitectura neta.\nAls usuaris els n'agrada la interfície intuïtiva.\nComenceu a explorar el poder del Haiku avui mateix.
+Help…	MainView		Ajuda...
+Indent lines	MainView		Sagnat de línies
+Insert example text	MainView		Insereix text d'exemple
+Insert line breaks (width)	MainView		Insereix salts de línia (amplada)
+Line tools	MainView		Eines de línia
+lowercase	MainView		minúscula
+Modified	MainView		Modificat
+New	MainView		Nou
+OK	MainView		D'acord
+Open…	MainView		Obre...
+Paste	MainView		Enganxa
+Quit	MainView		Surt
+RaNDoM caSE	MainView		CAixA AleATòRIa
+Redo	MainView		Refés
+Remove duplicate lines	MainView		Suprimeix les línies duplicades
+Remove empty lines	MainView		Suprimeix les línies buides
+Remove line breaks	MainView		Suprimeix els salts de línia
+Remove prefix/suffix	MainView		Suprimeix el prefix / sufix
+Replace line breaks	MainView		Substitueix els salts de línia
+Report a bug…	MainView		Informeu d'un error...
+ROT-13 encode/decode	MainView		Codificació / descodificació ROT-13
+Save	MainView		Desa
+Save as…	MainView		Desa com a...
+Search/replace	MainView		Cerca / substitueix
+Select all	MainView		Selecciona-ho tot
+Settings…	MainView		Paràmetres...
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Perdoneu, aquesta funcionalitat encara no s'ha implementat, però està prevista per a un futur proper.
+Sort lines	MainView		Ordena les línies
+Text case	MainView		Caixa del text
+TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		Ajuda del TextWorker\n\nUseu les pestanyes de l'esquerra per aplicar transformacions com ara les següents:\n- Cercar i substituir\n- Afegir / suprimir prefixos i sufixos\n- Ordenar o netejar línies\n- Ajustar el sagnat\n\nPodeu obrir fitxers de text mitjançant \"Fitxer → Obre\" o arrossegant-los a la finestra.\n\nDesfeu els canvis amb \"Edita → Desfés\" o Alt+Z.\n\nUseu \"Paràmetres\" per configurar la font i les opcions de desar.
+The selected file is not a recognized text file.	MainView		El fitxer seleccionat no és un fitxer de text reconegut.
+Title Case	MainView		Caixa del títol
+Toggle case	MainView		Commuta'n la caixa
+Transform	MainView		Transforma
+Trim whitespace	MainView		Retalla els espais en blanc
+Undo	MainView		Desfés
+Unindent lines	MainView		Suprimeix el sagnat
+UPPERCASE	MainView		MAJÚSCULA
+URL decode	MainView		Descodificació d'URL
+URL encode	MainView		Codificació d'URL
+Add	Sidebar	As short as possible	Afegeix
+Alphabetical	Sidebar		Alfabètic
+Apply	Sidebar		Aplica
+Ascending	Sidebar		Ascendent
+Break after X characters…	Sidebar		Interromp després de X caràcters…
+Break on…	Sidebar		Interromp...
+By line length	Sidebar		Per longitud de línia
+Case sensitive	Sidebar		Sensible a majúscules i minúscules
+Chars:	Sidebar	As short as possible	Caràcters:
+Cleanup	Sidebar		Neteja
+Descending	Sidebar		Descendent
+Indent	Sidebar	As short as possible	Sagnat
+Indent size:	Sidebar		Mida del sagnat:
+Indent/unindent lines	Sidebar		Sagnat / No sagnat de linies
+Keep delimiter	Sidebar	As short as possible	Mantén el delimitador
+Line break options	Sidebar		Opcions de salt de línia
+Lines	Sidebar	As short as possible	Línies
+Prefix:	Sidebar	As short as possible	Prefix:
+Prefix/suffix	Sidebar	As short as possible	Prefix / sufix
+Prefix/suffix each line	Sidebar		Prefix / sufix a cada línia
+Remove	Sidebar	As short as possible	Suprimeix
+Remove all	Sidebar		Suprimeix-ho tot
+Remove duplicate lines	Sidebar	As short as possible	Suprimeix les línies duplicades
+Remove empty lines	Sidebar	As short as possible	Suprimeix les línies buides
+Replace	Sidebar		Substitueix
+Replace with…	Sidebar		Substitueix per...
+Replace:	Sidebar	As short as possible	Substitueix:
+Search and replace	Sidebar		Cerca i substitueix
+Search:	Sidebar	As short as possible	Cerca:
+Sort	Sidebar		Ordena
+Sort lines	Sidebar		Ordena les línies
+Sort lines	Sidebar	As short as possible	Ordena les línies
+Sort order:	Sidebar		Ordre d'ordenació:
+Sort type:	Sidebar		Tipus d'ordenació:
+Spaces	Sidebar		Espais
+Split on words	Sidebar	As short as possible	Separa paraules
+Suffix:	Sidebar	As short as possible	Sufix:
+Tabs	Sidebar		Tabulacions
+Trim whitespace	Sidebar	As short as possible	Retalla els espais en blanc
+Unindent	Sidebar	As short as possible	Sense sagnat
+Capitalize	Toolbar		Posa en majúscules
+Copy	Toolbar		Copia
+Cut	Toolbar		Retalla
+Help…	Toolbar		Ajuda...
+lowercase	Toolbar		minúscula
+New file	Toolbar		Fitxer nou
+Open file…	Toolbar		Obre un fiter...
+Paste	Toolbar		Enganxa
+Redo	Toolbar		Refés
+ROT13 encode/decode	Toolbar		Codificació / descodificació ROT13
+Save file	Toolbar		Desa el fitxer
+Settings…	Toolbar		Paràmetres...
+Show stats…	Toolbar		Mostra'n les estadístiques...
+Title Case	Toolbar		Caixa del títol
+Undo	Toolbar		Desfés
+UPPERCASE	Toolbar		MAJÚSCULA
+URL decode	Toolbar		Descodificació d'URL
+URL encode	Toolbar		Codificació d'URL
+Word wrap	Toolbar		Ajustament de paraules
+Clear field values after use	Settings		Esborra els valors del camp després de l'ús
+Close	Settings		Tanca
+Font family:	Settings		Família de la lletra:
+Font size:	Settings		Mida de la lletra:
+Paste clipboard contents on open	Settings		Enganxa el contingut del porta-retalls en obrir
+Save field values on exit	Settings		Desa els valors dels camps en sortir
+Save text on exit	Settings		Desa el text en sortir
+Settings	Settings		Paràmetres
+TextWorker	System name		Treballador de textos

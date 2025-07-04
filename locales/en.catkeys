@@ -1,4 +1,4 @@
-1	English	application/x-vnd.jpw-TextWorker	686205747
+1	English	application/x-vnd.jpw-TextWorker	4267162439
 Remove duplicate lines	MainView		Remove duplicate lines
 %i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
 Open file…	Toolbar		Open file…
@@ -16,8 +16,8 @@ No text selected	Text utilities		No text selected
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.
 Capitalize	Toolbar		Capitalize
 Cleanup	Sidebar		Cleanup
-New	MainView		New
 Insert example text	MainView		Insert example text
+New	MainView		New
 Selected text URL-encoded	Text utilities		Selected text URL-encoded
 Suffix:	Sidebar	As short as possible	Suffix:
 Selected text URL-decoded	Text utilities		Selected text URL-decoded
@@ -66,6 +66,7 @@ Line break options	Sidebar		Line break options
 Save as…	MainView		Save as…
 %i characters changed to uppercase in entire text	Text utilities		%i characters changed to uppercase in entire text
 ROT13 encode/decode	Toolbar		ROT13 encode/decode
+Case sensitive	Sidebar	As short as possible	Case sensitive
 Help…	MainView		Help…
 Title Case	MainView		Title Case
 Open…	MainView		Open…
@@ -91,15 +92,16 @@ URL decode	Toolbar		URL decode
 URL decode	MainView		URL decode
 tabs	Text utilities		tabs
 Remove prefix/suffix	MainView		Remove prefix/suffix
+ZuMi (Toolbar icons)	MainView		ZuMi (Toolbar icons)
 Search and replace	Sidebar		Search and replace
 Spaces	Sidebar		Spaces
-%i line breaks removed in selection	Text utilities		%i line breaks removed in selection
 %i lines indented by %i %s	Text utilities		%i lines indented by %i %s
+%i line breaks removed in selection	Text utilities		%i line breaks removed in selection
 UPPERCASE	MainView		UPPERCASE
 %d empty lines removed from entire text	Text utilities		%d empty lines removed from entire text
 %d occurrences of \"%s\" replaced in entire text	Text utilities		%d occurrences of \"%s\" replaced in entire text
-Trim whitespace	MainView		Trim whitespace
 lowercase	MainView		lowercase
+Trim whitespace	MainView		Trim whitespace
 Insert line breaks (width)	MainView		Insert line breaks (width)
 ROT-13 encode/decode	MainView		ROT-13 encode/decode
 Copy	MainView		Copy
@@ -108,6 +110,7 @@ Save file	Toolbar		Save file
 Ascending	Sidebar		Ascending
 Toggle case	MainView		Toggle case
 Show stats…	Toolbar		Show stats…
+Humdinger for advice and review	MainView		Humdinger for advice and review
 %i characters changed in selection	Text utilities		%i characters changed in selection
 Save	MainView		Save
 Save text on exit	Settings		Save text on exit
@@ -149,6 +152,7 @@ Select all	MainView		Select all
 OK	MainView		OK
 RaNDoM caSE	MainView		RaNDoM caSE
 Capitalize	MainView		Capitalize
+Distributed under the terms of the MIT License.	MainView		Distributed under the terms of the MIT License.
 Cut	Toolbar		Cut
 Paste	Toolbar		Paste
 ascending	Text utilities		ascending
@@ -164,6 +168,8 @@ Undo	MainView		Undo
 %i characters changed in entire text	Text utilities		%i characters changed in entire text
 Redo	MainView		Redo
 Sort lines	Sidebar		Sort lines
+Clean and transform text easily with this lightweight tool.	MainView		Clean and transform text easily with this lightweight tool.
+Full words	Sidebar	As short as possible	Full words
 %i line breaks removed in entire text	Text utilities		%i line breaks removed in entire text
 Prefix/suffix removed from %i lines in selection	Text utilities		Prefix/suffix removed from %i lines in selection
 Trim whitespace	Sidebar	As short as possible	Trim whitespace

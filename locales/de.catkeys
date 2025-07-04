@@ -1,0 +1,173 @@
+1	German	application/x-vnd.jpw-TextWorker	686205747
+%d empty lines removed from entire text	Text utilities		%d leere Zeilen aus gesamten Text entfernt
+%d empty lines removed from selection	Text utilities		%d leere Zeilen in Auswahl entfernt
+%d occurrences of \"%s\" replaced in entire text	Text utilities		%d Vorkommen von \"%s\" im gesamten Text ersetzt
+%d occurrences of \"%s\" replaced in selection	Text utilities		%d Vorkommen von \"%s\" in Auswahl ersetzt
+%i characters changed in entire text	Text utilities		%i Zeichen im gesamten Text geändert
+%i characters changed in selection	Text utilities		%i Zeichen in Auswahl geändert
+%i characters changed to lowercase in entire text	Text utilities		%i Zeichen im gesamten Text zu Kleinschreibung geändert
+%i characters changed to lowercase in selection	Text utilities		%i Zeichen in Auswahl zu Kleinschreibung geändert
+%i characters changed to uppercase in entire text	Text utilities		%i Zeichen im gesamten Text zu Grossschreibung geändert
+%i characters changed to uppercase in selection	Text utilities		%i Zeichen in Auswahl zu Grossschreibung geändert
+%i duplicated lines removed from entire text	Text utilities		%d doppelte Zeilen aus gesamten Text entfernt
+%i duplicated lines removed from selection	Text utilities		%d doppelte Zeilen in Auswahl entfernt
+%i line breaks removed in entire text	Text utilities		%d Zeilenumbrüche aus gesamten Text entfernt
+%i line breaks removed in selection	Text utilities		%d Zeilenumbrüche in Auswahl entfernt
+%i line breaks replaced in entire text	Text utilities		%d Zeilenumbrüche im gesamten Text ersetzt
+%i line breaks replaced in selection	Text utilities		%d Zeilenumbrüche in Auswahl ersetzt
+%i lines indented by %i %s	Text utilities		%i Zeilen um %i %s eingerückt
+%i lines unindented by %i %s	Text utilities		%i Zeilen um %i %s ausgerückt
+%i selected lines indented by %i %s	Text utilities		%i ausgewählte Zeilen um %i %s eingerückt
+%i selected lines unindented by %i %s	Text utilities		%i ausgewählte Zeilen um %i %s ausgerückt
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu Zeilen im gesamten Text %s alphabetisch sortiert
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu Zeilen in der Auswahl %s alphabetisch sortiert
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu Zeilen im gesamten Text %s nach Länge sortiert
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu Zeilen in der Auswahl %s nach Länge sortiert
+ascending	Text utilities		aufsteigend
+breaking anywhere	Text utilities		irgendwo getrennt
+breaking on words	Text utilities		an Worten getrennt
+descending	Text utilities		absteigend
+Entire text URL-decoded	Text utilities		Gesamten Text URL-dekodiert
+Entire text URL-encoded	Text utilities		Gesamten Text URL-enkodiert
+kept	Text utilities		behalten
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Zeilenumbrüche im gesamten Text eingefügt (max. Länge: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Zeilenumbrüche in der Auswahl eingefügt (max. Länge: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Zeilenumbrüche an Trennzeichen \"%s\" (%s) im gesamten Text
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Zeilenumbrüche an Trennzeichen \"%s\" (%s) in der Auswahl
+No text selected	Text utilities		Kein Text ausgewählt
+OK	Text utilities		OK
+Prefix/suffix added to %i lines in entire text	Text utilities		Präfix/Suffix zu %i Zeilen im gesamten Text hinzugefügt
+Prefix/suffix added to %i lines in selection	Text utilities		Präfix/Suffix zu %i Zeilen in der Auswahl hinzugefügt
+Prefix/suffix removed from %i lines in entire text	Text utilities		Präfix/Suffix von %i Zeilen aus gesamten Text entfernt
+Prefix/suffix removed from %i lines in selection	Text utilities		Präfix/Suffix von %i Zeilen der Auswahl entfernt
+removed	Text utilities		entfernt
+ROT13 applied to %i characters in entire text	Text utilities		ROT13 auf %i Zeichen im gesamten Text angewandt
+ROT13 applied to %i characters in selection	Text utilities		ROT13 auf %i Zeichen in der Auswahl angewandt
+Selected text URL-decoded	Text utilities		Ausgewählten Text URL-dekodiert
+Selected text URL-encoded	Text utilities		Ausgewählten Text URL-enkodiert
+spaces	Text utilities		Leerzeichen
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		STATISTIK ZU AKTUELLEM TEXTn\nZeichen: %d\nWorte: %d\nZeilen: %d\nSätze: %d\nLängste Zeile: %d Zeichen\nDurchschnittl. Wortlänge: %.2f\n\nMeistbenutztes Wort:\n
+tabs	Text utilities		Tabulatoren
+Whitespace trimmed from lines in entire text	Text utilities		Whitespace von Zeilen aus gesamten Text gekürzt
+Whitespace trimmed from lines in selection	Text utilities		Whitespace von Zeilen der Auswahl gekürzt
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Zeichen: %d | Wörter: %d | Zeilen: %d
+About…	MainView		Über…
+Add prefix/suffix	MainView		Präfix/Suffix hinzu
+AlTeRnAtInG cAsE	MainView		AbWeChSeLnD
+Break lines on delimiter	MainView		Zeilenumbruch an Trennzeichen
+Capitalize	MainView		Groß am Satzanfang
+Cleanup	MainView		Bereinigen
+Copy	MainView		Kopieren
+Cut	MainView		Ausschneiden
+Edit	MainView		Bearbeiten
+Encode/decode	MainView		En/Dekodieren
+File	MainView		Datei
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku ist ein quelloffenes Betriebssystem.\nEs ist schnell, einfach und elegant.\nEntwickler lieben die saubere Architektur.\nBenutzer freuen sich über die intuitive Oberfläche.\nErkunde Haikus Stärken noch heute!
+Help…	MainView		Hilfe…
+Indent lines	MainView		Zeilen einrücken
+Insert example text	MainView		Beispieltext einfügen
+Insert line breaks (width)	MainView		Zeilenumbrüche einfügen (Breite)
+Line tools	MainView		Zeilen-Tools
+lowercase	MainView		klein
+Modified	MainView		Geändert
+New	MainView		Neu
+OK	MainView		OK
+Open…	MainView		Öffnen…
+Paste	MainView		Einfügen
+Quit	MainView		Beenden
+RaNDoM caSE	MainView		ZuFäLlig
+Redo	MainView		Wiederholen
+Remove duplicate lines	MainView		Doppelte Zeilen entfernen
+Remove empty lines	MainView		Leere Zeilen entfernen
+Remove line breaks	MainView		Zeilenumbrüche entfernen
+Remove prefix/suffix	MainView		Präfix/Suffix entfernen
+Replace line breaks	MainView		Zeilenumbrüche ersetzen
+Report a bug…	MainView		Fehler melden …
+ROT-13 encode/decode	MainView		ROT-13 en/dekodieren
+Save	MainView		Speichern
+Save as…	MainView		Speichern unter…
+Search/replace	MainView		Suchen/ersetzen
+Select all	MainView		Alles auswählen
+Settings…	MainView		Einstellungen…
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Diese Funktion ist noch nicht verfügbar, ist aber für die nahe Zukunft geplant.
+Sort lines	MainView		Zeilen sortieren
+Text case	MainView		Schreibweise
+TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		TextWorker Hilfe\n\nMit den Funktionen in den Reitern der linken Seite können Transformationen angewendet werden:\n- Suchen und ersetzen\n- Prä- und Suffixe hinzufügen und entfernen\n- Zeilen sortieren un bereinnigen\n- Einzüge ändern\n\nTextdateien werden per \"Datei → Öffnen\" geladen, oder einfach ins Fenster gezogen.\n\nMit \"Bearbeiten → Rückgängig\" oder Alt+Z werden Aktionen zurückgenommen.\n\"Einstellungen\" bieten Optionen für Schrift und Speicherverhalten.
+The selected file is not a recognized text file.	MainView		Die ausgewählte Datei wird nicht als Textdatei erkannt.
+Title Case	MainView		Titel
+Toggle case	MainView		Umkehren
+Transform	MainView		Transformieren
+Trim whitespace	MainView		Whitespace entfernen
+Undo	MainView		Rückgängig
+Unindent lines	MainView		Zeilen ausrücken
+UPPERCASE	MainView		GROSS
+URL decode	MainView		URL dekodieren
+URL encode	MainView		URL kodieren
+Add	Sidebar	As short as possible	Hinzu
+Alphabetical	Sidebar		Alphabetisch
+Apply	Sidebar		Anwenden
+Ascending	Sidebar		Aufsteigend
+Break after X characters…	Sidebar		Zeilenumbruch nach x Zeichen …
+Break on…	Sidebar		Zeilenumbruch bei …
+By line length	Sidebar		Nach Zeilenlänge
+Case sensitive	Sidebar		Groß/Kleinschreibung beachten
+Chars:	Sidebar	As short as possible	Zeichen:
+Cleanup	Sidebar		Bereinigen
+Descending	Sidebar		Absteigend
+Indent	Sidebar	As short as possible	Einrücken
+Indent size:	Sidebar		Einzug:
+Indent/unindent lines	Sidebar		Zeilen Ein/Ausrücken
+Keep delimiter	Sidebar	As short as possible	Trenner behalten
+Line break options	Sidebar		Zeilenumbruch
+Lines	Sidebar	As short as possible	Zeilen
+Prefix:	Sidebar	As short as possible	Präfix:
+Prefix/suffix	Sidebar	As short as possible	Prä/Suffix
+Prefix/suffix each line	Sidebar		Prä/Suffix jede Zeile
+Remove	Sidebar	As short as possible	Entfernen
+Remove all	Sidebar		Alle entfernen
+Remove duplicate lines	Sidebar	As short as possible	Doppelte Zeilen entfernen
+Remove empty lines	Sidebar	As short as possible	Leere Zeilen entfernen
+Replace	Sidebar		Ersetzen
+Replace with…	Sidebar		Ersetzen mit …
+Replace:	Sidebar	As short as possible	Ersetzen:
+Search and replace	Sidebar		Suchen und ersetzen
+Search:	Sidebar	As short as possible	Suchen:
+Sort	Sidebar		Sortieren
+Sort lines	Sidebar		Zeilen sortieren
+Sort lines	Sidebar	As short as possible	Sortierung
+Sort order:	Sidebar		Richtung:
+Sort type:	Sidebar		Modus:
+Spaces	Sidebar		Leerzeichen
+Split on words	Sidebar	As short as possible	An Worten trennen
+Suffix:	Sidebar	As short as possible	Suffix:
+Tabs	Sidebar		Tabulatoren
+Trim whitespace	Sidebar	As short as possible	Whitespace stutzen
+Unindent	Sidebar	As short as possible	Ausrücken
+Capitalize	Toolbar		Groß am Satzanfang
+Copy	Toolbar		Kopieren
+Cut	Toolbar		Ausschneiden
+Help…	Toolbar		Hilfe…
+lowercase	Toolbar		klein
+New file	Toolbar		Neue Datei
+Open file…	Toolbar		Datei öffnen …
+Paste	Toolbar		Einfügen
+Redo	Toolbar		Wiederholen
+ROT13 encode/decode	Toolbar		ROT13 en/dekodieren
+Save file	Toolbar		Datei speichern
+Settings…	Toolbar		Einstellungen…
+Show stats…	Toolbar		Statistik zeigen …
+Title Case	Toolbar		Titel
+Undo	Toolbar		Rückgängig
+UPPERCASE	Toolbar		GROSS
+URL decode	Toolbar		URL dekodieren
+URL encode	Toolbar		URL enkodieren
+Word wrap	Toolbar		Umbruch am Fenster
+Clear field values after use	Settings		Felder nach Anwenden leeren
+Close	Settings		Schließen
+Font family:	Settings		Schriftfamilie:
+Font size:	Settings		Schriftgröße:
+Paste clipboard contents on open	Settings		Zwischenablage beim Start einfügen
+Save field values on exit	Settings		Werte der Felder beim Beenden speichern
+Save text on exit	Settings		Text beim Beenden speichern
+Settings	Settings		Einstellungen
+TextWorker	System name		TextWorker
