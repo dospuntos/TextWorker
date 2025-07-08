@@ -15,6 +15,7 @@
 #include <MenuItem.h>
 #include <NodeInfo.h>
 #include <Path.h>
+#include <RecentItems.h>
 #include <Resources.h>
 #include <Screen.h>
 #include <ScrollView.h>
@@ -455,8 +456,13 @@ MainWindow::_BuildMenu()
 	menu = new BMenu(B_TRANSLATE("File"));
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("New"), new BMessage(M_FILE_NEW), 'N'));
-	menu->AddItem(
-		new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(M_FILE_OPEN), 'O'));
+	BMenuItem* openItem
+		= new BMenuItem(BRecentFilesList::NewFileListMenu(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), NULL,
+							NULL, be_app, 9, true, NULL, kApplicationSignature),
+			new BMessage(M_FILE_OPEN));
+	openItem->SetShortcut('O', 0);
+	menu->AddItem(openItem);
+
 	menu->AddSeparatorItem();
 
 	menu->AddItem(fSaveMenuItem);
