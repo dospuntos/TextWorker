@@ -68,7 +68,7 @@ GetText(BTextView* textView, bool isLineBased)
 	}
 
 	char* buffer = new char[selEnd - selStart + 1];
-	textView->GetText(selStart, selEnd, buffer);
+	textView->GetText(selStart, selEnd - selStart, buffer);
 	buffer[selEnd - selStart] = '\0';
 
 	BString result(buffer);
