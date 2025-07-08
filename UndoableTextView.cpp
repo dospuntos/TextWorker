@@ -17,8 +17,7 @@ UndoableTextView::UndoableTextView(const char* name)
 	:
 	BTextView(name, B_WILL_DRAW | B_SCROLL_VIEW_AWARE),
 	fCoalescing(false),
-	fRecording(true),
-	fTimer(nullptr)
+	fRecording(true)
 {
 	rgb_color viewColor = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
 	rgb_color textColor = ui_color(B_DOCUMENT_TEXT_COLOR);
@@ -32,7 +31,6 @@ UndoableTextView::UndoableTextView(const char* name)
 
 UndoableTextView::~UndoableTextView()
 {
-	delete fTimer;
 }
 
 
@@ -152,17 +150,13 @@ UndoableTextView::StartCoalesceTimer()
 	fCoalescing = true;
 
 	BMessage timeoutMsg(M_COALESCE_TIMEOUT);
-	fTimer = new BMessageRunner(BMessenger(this), &timeoutMsg, kCoalesceDelay, 1);
+	BMessageRunner::StartSending(this, &timeoutMsg, kCoalesceDelay, 1);
 }
 
 
 void
 UndoableTextView::StopCoalesceTimer()
 {
-	if (fTimer) {
-		delete fTimer;
-		fTimer = nullptr;
-	}
 	fCoalescing = false;
 }
 

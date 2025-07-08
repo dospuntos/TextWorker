@@ -50,8 +50,6 @@ private:
 
 	bool fCoalescing;
 	bool fRecording;
-
-	BMessageRunner* fTimer;
 };
 
 

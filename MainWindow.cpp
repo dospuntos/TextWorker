@@ -787,15 +787,9 @@ MainWindow::_UpdateStatusMessage(BString message)
 	if (fStatusBar) {
 		fMessageBar->SetText(message.String());
 
-		// Cancel previous timer if any
-		if (fStatusClearRunner) {
-			delete fStatusClearRunner;
-			fStatusClearRunner = nullptr;
-		}
-
 		// Set up 5-second timer to clear message
-		BMessage* clearMsg = new BMessage(M_CLEAR_STATUS);
-		fStatusClearRunner = new BMessageRunner(BMessenger(this), clearMsg, 5000000, 1);
+		BMessage clearMsg(M_CLEAR_STATUS);
+		BMessageRunner::StartSending(this, &clearMsg, 5000000, 1);
 	}
 }
 
