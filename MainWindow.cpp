@@ -543,7 +543,7 @@ MainWindow::_BuildMenu()
 	// 'Cleanup' submenu
 	BMenu* cleanMenu = new BMenu(B_TRANSLATE("Cleanup"));
 	cleanMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES), 'W'));
+		new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES), 'G'));
 	cleanMenu->AddItem(
 		new BMenuItem(B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES), 'T'));
 	cleanMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove duplicate lines"),

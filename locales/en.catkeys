@@ -1,4 +1,4 @@
-1	English	application/x-vnd.jpw-TextWorker	4267162439
+1	English	application/x-vnd.jpw-TextWorker	330512145
 Remove duplicate lines	MainView		Remove duplicate lines
 %i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
 Open file…	Toolbar		Open file…
@@ -60,6 +60,7 @@ spaces	Text utilities		spaces
 ROT13 applied to %i characters in entire text	Text utilities		ROT13 applied to %i characters in entire text
 kept	Text utilities		kept
 Undo	Toolbar		Undo
+Humdinger (advice and review)	MainView		Humdinger (advice and review)
 %i characters changed to uppercase in selection	Text utilities		%i characters changed to uppercase in selection
 %zu lines sorted by line length in %s order in selection	Text utilities		%zu lines sorted by line length in %s order in selection
 Line break options	Sidebar		Line break options
@@ -110,7 +111,6 @@ Save file	Toolbar		Save file
 Ascending	Sidebar		Ascending
 Toggle case	MainView		Toggle case
 Show stats…	Toolbar		Show stats…
-Humdinger for advice and review	MainView		Humdinger for advice and review
 %i characters changed in selection	Text utilities		%i characters changed in selection
 Save	MainView		Save
 Save text on exit	Settings		Save text on exit
