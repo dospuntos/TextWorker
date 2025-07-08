@@ -89,8 +89,10 @@ Sidebar::_BuildLineTab()
 	BBox* searchReplaceBox = new BBox("SearchReplaceBox");
 	searchReplaceBox->SetLabel(B_TRANSLATE("Search and replace"));
 
-	fSearchInput = new BTextControl("SearchString", nullptr, "", nullptr);
-	fReplaceInput = new BTextControl("ReplaceString", nullptr, "", nullptr);
+	fSearchInput = new BTextControl("SearchString",
+		B_TRANSLATE_COMMENT("Search:", "As short as possible"), "", nullptr);
+	fReplaceInput = new BTextControl("ReplaceString",
+		B_TRANSLATE_COMMENT("Replace:", "As short as possible"), "", nullptr);
 	fCaseCheck = new BCheckBox("ReplaceCaseSensitiveCheckbox",
 		B_TRANSLATE_COMMENT("Case sensitive", "As short as possible"), nullptr);
 	fWholeWordCheck = new BCheckBox("ReplaceFullWordsCheckbox",
@@ -100,31 +102,26 @@ Sidebar::_BuildLineTab()
 		new BMessage(M_TRANSFORM_REPLACE));
 	searchReplaceBtn->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 
-	// Set consistent minimum widths for text fields
-	fSearchInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
-	fReplaceInput->SetExplicitMinSize(BSize(150, B_SIZE_UNSET));
+	BView* searchView = new BView("searchreplace", B_WILL_DRAW);
 
-	// Grid layout
-	BGridLayoutBuilder grid1(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING);
 	// clang-format off
-	grid1.Add(new BStringView(NULL, B_TRANSLATE_COMMENT(
-						"Search:", "As short as possible")), 	0, 0, 1)
-		.Add(fSearchInput,										1, 0, 1)
-		.Add(new BStringView(NULL, B_TRANSLATE_COMMENT(
-						"Replace:", "As short as possible")),	0, 1, 1)
-		.Add(fReplaceInput,                    				   	1, 1, 1)
-		.Add(fCaseCheck,            							0, 2, 1)
-		.Add(fWholeWordCheck,                					1, 2, 1)
-		.Add(searchReplaceBtn,                      			0, 3, 2);
+	BLayoutBuilder::Group<>(searchView, B_VERTICAL, B_USE_DEFAULT_SPACING)
+		.SetInsets(10, 12, 10, 10)
+		.AddGrid(5, 5)
+			.Add(fSearchInput->CreateLabelLayoutItem(),			0, 0, 1)
+			.Add(fSearchInput->CreateTextViewLayoutItem(),		1, 0, 1)
+			.Add(fReplaceInput->CreateLabelLayoutItem(),		0, 1, 1)
+			.Add(fReplaceInput->CreateTextViewLayoutItem(),		1, 1, 1)
+			.End()
+		.AddGroup(B_HORIZONTAL, B_USE_SMALL_SPACING)
+			.Add(fCaseCheck)
+			.Add(fWholeWordCheck)
+			.End()
+		.Add(searchReplaceBtn)
+		.End();
 	// clang-format on
 
-	grid1.GridLayout()->SetMinColumnWidth(0, fMaxLabelWidth);
-
-	// Wrap in a group and add to the box
-	BGroupView* searchGroup = new BGroupView(B_VERTICAL, 0);
-	searchReplaceBox->AddChild(searchGroup);
-	searchGroup->GroupLayout()->AddView(grid1.View());
-	searchGroup->GroupLayout()->SetInsets(10, 12, 10, 10);
+	searchReplaceBox->AddChild(searchView);
 
 	// === Line Breaks Options Box ===
 	// ===============================
