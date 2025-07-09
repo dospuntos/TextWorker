@@ -62,7 +62,7 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 		.Add(fFontSizeSlider)
 		.AddGlue()
 		.Add(fApplyButton)
-		.SetInsets(10, 10, 10, 10);
+		.SetInsets(B_USE_WINDOW_INSETS);
 
 	ResizeToPreferred();
 }

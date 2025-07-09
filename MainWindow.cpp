@@ -6,6 +6,7 @@
 #include <Button.h>
 #include <Catalog.h>
 #include <Clipboard.h>
+#include <ControlLook.h>
 #include <File.h>
 #include <FindDirectory.h>
 #include <Font.h>
@@ -48,7 +49,8 @@ MainWindow::MainWindow(void)
 
 	fTextView = new UndoableTextView("TextView");
 	fTextView->MakeEditable(true);
-	fTextView->SetInsets(5, 5, 5, 5);
+	const float spacing = be_control_look->DefaultItemSpacing() / 2;
+	fTextView->SetInsets(spacing, spacing, spacing, spacing);
 
 	fScrollView = new BScrollView("TextViewScroll", fTextView, B_WILL_DRAW | B_FRAME_EVENTS, true,
 		true, B_FANCY_BORDER);
@@ -73,12 +75,12 @@ MainWindow::MainWindow(void)
 		.AddGroup(B_HORIZONTAL, -2)
 			.Add(fSidebar, 0)
 			.Add(fScrollView, 1)
-			.SetInsets(-2, 5, -2, 5)
+			.SetInsets(-2, B_USE_HALF_ITEM_INSETS, -2, B_USE_HALF_ITEM_INSETS)
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
 			.Add(fStatusBar, 0)
 			.Add(fMessageBar, 0)
-			.SetInsets(5, 0, 20, 0)
+			.SetInsets(B_USE_HALF_ITEM_INSETS, 0, be_control_look->GetScrollBarWidth() + spacing, 0)
 		.End();
 	// clang-format on
 
