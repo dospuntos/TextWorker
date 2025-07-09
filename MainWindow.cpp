@@ -876,7 +876,7 @@ MainWindow::SaveFile(const char* path)
 	if (file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE) != B_OK)
 		return;
 
-	if (BTranslationUtils::PutStyledText(fTextView, &file) == B_OK) {
+	if (BTranslationUtils::WriteStyledEditFile(fTextView, &file) == B_OK) {
 		fFilePath = path;
 
 		BPath p(path);
