@@ -106,8 +106,9 @@ Sidebar::_BuildLineTab()
 
 	// clang-format off
 	BLayoutBuilder::Group<>(searchView, B_VERTICAL, B_USE_DEFAULT_SPACING)
-		.SetInsets(10, 12, 10, 10)
-		.AddGrid(5, 5)
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
 			.Add(fSearchInput->CreateLabelLayoutItem(),			0, 0, 1)
 			.Add(fSearchInput->CreateTextViewLayoutItem(),		1, 0, 1)
 			.Add(fReplaceInput->CreateLabelLayoutItem(),		0, 1, 1)
@@ -181,7 +182,8 @@ Sidebar::_BuildLineTab()
 	BGroupView* breakGroup = new BGroupView(B_VERTICAL, 0);
 	breakBox->AddChild(breakGroup);
 	breakGroup->GroupLayout()->AddView(grid.View());
-	breakGroup->GroupLayout()->SetInsets(10, 12, 10, 10);
+	breakGroup->GroupLayout()->SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 
 	// === Cleanup Box ===
 	BBox* cleanupBox = new BBox("CleanupBox");
@@ -208,15 +210,16 @@ Sidebar::_BuildLineTab()
 		.Add(trimLinesBtn)
 		.Add(trimEmptyLinesBtn)
 		.Add(removeDuplicates)
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 
 	// === Line Operations Tab ===
-	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, 10)
+	BLayoutBuilder::Group<>(lineOperationsView, B_VERTICAL, B_USE_DEFAULT_SPACING)
 		.Add(searchReplaceBox)
 		.Add(breakBox)
 		.Add(cleanupBox)
 		.AddGlue()
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_ITEM_INSETS);
 
 	BTab* lineOperationsTab = new BTab();
 	AddTab(lineOperationsView, lineOperationsTab);
@@ -251,7 +254,8 @@ Sidebar::_BuildPrefixTab()
 			B_TRANSLATE_COMMENT("Remove", "As short as possible"),
 			new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX)))
 		.End()
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 
 	// === Indent/Unindent Box ===
 	BBox* indentBox = new BBox("IndentBox");
@@ -290,15 +294,17 @@ Sidebar::_BuildPrefixTab()
 			.AddGlue()
 			.Add(unindentButton)
 		.End()
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 	// clang-format on
 
 	// === Prefix/suffix Tab ===
-	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, 10)
+	BLayoutBuilder::Group<>(prefixSuffixView, B_VERTICAL, B_USE_DEFAULT_SPACING)
 		.Add(prefixSuffixBox)
 		.Add(indentBox)
 		.AddGlue()
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 
 	BTab* prefixSuffixTab = new BTab();
 	AddTab(prefixSuffixView, prefixSuffixTab);
@@ -351,17 +357,19 @@ Sidebar::_BuildSortTab()
 		.Add(sortOrderGroup)
 		.Add(fCaseSortCheck)
 		.Add(sortButton)
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 
 	fAlphaSortRadio->SetValue(B_CONTROL_ON);
 	fSortAsc->SetValue(B_CONTROL_ON);
 	fCaseSortCheck->SetValue(B_CONTROL_OFF);
 
 	// === Sort Tab ===
-	BLayoutBuilder::Group<>(sortView, B_VERTICAL, 10)
+	BLayoutBuilder::Group<>(sortView, B_VERTICAL, B_USE_DEFAULT_SPACING)
 		.Add(sortBox)
 		.AddGlue()
-		.SetInsets(10, 12, 10, 10);
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS);
 
 	BTab* sortTab = new BTab();
 	AddTab(sortView, sortTab);
