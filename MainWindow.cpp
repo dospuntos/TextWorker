@@ -84,6 +84,7 @@ MainWindow::MainWindow(void)
 		.End();
 	// clang-format on
 
+	_UpdateWindowTitle();
 	BMessage settings;
 	_LoadSettings(settings);
 	_RestoreValues(settings);
@@ -147,10 +148,13 @@ MainWindow::MessageReceived(BMessage* msg)
 			}
 		}
 		case M_FILE_NEW:
+		{
 			fTextView->SetText("");
 			fFilePath = "";
 			fLastSavedText = "";
+			_UpdateWindowTitle();
 			break;
+		}
 		case B_SIMPLE_DATA:
 		case B_REFS_RECEIVED:
 		{
@@ -185,6 +189,7 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_UPDATE_STATUSBAR:
 			_UpdateStatusBar();
 			_UpdateToolbarState();
+			_UpdateWindowTitle();
 			break;
 		case M_SHOW_SETTINGS:
 		{
@@ -404,6 +409,7 @@ MainWindow::MessageReceived(BMessage* msg)
 	}
 	_UpdateStatusBar();
 	_UpdateToolbarState();
+	_UpdateWindowTitle();
 }
 
 
@@ -760,6 +766,7 @@ MainWindow::_RestoreValues(BMessage& settings)
 	}
 	_UpdateStatusBar();
 	_UpdateToolbarState();
+	_UpdateWindowTitle();
 }
 
 
@@ -859,15 +866,13 @@ MainWindow::OpenFile(const entry_ref& ref)
 	}
 
 	fTextView->SetText("");
-	fLastSavedText = fTextView->Text();
 
 	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
-		BString windowTitle(kApplicationName);
-		windowTitle << ": " << path.Leaf();
-		SetTitle(windowTitle.String());
 	}
+	fLastSavedText = fTextView->Text();
+	_UpdateWindowTitle();
 }
 
 
@@ -881,15 +886,11 @@ MainWindow::SaveFile(const char* path)
 	if (BTranslationUtils::WriteStyledEditFile(fTextView, &file) == B_OK) {
 		fFilePath = path;
 
-		BPath p(path);
-		BString windowTitle(kApplicationName);
-		windowTitle << ": " << p.Leaf();
-		SetTitle(windowTitle.String());
-
 		BNodeInfo nodeInfo(&file);
 		nodeInfo.SetType("text/plain");
 	}
 	fLastSavedText = fTextView->Text();
+	_UpdateWindowTitle();
 }
 
 
@@ -971,6 +972,24 @@ MainWindow::_UpdateToolbarState()
 
 	fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
 }
+
+
+void
+MainWindow::_UpdateWindowTitle()
+{
+	BString windowTitle = kApplicationName;
+	windowTitle.Append(": ");
+	windowTitle.Append(fFilePath.IsEmpty() ? B_TRANSLATE("Untitled") : fFilePath.String());
+	if (IsDocumentModified()) {
+		if (!windowTitle.EndsWith("*"))
+			windowTitle.Append("*");
+	} else {
+		if (windowTitle.EndsWith("*"))
+			windowTitle.RemoveLast("*");
+	}
+	SetTitle(windowTitle);
+}
+
 
 
 bool

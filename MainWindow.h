@@ -36,6 +36,7 @@ private:
 	void _UpdateStatusBar();
 	void _UpdateStatusMessage(BString message);
 	void _UpdateToolbarState();
+	void _UpdateWindowTitle();
 	bool _ClipboardHasText() const;
 	bool _GetClipboardText(BString& outText) const;
 
