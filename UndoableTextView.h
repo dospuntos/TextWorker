@@ -20,6 +20,8 @@ public:
 	UndoableTextView(const char* name);
 	~UndoableTextView();
 	void MessageReceived(BMessage* msg) override;
+	void MakeFocus(bool focus) override;
+	void Draw(BRect updateRect) override;
 
 	void InsertText(const char* text, int32 length, int32 offset,
 		const text_run_array* runs) override;
@@ -50,6 +52,13 @@ private:
 
 	bool fCoalescing;
 	bool fRecording;
+
+	void _DrawInactiveSelection();
+	void _InvalidateSelection();
+
+	bool fHasFocus;
+	int32 fSavedSelectionStart;
+	int32 fSavedSelectionEnd;
 };
 
 

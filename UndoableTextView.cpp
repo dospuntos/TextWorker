@@ -8,6 +8,7 @@
 #include <Application.h>
 #include <Message.h>
 #include <Messenger.h>
+#include <Region.h>
 #include <Window.h>
 
 enum { M_COALESCE_TIMEOUT = '_cut' };
@@ -17,7 +18,10 @@ UndoableTextView::UndoableTextView(const char* name)
 	:
 	BTextView(name, B_WILL_DRAW | B_SCROLL_VIEW_AWARE),
 	fCoalescing(false),
-	fRecording(true)
+	fRecording(true),
+	fHasFocus(false),
+	fSavedSelectionStart(0),
+	fSavedSelectionEnd(0)
 {
 	rgb_color viewColor = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
 	rgb_color textColor = ui_color(B_DOCUMENT_TEXT_COLOR);
@@ -31,6 +35,82 @@ UndoableTextView::UndoableTextView(const char* name)
 
 UndoableTextView::~UndoableTextView()
 {
+}
+
+
+void
+UndoableTextView::MakeFocus(bool focus)
+{
+	if (focus == fHasFocus) {
+		BTextView::MakeFocus(focus);
+		return;
+	}
+
+	_InvalidateSelection();
+
+	fHasFocus = focus;
+
+	BTextView::MakeFocus(focus);
+
+	_InvalidateSelection();
+}
+
+
+void
+UndoableTextView::_InvalidateSelection()
+{
+	int32 start;
+	int32 end;
+
+	GetSelection(&start, &end);
+
+	if (start == end)
+		return;
+
+	BRegion region;
+	GetTextRegion(start, end, &region);
+
+	Invalidate(region.Frame());
+}
+
+void
+UndoableTextView::Draw(BRect updateRect)
+{
+	BTextView::Draw(updateRect);
+
+	if (fHasFocus)
+		return;
+
+	_DrawInactiveSelection();
+}
+
+
+void
+UndoableTextView::_DrawInactiveSelection()
+{
+	int32 start;
+	int32 end;
+
+	GetSelection(&start, &end);
+
+	if (start == end)
+		return;
+
+	BRegion region;
+	GetTextRegion(start, end, &region);
+
+	rgb_color inactiveColor = {
+		210, 210, 210, 255
+	};
+
+	PushState();
+
+	SetDrawingMode(B_OP_BLEND);
+	SetHighColor(inactiveColor);
+
+	FillRegion(&region);
+
+	PopState();
 }
 
 
@@ -60,7 +140,15 @@ UndoableTextView::DeleteText(int32 start, int32 finish)
 void
 UndoableTextView::MouseDown(BPoint point)
 {
+	if (!IsFocus()) {
+		MakeFocus(true);
+
+		Window()->PostMessage(M_UPDATE_STATUSBAR);
+		return;
+	}
+
 	BTextView::MouseDown(point);
+
 	Window()->PostMessage(M_UPDATE_STATUSBAR);
 }
 
