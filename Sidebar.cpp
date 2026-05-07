@@ -104,7 +104,7 @@ Sidebar::_BuildLineTab()
 
 	BView* searchView = new BView("searchreplace", B_WILL_DRAW);
 	// clang-format off
-	BLayoutBuilder::Group<>(searchView, B_VERTICAL, B_USE_DEFAULT_SPACING)
+	BLayoutBuilder::Group<>(searchView, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
 			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
@@ -113,10 +113,8 @@ Sidebar::_BuildLineTab()
 			.Add(fReplaceInput->CreateLabelLayoutItem(),		0, 1, 1)
 			.Add(fReplaceInput->CreateTextViewLayoutItem(),		1, 1, 1)
 			.End()
-		.AddGroup(B_HORIZONTAL, B_USE_SMALL_SPACING)
-			.Add(fCaseCheck)
-			.Add(fWholeWordCheck)
-			.End()
+		.Add(fCaseCheck)
+		.Add(fWholeWordCheck)
 		.Add(searchReplaceBtn)
 		.End();
 	// clang-format on
@@ -165,7 +163,7 @@ Sidebar::_BuildLineTab()
 
 	BView* breakView = new BView("searchreplace", B_WILL_DRAW);
 	// clang-format off
-	BLayoutBuilder::Group<>(breakView, B_VERTICAL, B_USE_DEFAULT_SPACING)
+	BLayoutBuilder::Group<>(breakView, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
 			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
 		.Add(breakField)
@@ -173,7 +171,7 @@ Sidebar::_BuildLineTab()
 			.Add(fBreakInput)
 			.Add(fBreakOnChars)
 			.End()
-		.AddGroup(B_HORIZONTAL)
+		.AddGroup(B_VERTICAL)
 			.Add(fWordWrapCheck)
 			.Add(fKeepDelimiterCheck)
 			.End()
@@ -253,7 +251,7 @@ Sidebar::_BuildPrefixTab()
 	BView* presuffixView = new BView("prefixsuffix", B_WILL_DRAW);
 
 	// clang-format off
-	BLayoutBuilder::Group<>(presuffixView, B_VERTICAL, B_USE_DEFAULT_SPACING)
+	BLayoutBuilder::Group<>(presuffixView, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
 			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
@@ -294,11 +292,11 @@ Sidebar::_BuildPrefixTab()
 
 	BView* indentView = new BView("indent", B_WILL_DRAW);
 	// clang-format off
-	BLayoutBuilder::Group<>(indentView, B_VERTICAL, B_USE_DEFAULT_SPACING)
+	BLayoutBuilder::Group<>(indentView, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
 			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
 		.Add(fIndentSizeSpinner)
-		.AddGroup(B_HORIZONTAL)
+		.AddGroup(B_VERTICAL)
 			.Add(fTabsRadio)
 			.Add(fSpacesRadio)
 			.End()
