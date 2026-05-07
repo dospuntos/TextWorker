@@ -209,7 +209,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			if (!fSettingsWindow) {
 				fSettingsWindow
 					= new SettingsWindow(fSaveTextOnExit, fSaveFieldsOnExit, fInsertClipboard,
-						fClearSettingsAfterUse, fFontSize, fFontFamily);
+						fClearSettingsAfterUse, fFontSize, fFontFamily, fCloseOnEsc, fAskToSave);
 				fSettingsWindow->CenterIn(Frame());
 				fSettingsWindow->Show();
 			} else {
@@ -241,6 +241,12 @@ MainWindow::MessageReceived(BMessage* msg)
 
 			if (msg->FindString("fontFamily", &text) == B_OK)
 				fFontFamily = text;
+
+			if (msg->FindBool("closeOnEsc", &flag) == B_OK)
+				fCloseOnEsc = flag;
+
+			if (msg->FindBool("askToSave", &flag) == B_OK)
+				fAskToSave = flag;
 
 			// Apply font to the textView
 			BFont newFont(be_fixed_font); // Default fallback
@@ -437,7 +443,7 @@ MainWindow::QuitRequested()
 		fSettingsWindow = nullptr;
 	}
 
-	if (IsDocumentModified()) {
+	if (IsDocumentModified() && fAskToSave) {
 		BAlert* alert = new BAlert("save-changes",
 			"Do you want to save changes to this document before closing?",
 			"Cancel", "Don't Save", "Save", B_WIDTH_AS_USUAL, B_WARNING_ALERT);
@@ -630,6 +636,8 @@ MainWindow::_SaveSettings()
 	settings.AddInt32("fontSize", fFontSize);
 	settings.AddString("fontFamily", fFontFamily);
 	settings.AddBool("wrapLines", fTextView->DoesWordWrap());
+	settings.AddBool("closeOnEsc", fCloseOnEsc);
+	settings.AddBool("askToSave", fAskToSave);
 
 	// Save textView
 	if (fTextView && fSaveTextOnExit)
@@ -682,6 +690,8 @@ MainWindow::_RestoreValues(BMessage& settings)
 	fSaveFieldsOnExit = false;
 	fInsertClipboard = true;
 	fClearSettingsAfterUse = false;
+	fCloseOnEsc = false;
+	fAskToSave = true;
 
 	BString text;
 	int32 number;
@@ -708,6 +718,12 @@ MainWindow::_RestoreValues(BMessage& settings)
 
 	if (settings.FindBool("wrapLines", &flag) == B_OK)
 		fTextView->SetWordWrap(flag);
+
+	if (settings.FindBool("closeOnEsc", &flag) == B_OK)
+		fCloseOnEsc = flag;
+
+	if (settings.FindBool("askToSave", &flag) == B_OK)
+		fAskToSave = flag;
 
 	// Apply the restored font settings to textView
 	BFont font;
@@ -1050,4 +1066,20 @@ MainWindow::IsDocumentModified() const
 
 	BString currentText = fTextView->Text();
 	return currentText != fLastSavedText;
+}
+
+void
+MainWindow::DispatchMessage(BMessage* message, BHandler* target)
+{
+	if (message->what == B_KEY_DOWN) {
+		const char* bytes;
+
+		if (message->FindString("bytes", &bytes) == B_OK
+			&& bytes[0] == B_ESCAPE && fCloseOnEsc) {
+			PostMessage(B_QUIT_REQUESTED);
+			return;
+		}
+	}
+
+	BWindow::DispatchMessage(message, target);
 }

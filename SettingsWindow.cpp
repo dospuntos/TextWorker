@@ -17,14 +17,15 @@
 #define B_TRANSLATION_CONTEXT "Settings"
 
 
-SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings, int32 fontSize, BString fontFamily)
-	:
+SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings,
+							int32 fontSize, BString fontFamily, bool closeOnEsc, bool askToSave)
+:
 	BWindow(BRect(200, 200, 500, 400), B_TRANSLATE("Settings"), B_TITLED_WINDOW,
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE | B_AUTO_UPDATE_SIZE_LIMITS
 			| B_CLOSE_ON_ESCAPE),
 	fFontFamily(fontFamily)
 {
-	fSaveTextCheck = new BCheckBox("SaveText", B_TRANSLATE("Save text on exit"), new BMessage(M_APPLY_SETTINGS));
+	fSaveTextCheck = new BCheckBox("SaveText", B_TRANSLATE("Restore last session on startup"), new BMessage(M_APPLY_SETTINGS));
 	fSaveTextCheck->SetValue(saveText ? B_CONTROL_ON : B_CONTROL_OFF);
 	fSaveFieldsCheck
 		= new BCheckBox("SaveSettings", B_TRANSLATE("Save field values on exit"), new BMessage(M_APPLY_SETTINGS));
@@ -35,6 +36,10 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 	fClearSettingsAfterUse = new BCheckBox("ClearSettings", B_TRANSLATE("Clear field values after use"),
 		new BMessage(M_APPLY_SETTINGS));
 	fClearSettingsAfterUse->SetValue(clearSettings ? B_CONTROL_ON : B_CONTROL_OFF);
+	fCloseOnEsc = new BCheckBox("CloseSettings", B_TRANSLATE("Close on Escape"), new BMessage(M_APPLY_SETTINGS));
+	fCloseOnEsc->SetValue(closeOnEsc ? B_CONTROL_ON : B_CONTROL_OFF);
+	fAskToSave = new BCheckBox("SaveSettings", B_TRANSLATE("Prompt to save changes before closing"), new BMessage(M_APPLY_SETTINGS));
+	fAskToSave->SetValue(askToSave ? B_CONTROL_ON : B_CONTROL_OFF);
 
 	BPopUpMenu* fontMenu = new BPopUpMenu("FontFamily");
 	PopulateFontMenu(fontMenu);
@@ -53,16 +58,44 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 
 	fApplyButton = new BButton("Close", B_TRANSLATE("Close"), new BMessage(M_CLOSE_SETTINGS));
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL)
+	BBox* behaviorBox = new BBox("behaviorBox");
+	behaviorBox->SetLabel("Behavior");
+
+	BLayoutBuilder::Group<>(behaviorBox, B_VERTICAL,
+		B_USE_DEFAULT_SPACING)
+		.SetInsets(B_USE_BIG_INSETS)
 		.Add(fInsertClipboard)
 		.Add(fSaveTextCheck)
 		.Add(fSaveFieldsCheck)
 		.Add(fClearSettingsAfterUse)
+		.Add(fCloseOnEsc)
+		.Add(fAskToSave);
+
+	BBox* appearanceBox = new BBox("appearanceBox");
+	appearanceBox->SetLabel("Appearance");
+
+	BLayoutBuilder::Group<>(appearanceBox, B_VERTICAL,
+		B_USE_DEFAULT_SPACING)
+		.SetInsets(B_USE_BIG_INSETS)
 		.Add(fFontFamilyField)
 		.Add(fFontSizeSlider)
-		.AddGlue()
-		.Add(fApplyButton)
-		.SetInsets(B_USE_WINDOW_INSETS);
+		.AddGlue();
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL,
+		B_USE_DEFAULT_SPACING)
+		.SetInsets(B_USE_WINDOW_INSETS)
+
+		.AddGroup(B_HORIZONTAL,
+			B_USE_DEFAULT_SPACING)
+			.Add(behaviorBox, 1)
+			.Add(appearanceBox, 1)
+		.End()
+
+		.AddGroup(B_HORIZONTAL,
+			B_USE_DEFAULT_SPACING)
+			.AddGlue()
+			.Add(fApplyButton)
+		.End();
 
 	ResizeToPreferred();
 }
@@ -104,6 +137,8 @@ SettingsWindow::MessageReceived(BMessage* message)
 			applyMsg.AddBool("saveSettings", fSaveFieldsCheck->Value() == B_CONTROL_ON);
 			applyMsg.AddBool("insertClipboard", fInsertClipboard->Value() == B_CONTROL_ON);
 			applyMsg.AddBool("clearSettings", fClearSettingsAfterUse->Value() == B_CONTROL_ON);
+			applyMsg.AddBool("closeOnEsc", fCloseOnEsc->Value() == B_CONTROL_ON);
+			applyMsg.AddBool("askToSave", fAskToSave->Value() == B_CONTROL_ON);
 			applyMsg.AddInt32("fontSize", fFontSizeSlider->Value());
 			applyMsg.AddString("fontFamily", fontFamily);
 

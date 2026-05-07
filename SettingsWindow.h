@@ -18,7 +18,7 @@
 class SettingsWindow : public BWindow {
 public:
 	SettingsWindow(bool saveText, bool saveSettings, bool clipboard, bool clearSettings,
-		int32 fontSize, BString fontFamily);
+		int32 fontSize, BString fontFamily, bool closeOnEsc, bool askToSave);
 	virtual void MessageReceived(BMessage* message);
 	bool QuitRequested();
 
@@ -27,6 +27,8 @@ private:
 	BCheckBox* fSaveFieldsCheck;
 	BCheckBox* fInsertClipboard;
 	BCheckBox* fClearSettingsAfterUse;
+	BCheckBox* fCloseOnEsc;
+	BCheckBox* fAskToSave;
 	BMenuField* fFontFamilyField;
 	BString fFontFamily;
 	BSlider* fFontSizeSlider;

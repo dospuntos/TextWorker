@@ -28,6 +28,7 @@ public:
 	void OpenFile(const entry_ref& ref);
 	status_t SaveFile(const char* path);
 	void MenusBeginning();
+	void DispatchMessage(BMessage* message, BHandler* target);
 
 private:
 	bool fPendingQuitAfterSave = false;
@@ -46,6 +47,8 @@ private:
 	bool fInsertClipboard;
 	bool fClearSettingsAfterUse;
 	int32 fFontSize;
+	bool fCloseOnEsc;
+	bool fAskToSave;
 	BString fFontFamily;
 	status_t _LoadSettings(BMessage& settings);
 	status_t _SaveSettings();
