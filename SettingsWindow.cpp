@@ -107,7 +107,7 @@ SettingsWindow::PopulateFontMenu(BPopUpMenu* menu)
 	// Add a default system font option
 	BMenuItem* defaultItem = new BMenuItem("System default", new BMessage(M_APPLY_SETTINGS));
 	menu->AddItem(defaultItem);
-	menu->AddSeparatorItem(); // Optional visual separator
+	menu->AddSeparatorItem();
 	defaultItem->SetMarked(true);
 
 	font_family family;
