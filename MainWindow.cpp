@@ -20,6 +20,7 @@
 #include <Resources.h>
 #include <Screen.h>
 #include <ScrollView.h>
+#include <SplitView.h>
 #include <TranslationUtils.h>
 #include <TranslatorRoster.h>
 #include <Url.h>
@@ -66,17 +67,21 @@ MainWindow::MainWindow(void)
 
 	fSettingsWindow = nullptr;
 
+	BSplitView* splitView = new BSplitView(B_HORIZONTAL);
+	splitView->SetCollapsible(false); // Todo: make collapsible with toolbar button
+	splitView->AddChild(fSidebar, 0.1f); // smaller than MinSize
+	splitView->AddChild(fScrollView);
+	splitView->SetSpacing(0.0f);
+	fSidebar->SetExplicitMinSize(fSidebar->PreferredSize());
+	fSidebar->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNLIMITED));
+
 	// Layout
 	// clang-format off
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(menuBar, 0)
 		.Add(fToolbar, 0)
 		.SetInsets(0, 0, 0, 2)
-		.AddGroup(B_HORIZONTAL, -2)
-			.Add(fSidebar, 0)
-			.Add(fScrollView, 1)
-			.SetInsets(-2, B_USE_HALF_ITEM_INSETS, -2, B_USE_HALF_ITEM_INSETS)
-		.End()
+		.Add(splitView, 1)
 		.AddGroup(B_HORIZONTAL, 0)
 			.Add(fStatusBar, 0)
 			.Add(fMessageBar, 0)
@@ -88,6 +93,7 @@ MainWindow::MainWindow(void)
 	BMessage settings;
 	_LoadSettings(settings);
 	_RestoreValues(settings);
+
 
 	// Set min size of main window
 	BSize toolbarSize = fToolbar->PreferredSize();
@@ -107,10 +113,13 @@ MainWindow::MainWindow(void)
 	}
 	MoveOnScreen();
 
+
 	if (!fSaveTextOnExit && fInsertClipboard) {
 		BString clipboardText;
-		if (_GetClipboardText(clipboardText))
+		if (_GetClipboardText(clipboardText)) {
 			fTextView->SetText(clipboardText);
+			fLastSavedText = clipboardText;
+		}
 	}
 }
 
@@ -178,10 +187,14 @@ MainWindow::MessageReceived(BMessage* msg)
 			fOpenPanel->Show();
 			break;
 		case M_FILE_SAVE:
-			if (fFilePath.CountChars() < 1)
+			if (fFilePath.IsEmpty()) {
+				// First time save, show Save As panel
 				fSavePanel->Show();
-			else
-				SaveFile(fFilePath.String());
+			} else {
+				if (SaveFile(fFilePath.String()) == B_OK && fPendingQuitAfterSave) {
+					be_app->PostMessage(B_QUIT_REQUESTED);
+				}
+			}
 			break;
 		case M_FILE_SAVE_AS:
 			fSavePanel->Show();
@@ -258,6 +271,9 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRANSFORM_TOGGLE_CASE:
 			ToggleCase(fTextView);
+			break;
+		case M_REMOVE_LINE_BREAKS_DEFAULT:
+			RemoveLineBreaks(fTextView, "");
 			break;
 		case M_REMOVE_LINE_BREAKS:
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
@@ -414,14 +430,33 @@ MainWindow::MessageReceived(BMessage* msg)
 
 
 bool
-MainWindow::QuitRequested(void)
+MainWindow::QuitRequested()
 {
 	if (fSettingsWindow && fSettingsWindow->LockLooper()) {
 		fSettingsWindow->Quit();
 		fSettingsWindow = nullptr;
 	}
-	if (!fSaveTextOnExit && IsDocumentModified() == true)
-		this->PostMessage(M_FILE_SAVE_AS);
+
+	if (IsDocumentModified()) {
+		BAlert* alert = new BAlert("save-changes",
+			"Do you want to save changes to this document before closing?",
+			"Cancel", "Don't Save", "Save", B_WIDTH_AS_USUAL, B_WARNING_ALERT);
+		int32 choice = alert->Go();
+
+		switch (choice) {
+			case 0: // Cancel
+				return false;
+
+			case 1: // Don't Save
+				return true;
+
+			case 2: // Save
+				fPendingQuitAfterSave = true;
+				PostMessage(M_FILE_SAVE);
+				return false; // Wait for save to finish
+		}
+	}
+
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }
@@ -519,55 +554,26 @@ MainWindow::_BuildMenu()
 	// 'Transform' menu
 	BMenu* transformMenu = new BMenu(B_TRANSLATE("Transform"));
 
+	// 'Encode/decode' submenu
 	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Search/replace"), new BMessage(M_TRANSFORM_REPLACE)), 'H');
-	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Add prefix/suffix"),
-		new BMessage(M_TRANSFORM_PREFIX_SUFFIX), 'P'));
-	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove prefix/suffix"),
-		new BMessage(M_TRANSFORM_REMOVE_PREFIX_SUFFIX), 'P', B_SHIFT_KEY));
+		new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL)));
 	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Indent lines"), new BMessage(M_INDENT_LINES), 'I'));
-	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Unindent lines"),
-		new BMessage(M_UNINDENT_LINES), 'I', B_SHIFT_KEY));
+		new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL)));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13)));
 
 	transformMenu->AddSeparatorItem();
-
-	// 'Encode/decode' submenu
-	BMenu* encodeMenu = new BMenu(B_TRANSLATE("Encode/decode"));
-	encodeMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("URL encode"), new BMessage(M_TRANSFORM_ENCODE_URL)));
-	encodeMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL)));
-	encodeMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13)));
-	transformMenu->AddItem(encodeMenu);
-
-	// 'Line tools' submenu
-	BMenu* lineMenu = new BMenu(B_TRANSLATE("Line tools"));
-	lineMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Remove line breaks"), new BMessage(M_REMOVE_LINE_BREAKS), 'B'));
-	lineMenu->AddItem(new BMenuItem(B_TRANSLATE("Replace line breaks"),
-		new BMessage(M_MODE_REPLACE_LINE_BREAKS), 'F'));
-	lineMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert line breaks (width)"),
-		new BMessage(M_INSERT_LINE_BREAKS), 'I'));
-	lineMenu->AddItem(new BMenuItem(B_TRANSLATE("Break lines on delimiter"),
-		new BMessage(M_BREAK_LINES_ON_DELIMITER), 'D'));
-	transformMenu->AddItem(lineMenu);
 
 	// 'Cleanup' submenu
-	BMenu* cleanMenu = new BMenu(B_TRANSLATE("Cleanup"));
-	cleanMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES), 'G'));
-	cleanMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES), 'T'));
-	cleanMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove duplicate lines"),
-		new BMessage(M_REMOVE_DUPLICATES), 'R'));
-	transformMenu->AddItem(cleanMenu);
-
-	transformMenu->AddSeparatorItem();
-
 	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Sort lines"), new BMessage(M_SORT_LINES), 'J'));
+		new BMenuItem(B_TRANSLATE("Trim whitespace"), new BMessage(M_TRIM_LINES), 'G'));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Remove empty lines"), new BMessage(M_TRIM_EMPTY_LINES), 'T'));
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove duplicate lines"),
+		new BMessage(M_REMOVE_DUPLICATES), 'R'));
+	transformMenu->AddSeparatorItem();
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Remove line breaks"), new BMessage(M_REMOVE_LINE_BREAKS_DEFAULT), 'B'));
 
 	// Add the whole Transform menu to the menu bar
 	menuBar->AddItem(transformMenu);
@@ -876,21 +882,26 @@ MainWindow::OpenFile(const entry_ref& ref)
 }
 
 
-void
+status_t
 MainWindow::SaveFile(const char* path)
 {
 	BFile file;
-	if (file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE) != B_OK)
-		return;
+	status_t result = file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);
+	if (result != B_OK)
+		return result;
 
-	if (BTranslationUtils::WriteStyledEditFile(fTextView, &file) == B_OK) {
-		fFilePath = path;
+	result = BTranslationUtils::WriteStyledEditFile(fTextView, &file);
+	if (result != B_OK)
+		return result;
 
-		BNodeInfo nodeInfo(&file);
-		nodeInfo.SetType("text/plain");
-	}
+	fFilePath = path;
+
+	BNodeInfo nodeInfo(&file);
+	nodeInfo.SetType("text/plain");
+
 	fLastSavedText = fTextView->Text();
 	_UpdateWindowTitle();
+	return B_OK;
 }
 
 

@@ -28,6 +28,7 @@ enum {
 	M_TRANSFORM_WIP                    = 'twip',
 
 	// Line/Block Operations
+	M_REMOVE_LINE_BREAKS_DEFAULT	   = 'rmab',
 	M_REMOVE_LINE_BREAKS               = 'rmlb',
 	M_INSERT_LINE_BREAKS               = 'inlb',
 	M_BREAK_LINES_ON_DELIMITER         = 'brdl',

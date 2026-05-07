@@ -26,10 +26,11 @@ public:
 	bool QuitRequested(void);
 
 	void OpenFile(const entry_ref& ref);
-	void SaveFile(const char* path);
+	status_t SaveFile(const char* path);
 	void MenusBeginning();
 
 private:
+	bool fPendingQuitAfterSave = false;
 	BMenuBar* _BuildMenu();
 	BToolBar* fToolbar;
 	Sidebar* fSidebar;
