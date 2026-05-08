@@ -1,0 +1,179 @@
+1	Russian	application/x-vnd.jpw-TextWorker	4267162439
+%d empty lines removed from entire text	Text utilities		%d empty lines removed from entire text
+%d empty lines removed from selection	Text utilities		%d empty lines removed from selection
+%d occurrences of \"%s\" replaced in entire text	Text utilities		%d occurrences of \"%s\" replaced in entire text
+%d occurrences of \"%s\" replaced in selection	Text utilities		%d occurrences of \"%s\" replaced in selection
+%i characters changed in entire text	Text utilities		%i characters changed in entire text
+%i characters changed in selection	Text utilities		%i characters changed in selection
+%i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
+%i characters changed to lowercase in selection	Text utilities		%i characters changed to lowercase in selection
+%i characters changed to uppercase in entire text	Text utilities		%i characters changed to uppercase in entire text
+%i characters changed to uppercase in selection	Text utilities		%i characters changed to uppercase in selection
+%i duplicated lines removed from entire text	Text utilities		%i duplicated lines removed from entire text
+%i duplicated lines removed from selection	Text utilities		%i duplicated lines removed from selection
+%i line breaks removed in entire text	Text utilities		%i line breaks removed in entire text
+%i line breaks removed in selection	Text utilities		%i line breaks removed in selection
+%i line breaks replaced in entire text	Text utilities		%i line breaks replaced in entire text
+%i line breaks replaced in selection	Text utilities		%i line breaks replaced in selection
+%i lines indented by %i %s	Text utilities		%i lines indented by %i %s
+%i lines unindented by %i %s	Text utilities		%i lines unindented by %i %s
+%i selected lines indented by %i %s	Text utilities		%i selected lines indented by %i %s
+%i selected lines unindented by %i %s	Text utilities		%i selected lines unindented by %i %s
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu lines sorted alphabetically in %s order in entire text
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu lines sorted alphabetically in %s order in selection
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu lines sorted by line length in %s order in entire text
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu lines sorted by line length in %s order in selection
+ascending	Text utilities		ascending
+breaking anywhere	Text utilities		breaking anywhere
+breaking on words	Text utilities		breaking on words
+descending	Text utilities		descending
+Entire text URL-decoded	Text utilities		Весь текст декодирован из URL-формата
+Entire text URL-encoded	Text utilities		Весь текст кодирован в URL-формат
+kept	Text utilities		kept
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Line breaks inserted in entire text (max length: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Line breaks inserted in selection (max length: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Lines broken on delimiter \"%s\" (%s) in entire text
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Lines broken on delimiter \"%s\" (%s) in selection
+No text selected	Text utilities		Текст не выбран
+OK	Text utilities		OK
+Prefix/suffix added to %i lines in entire text	Text utilities		Prefix/suffix added to %i lines in entire text
+Prefix/suffix added to %i lines in selection	Text utilities		Prefix/suffix added to %i lines in selection
+Prefix/suffix removed from %i lines in entire text	Text utilities		Prefix/suffix removed from %i lines in entire text
+Prefix/suffix removed from %i lines in selection	Text utilities		Prefix/suffix removed from %i lines in selection
+removed	Text utilities		removed
+ROT13 applied to %i characters in entire text	Text utilities		ROT13 applied to %i characters in entire text
+ROT13 applied to %i characters in selection	Text utilities		ROT13 applied to %i characters in selection
+Selected text URL-decoded	Text utilities		Выбранный текст декодирован из URL-формата
+Selected text URL-encoded	Text utilities		Выбранный текст кодирован в URL-формат
+spaces	Text utilities		spaces
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		СТАТИСТИКА ДЛЯ ТЕКУЩЕГО ТЕКСТА\n\nСимволов: %d\nСлов: %d\nСтрок: %d\nПредложений: %d\nСамая длинная строка: %d chars\nСредняя длина слов: %.2f\n\nСамые частые слова:\n
+tabs	Text utilities		tabs
+Whitespace trimmed from lines in entire text	Text utilities		Whitespace trimmed from lines in entire text
+Whitespace trimmed from lines in selection	Text utilities		Whitespace trimmed from lines in selection
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Символов: %d | Слов: %d | Строк: %d
+About…	MainView		О приложении…
+Add prefix/suffix	MainView		Add prefix/suffix
+AlTeRnAtInG cAsE	MainView		ЧеРеДуЮщИйСя РеГиСтР
+Break lines on delimiter	MainView		Break lines on delimiter
+Capitalize	MainView		Capitalize
+Clean and transform text easily with this lightweight tool.	MainView		Без труда очищайте и изменяйте текст с помощью этого легковесного инструмента.
+Cleanup	MainView		Очистка
+Copy	MainView		Скопировать
+Cut	MainView		Вырезать
+Distributed under the terms of the MIT License.	MainView		Распространяется под лицензией MIT.
+Edit	MainView		Изменить
+Encode/decode	MainView		Кодировать/декодировать
+File	MainView		Файл
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku — свободная операционная система.\nОна быстрая, простая и элегантная.\nРазработчики любят ее за чистую архитектуру.\nПользователи ценят интуитивно понятный интерфейс.\nНачните исследовать возможности Haiku уже сейчас!
+Help…	MainView		Помощь…
+Humdinger for advice and review	MainView		Humdinger за советы и рецензирование
+Indent lines	MainView		Indent lines
+Insert example text	MainView		Вставить пример текста
+Insert line breaks (width)	MainView		Insert line breaks (width)
+Line tools	MainView		Работа со строками
+lowercase	MainView		нижний регистр
+Modified	MainView		Изменено
+New	MainView		Новый
+OK	MainView		OK
+Open…	MainView		Открыть…
+Paste	MainView		Вставить
+Quit	MainView		Выход
+RaNDoM caSE	MainView		СлуЧАйнЫй региСТР
+Redo	MainView		Повторить
+Remove duplicate lines	MainView		Удалить дубликаты строк
+Remove empty lines	MainView		Удалить пустые строки
+Remove line breaks	MainView		Remove line breaks
+Remove prefix/suffix	MainView		Remove prefix/suffix
+Replace line breaks	MainView		Replace line breaks
+Report a bug…	MainView		Сообщить об ошибке…
+ROT-13 encode/decode	MainView		ROT-13 (кодировать/декодировать)
+Save	MainView		Сохранить
+Save as…	MainView		Сохранить как…
+Search/replace	MainView		Search/replace
+Select all	MainView		Select all
+Settings…	MainView		Настройки…
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Извините, эту функциональность планируется реализовать в ближайшем будущем.
+Sort lines	MainView		Sort lines
+Text case	MainView		Регистр текста
+TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.
+The selected file is not a recognized text file.	MainView		The selected file is not a recognized text file.
+Title Case	MainView		Заголовочный Регистр
+Toggle case	MainView		Toggle case
+Transform	MainView		Transform
+Trim whitespace	MainView		Trim whitespace
+Undo	MainView		Отменить
+Unindent lines	MainView		Unindent lines
+UPPERCASE	MainView		ВЕРХНИЙ РЕГИСТР
+URL decode	MainView		Декодировать из URL-формата
+URL encode	MainView		Кодировать в URL-формат
+ZuMi (Toolbar icons)	MainView		ZuMi (значки на панели инструментов)
+Add	Sidebar	As short as possible	Добавить
+Alphabetical	Sidebar		Алфавитный
+Apply	Sidebar		Применить
+Ascending	Sidebar		Ascending
+Break after X characters…	Sidebar		Разрыв после X символов…
+Break on…	Sidebar		Break on…
+By line length	Sidebar		By line length
+Case sensitive	Sidebar		Case sensitive
+Case sensitive	Sidebar	As short as possible	Case sensitive
+Chars:	Sidebar	As short as possible	Chars:
+Cleanup	Sidebar		Cleanup
+Descending	Sidebar		Descending
+Full words	Sidebar	As short as possible	Full words
+Indent	Sidebar	As short as possible	Indent
+Indent size:	Sidebar		Indent size:
+Indent/unindent lines	Sidebar		Indent/unindent lines
+Keep delimiter	Sidebar	As short as possible	Keep delimiter
+Line break options	Sidebar		Line break options
+Lines	Sidebar	As short as possible	Lines
+Prefix:	Sidebar	As short as possible	Prefix:
+Prefix/suffix	Sidebar	As short as possible	Prefix/suffix
+Prefix/suffix each line	Sidebar		Prefix/suffix each line
+Remove	Sidebar	As short as possible	Удалить
+Remove all	Sidebar		Remove all
+Remove duplicate lines	Sidebar	As short as possible	Удалить дубликаты строк
+Remove empty lines	Sidebar	As short as possible	Удалить пустые строки
+Replace	Sidebar		Заменить
+Replace with…	Sidebar		Replace with…
+Replace:	Sidebar	As short as possible	Заменить:
+Search and replace	Sidebar		Search and replace
+Search:	Sidebar	As short as possible	Search:
+Sort	Sidebar		Sort
+Sort lines	Sidebar		Sort lines
+Sort lines	Sidebar	As short as possible	Sort lines
+Sort order:	Sidebar		Sort order:
+Sort type:	Sidebar		Sort type:
+Spaces	Sidebar		Spaces
+Split on words	Sidebar	As short as possible	Split on words
+Suffix:	Sidebar	As short as possible	Suffix:
+Tabs	Sidebar		Tabs
+Trim whitespace	Sidebar	As short as possible	Trim whitespace
+Unindent	Sidebar	As short as possible	Unindent
+Capitalize	Toolbar		Capitalize
+Copy	Toolbar		Скопировать
+Cut	Toolbar		Вырезать
+Help…	Toolbar		Помощь…
+lowercase	Toolbar		нижний регистр
+New file	Toolbar		Новый файл
+Open file…	Toolbar		Открыть файл…
+Paste	Toolbar		Вставить
+Redo	Toolbar		Redo
+ROT13 encode/decode	Toolbar		ROT-13 (кодировать/декодировать)
+Save file	Toolbar		Сохранить файл
+Settings…	Toolbar		Настройки…
+Show stats…	Toolbar		Показать статистику…
+Title Case	Toolbar		Заголовочный Регистр
+Undo	Toolbar		Отменить
+UPPERCASE	Toolbar		ВЕРХНИЙ РЕГИСТР
+URL decode	Toolbar		Декодировать из URL-формата
+URL encode	Toolbar		Кодировать в URL-формат
+Word wrap	Toolbar		Перенос слов
+Clear field values after use	Settings		Очистить значения полей после использования
+Close	Settings		Закрыть
+Font family:	Settings		Семейство шрифтов:
+Font size:	Settings		Размер шрифта:
+Paste clipboard contents on open	Settings		Вставлять содержимое буфера обмена при запуске
+Save field values on exit	Settings		Сохранять значения полей при выходе
+Save text on exit	Settings		Сохранять текст при выходе
+Settings	Settings		Настройки
+TextWorker	System name		TextWorker

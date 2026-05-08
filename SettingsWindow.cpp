@@ -59,7 +59,7 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 	fApplyButton = new BButton("Close", B_TRANSLATE("Close"), new BMessage(M_CLOSE_SETTINGS));
 
 	BBox* behaviorBox = new BBox("behaviorBox");
-	behaviorBox->SetLabel("Behavior");
+	behaviorBox->SetLabel(B_TRANSLATE("Preferences"));
 
 	BLayoutBuilder::Group<>(behaviorBox, B_VERTICAL,
 		B_USE_DEFAULT_SPACING)
@@ -72,7 +72,7 @@ SettingsWindow::SettingsWindow(bool saveText, bool saveSettings, bool clipboard,
 		.Add(fAskToSave);
 
 	BBox* appearanceBox = new BBox("appearanceBox");
-	appearanceBox->SetLabel("Appearance");
+	appearanceBox->SetLabel(B_TRANSLATE("Appearance"));
 
 	BLayoutBuilder::Group<>(appearanceBox, B_VERTICAL,
 		B_USE_DEFAULT_SPACING)

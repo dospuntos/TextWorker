@@ -1,4 +1,4 @@
-1	Spanish (Latin American)	application/x-vnd.jpw-TextWorker	686205747
+1	Spanish (Latin American)	application/x-vnd.jpw-TextWorker	4267162439
 %d empty lines removed from entire text	Text utilities		%d líneas vacías eliminadas de todo el texto
 %d empty lines removed from selection	Text utilities		%d líneas vacías eliminadas de la selección
 %d occurrences of \"%s\" replaced in entire text	Text utilities		%d ocurrencias de \"%s\" reemplazadas en todo el texto
@@ -56,14 +56,17 @@ Add prefix/suffix	MainView		Agregar prefijo/sufijo
 AlTeRnAtInG cAsE	MainView		InTeRcAlAdO
 Break lines on delimiter	MainView		Dividir líneas por delimitador
 Capitalize	MainView		Mayúscula inicial
+Clean and transform text easily with this lightweight tool.	MainView		Limpie y transforme texto fácilmente con esta herramienta liviana.
 Cleanup	MainView		Limpiar
 Copy	MainView		Copiar
 Cut	MainView		Cortar
+Distributed under the terms of the MIT License.	MainView		Distribuido bajo los términos de la licencia MIT.
 Edit	MainView		Editar
 Encode/decode	MainView		Codificar/decodificar
 File	MainView		Archivo
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku es un sistema operativo de código abierto.\nEs rápido, simple y elegante.\nA los desarrolladores les encanta su arquitectura limpia.\nLos usuarios disfrutan de su interfaz intuitiva.\nComienza a explorar el poder de Haiku hoy.
 Help…	MainView		Ayuda…
+Humdinger for advice and review	MainView		Humdinger por asesoramiento y revisión
 Indent lines	MainView		Incrementar sangría
 Insert example text	MainView		Insertar text de ejemplo
 Insert line breaks (width)	MainView		Insertar saltos de línea (ancho)
@@ -103,6 +106,7 @@ Unindent lines	MainView		Reducir sangría
 UPPERCASE	MainView		MAYÚSCULAS
 URL decode	MainView		Decodificación de URL
 URL encode	MainView		Codificación de URL
+ZuMi (Toolbar icons)	MainView		ZuMi (iconos de la barra de herramientas)
 Add	Sidebar	As short as possible	Agregar
 Alphabetical	Sidebar		Orden alfabético
 Apply	Sidebar		Aplicar
@@ -111,9 +115,11 @@ Break after X characters…	Sidebar		Dividir después de X caracteres…
 Break on…	Sidebar		Dividir en…
 By line length	Sidebar		Por longitud de línea
 Case sensitive	Sidebar		Distingue mayúsculas
+Case sensitive	Sidebar	As short as possible	Distingue mayús/minús
 Chars:	Sidebar	As short as possible	Letras:
 Cleanup	Sidebar		Limpiar
 Descending	Sidebar		Descendiendo
+Full words	Sidebar	As short as possible	Palabras enteras
 Indent	Sidebar	As short as possible	Indentar
 Indent size:	Sidebar		Tamaño:
 Indent/unindent lines	Sidebar		Agregar/quitar sangría

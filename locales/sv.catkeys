@@ -1,0 +1,179 @@
+1	Swedish	application/x-vnd.jpw-TextWorker	4267162439
+%d empty lines removed from entire text	Text utilities		%d tomma rader borttagna från hela texten
+%d empty lines removed from selection	Text utilities		%d tomma rader borttagna från markeringen
+%d occurrences of \"%s\" replaced in entire text	Text utilities		%d förekomster av "%s" ersatta i hela texten
+%d occurrences of \"%s\" replaced in selection	Text utilities		%d förekomster av "%s" ersatta i markeringen
+%i characters changed in entire text	Text utilities		%i tecken har ändrats i hela texten
+%i characters changed in selection	Text utilities		%i tecken ändrades i markeringen
+%i characters changed to lowercase in entire text	Text utilities		%i tecken har ändrats till gemener i hela texten
+%i characters changed to lowercase in selection	Text utilities		%i tecken har ändrats till gemener i markeringen
+%i characters changed to uppercase in entire text	Text utilities		%i tecken ändrade till versaler i hela texten
+%i characters changed to uppercase in selection	Text utilities		%i tecken har ändrats till versaler i markeringen
+%i duplicated lines removed from entire text	Text utilities		%i duplicerade rader borttagna från hela texten
+%i duplicated lines removed from selection	Text utilities		%i duplicerade rader borttagna från markeringen
+%i line breaks removed in entire text	Text utilities		%i radbrytningar borttagna i hela texten
+%i line breaks removed in selection	Text utilities		%i radbrytningar borttagna i markeringen
+%i line breaks replaced in entire text	Text utilities		%i radbrytningar ersatta i hela texten
+%i line breaks replaced in selection	Text utilities		%i radbrytningar ersatta i markeringen
+%i lines indented by %i %s	Text utilities		%i rader indragna med %i %s
+%i lines unindented by %i %s	Text utilities		%i rader avindragna med %i %s
+%i selected lines indented by %i %s	Text utilities		%i markerade rader indragna med %i %s
+%i selected lines unindented by %i %s	Text utilities		%i markerade rader avindragna med %i %s
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu rader sorterade alfabetiskt i %s ordning i hela texten
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu rader sorterade alfabetiskt i %s ordning i markeringen
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu rader sorterade efter radlängd i %s ordning i hela texten
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu rader sorterade efter radlängd i %s ordning i markeringen
+ascending	Text utilities		stigande
+breaking anywhere	Text utilities		går sönder var som helst
+breaking on words	Text utilities		bryta på ord
+descending	Text utilities		fallande
+Entire text URL-decoded	Text utilities		Hela texten URL-avkodad
+Entire text URL-encoded	Text utilities		Hela texten URL-kodad
+kept	Text utilities		hålls
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Radbrytningar infogade i hel text (maxlängd: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Radbrytningar infogade i markeringen (maxlängd: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Radbrytning vid avgränsningstecknet "%s" (%s) i hela texten
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Linjer brutna på avgränsare "%s" (%s) i markeringen
+No text selected	Text utilities		Ingen text har valts
+OK	Text utilities		OK
+Prefix/suffix added to %i lines in entire text	Text utilities		Prefix/suffix tillagt till %i rader i hela texten
+Prefix/suffix added to %i lines in selection	Text utilities		Prefix/suffix tillagt till %i rader i markeringen
+Prefix/suffix removed from %i lines in entire text	Text utilities		Prefix/suffix borttaget från %i rader i hela texten
+Prefix/suffix removed from %i lines in selection	Text utilities		Prefix/suffix borttaget från %i rader i markeringen
+removed	Text utilities		tas bort
+ROT13 applied to %i characters in entire text	Text utilities		ROT13 tillämpades på %i tecken i hela texten
+ROT13 applied to %i characters in selection	Text utilities		ROT13 tillämpades på %i tecken i markeringen
+Selected text URL-decoded	Text utilities		Markerad text URL-avkodad
+Selected text URL-encoded	Text utilities		Markerad text URL-kodad
+spaces	Text utilities		utrymmen
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		STATISTIK FÖR AKTUELL TEXT\n\nTecken: %d\nOrd: %d\nRader: %d\nMeningar: %d\nLängsta rad: %d tecken\nGenomsnittlig ordlängd: %.2f\n\nMest använda ord:\n
+tabs	Text utilities		flikar
+Whitespace trimmed from lines in entire text	Text utilities		Blanksteg borttaget från rader i hela texten
+Whitespace trimmed from lines in selection	Text utilities		Blanksteg borttaget från rader i markeringen
+%d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Tecken: %d | Ord: %d | Rader: %d
+About…	MainView		Om...
+Add prefix/suffix	MainView		Lägg till prefix/suffix
+AlTeRnAtInG cAsE	MainView		AlTeRnAtInG cAsE
+Break lines on delimiter	MainView		Bryt linjer på avgränsare
+Capitalize	MainView		Kapitalisera
+Clean and transform text easily with this lightweight tool.	MainView		Rensa och omvandla text enkelt med detta lätta verktyg.
+Cleanup	MainView		Rengöring
+Copy	MainView		Kopiera
+Cut	MainView		Skära
+Distributed under the terms of the MIT License.	MainView		Distribueras enligt villkoren i MIT-licensen.
+Edit	MainView		Redigera
+Encode/decode	MainView		Koda/avkoda
+File	MainView		Fil
+Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku är ett operativsystem med öppen källkod. Det är snabbt, enkelt och elegant. Utvecklare älskar dess rena arkitektur. Användare uppskattar det intuitiva gränssnittet. Börja utforska kraften i Haiku idag.
+Help…	MainView		Hjälp…
+Humdinger for advice and review	MainView		Humdinger för råd och recension
+Indent lines	MainView		Indrag linjer
+Insert example text	MainView		Infoga exempeltext
+Insert line breaks (width)	MainView		Infoga radbrytningar (bredd)
+Line tools	MainView		Linjeverktyg
+lowercase	MainView		gemener
+Modified	MainView		Ändrad
+New	MainView		Ny
+OK	MainView		OK
+Open…	MainView		Öppna…
+Paste	MainView		Klistra
+Quit	MainView		Avsluta
+RaNDoM caSE	MainView		RaNDoM caSE
+Redo	MainView		Göra om
+Remove duplicate lines	MainView		Ta bort dubbla linjer
+Remove empty lines	MainView		Ta bort tomma rader
+Remove line breaks	MainView		Ta bort radbrytningar
+Remove prefix/suffix	MainView		Ta bort prefix/suffix
+Replace line breaks	MainView		Byt ut radbrytningar
+Report a bug…	MainView		Rapportera ett fel...
+ROT-13 encode/decode	MainView		ROT-13 kodar/avkodar
+Save	MainView		Spara
+Save as…	MainView		Spara som...
+Search/replace	MainView		Sök/ersätt
+Select all	MainView		Välj alla
+Settings…	MainView		Inställningar...
+Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Tyvärr har den här funktionen inte implementerats ännu, men den är planerad för en snar framtid.
+Sort lines	MainView		Sortera linjer
+Text case	MainView		Textfall
+TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		TextWorker Hjälp\n\nAnvänd flikarna till vänster för att tillämpa transformationer som:\n- Sök och ersätt\n- Lägg till/ta bort prefix och suffix\n- Sortera eller rensa rader\n- Justera indrag\n\nDu kan öppna textfiler via "Arkiv → Öppna" eller genom att dra dem in i fönstret.\n\nÅngra ändringar med "Redigera → Ångra" eller Alt+Z.\n\nAnvänd "Inställningar" för att konfigurera teckensnitt och spara alternativ.
+The selected file is not a recognized text file.	MainView		Den valda filen är inte en igenkänd textfil.
+Title Case	MainView		Titel Case
+Toggle case	MainView		Växla fall
+Transform	MainView		Omvandla
+Trim whitespace	MainView		Trimma blanksteg
+Undo	MainView		Ångra
+Unindent lines	MainView		Oindragna linjer
+UPPERCASE	MainView		VERSAL
+URL decode	MainView		URL-avkodning
+URL encode	MainView		URL-kodning
+ZuMi (Toolbar icons)	MainView		ZuMi (verktygsfältsikoner)
+Add	Sidebar	As short as possible	Tillägga
+Alphabetical	Sidebar		Alfabetisk
+Apply	Sidebar		Tillämpas
+Ascending	Sidebar		Stigande
+Break after X characters…	Sidebar		Paus efter X tecken…
+Break on…	Sidebar		Bryt på...
+By line length	Sidebar		Efter radlängd
+Case sensitive	Sidebar		Skiftlägeskänslig
+Case sensitive	Sidebar	As short as possible	Skiftlägeskänslig
+Chars:	Sidebar	As short as possible	Tecken:
+Cleanup	Sidebar		Rengöring
+Descending	Sidebar		Fallande
+Full words	Sidebar	As short as possible	Fullständiga ord
+Indent	Sidebar	As short as possible	Indrag
+Indent size:	Sidebar		Indragsstorlek:
+Indent/unindent lines	Sidebar		Indrag/avdrag rader
+Keep delimiter	Sidebar	As short as possible	Behåll avgränsare
+Line break options	Sidebar		Alternativ för radbrytning
+Lines	Sidebar	As short as possible	Rader
+Prefix:	Sidebar	As short as possible	Prefix:
+Prefix/suffix	Sidebar	As short as possible	Prefix/suffix
+Prefix/suffix each line	Sidebar		Prefix/suffix på varje rad
+Remove	Sidebar	As short as possible	Ta bort
+Remove all	Sidebar		Ta bort alla
+Remove duplicate lines	Sidebar	As short as possible	Ta bort dubbletter av linjer
+Remove empty lines	Sidebar	As short as possible	Ta bort tomma rader
+Replace	Sidebar		Ersätta
+Replace with…	Sidebar		Ersätt med...
+Replace:	Sidebar	As short as possible	Ersätta:
+Search and replace	Sidebar		Sök och ersätt
+Search:	Sidebar	As short as possible	Söka:
+Sort	Sidebar		Sortera
+Sort lines	Sidebar		Sortera linjer
+Sort lines	Sidebar	As short as possible	Sortera linjer
+Sort order:	Sidebar		Sorteringsordning:
+Sort type:	Sidebar		Sorteringstyp:
+Spaces	Sidebar		Mellanslag
+Split on words	Sidebar	As short as possible	Dela på ord
+Suffix:	Sidebar	As short as possible	Ändelse:
+Tabs	Sidebar		Flikar
+Trim whitespace	Sidebar	As short as possible	Trimma blanksteg
+Unindent	Sidebar	As short as possible	Oindrag
+Capitalize	Toolbar		Kapitalisera
+Copy	Toolbar		Kopiera
+Cut	Toolbar		Skära
+Help…	Toolbar		Hjälp…
+lowercase	Toolbar		gemener
+New file	Toolbar		Ny fil
+Open file…	Toolbar		Öppna fil...
+Paste	Toolbar		Klistra
+Redo	Toolbar		Göra om
+ROT13 encode/decode	Toolbar		ROT13-kodning/avkodning
+Save file	Toolbar		Spara filen
+Settings…	Toolbar		Inställningar...
+Show stats…	Toolbar		Visa statistik...
+Title Case	Toolbar		Titel Fall
+Undo	Toolbar		Ångra
+UPPERCASE	Toolbar		VERSAL
+URL decode	Toolbar		URL-avkodning
+URL encode	Toolbar		URL-kodning
+Word wrap	Toolbar		Ordlindning
+Clear field values after use	Settings		Rensa fältvärden efter användning
+Close	Settings		Stäng
+Font family:	Settings		Teckensnittsfamilj:
+Font size:	Settings		Fontstorlek:
+Paste clipboard contents on open	Settings		Klistra in innehållet i urklippet vid öppning
+Save field values on exit	Settings		Spara fältvärden vid avslutning
+Save text on exit	Settings		Spara text vid utgång
+Settings	Settings		Inställningar
+TextWorker	System name		TextWorker

@@ -29,7 +29,13 @@ App::AboutRequested()
 	const char* mentions2 = B_TRANSLATE("Humdinger (advice and review)");
 	const char* thanks[] = {
 		"Davidmp (Catalan translation)",
+		"Briseur, phoudoin (French translation)",
+		"tmtfx (Friulian translation)",
 		"Humdinger (German translation)",
+		"butyoutried, itvanya (Russian translation)",
+		"cafeina, Pintaio (Spanish translation)",
+		"Fredrik Modéen (Swedish translation)",
+		"Emir Sarı (Turkish translation)",
 		mentions,
 		mentions2,
 		NULL

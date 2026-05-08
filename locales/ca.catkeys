@@ -1,4 +1,4 @@
-1	Catalan	application/x-vnd.jpw-TextWorker	686205747
+1	Catalan	application/x-vnd.jpw-TextWorker	4267162439
 %d empty lines removed from entire text	Text utilities		S'han suprimit %d línies buides de tot el text.
 %d empty lines removed from selection	Text utilities		S'han suprimit %d línies buides de la selecció.
 %d occurrences of \"%s\" replaced in entire text	Text utilities		S'han substituït %d ocurrències de \"%s\" en tot el text.
@@ -56,14 +56,17 @@ Add prefix/suffix	MainView		Afegiu un prefix / sufix
 AlTeRnAtInG cAsE	MainView		CaIxA AlTeRnAnT
 Break lines on delimiter	MainView		Línies de trencament al delimitador
 Capitalize	MainView		Posa en majúscules
+Clean and transform text easily with this lightweight tool.	MainView		Netegeu i transformeu text fàcilment amb aquesta eina lleugera.
 Cleanup	MainView		Neteja
 Copy	MainView		Copia
 Cut	MainView		Retalla
+Distributed under the terms of the MIT License.	MainView		Distribuïda d'acord amb els termes de la llicència MIT.
 Edit	MainView		Edita
 Encode/decode	MainView		Codifica / descodifica
 File	MainView		Fitxer
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		El Haiku és un sistema operatiu de codi obert.\nÉs ràpid, senzill i elegant.\nAls desenvolupadors els n'encanta l'arquitectura neta.\nAls usuaris els n'agrada la interfície intuïtiva.\nComenceu a explorar el poder del Haiku avui mateix.
 Help…	MainView		Ajuda...
+Humdinger for advice and review	MainView		Humdinger, pel consell i revisió
 Indent lines	MainView		Sagnat de línies
 Insert example text	MainView		Insereix text d'exemple
 Insert line breaks (width)	MainView		Insereix salts de línia (amplada)
@@ -103,6 +106,7 @@ Unindent lines	MainView		Suprimeix el sagnat
 UPPERCASE	MainView		MAJÚSCULA
 URL decode	MainView		Descodificació d'URL
 URL encode	MainView		Codificació d'URL
+ZuMi (Toolbar icons)	MainView		ZuMi (icones de la barra d'eines)
 Add	Sidebar	As short as possible	Afegeix
 Alphabetical	Sidebar		Alfabètic
 Apply	Sidebar		Aplica
@@ -111,9 +115,11 @@ Break after X characters…	Sidebar		Interromp després de X caràcters…
 Break on…	Sidebar		Interromp...
 By line length	Sidebar		Per longitud de línia
 Case sensitive	Sidebar		Sensible a majúscules i minúscules
+Case sensitive	Sidebar	As short as possible	Sensible a majúscules i minúscules
 Chars:	Sidebar	As short as possible	Caràcters:
 Cleanup	Sidebar		Neteja
 Descending	Sidebar		Descendent
+Full words	Sidebar	As short as possible	Paraules senceres
 Indent	Sidebar	As short as possible	Sagnat
 Indent size:	Sidebar		Mida del sagnat:
 Indent/unindent lines	Sidebar		Sagnat / No sagnat de linies

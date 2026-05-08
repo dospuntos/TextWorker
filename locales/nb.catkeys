@@ -1,4 +1,4 @@
-1	Norwegian	application/x-vnd.jpw-TextWorker	686205747
+1	Norwegian	application/x-vnd.jpw-TextWorker	4267162439
 %d empty lines removed from entire text	Text utilities		%d tomme linjer fjernet fra hele teksten
 %d empty lines removed from selection	Text utilities		%d tomme linjer fjernet fra utvalg
 %d occurrences of \"%s\" replaced in entire text	Text utilities		%d forekomster av \"%s\" erstattet i hele teksten
@@ -56,14 +56,17 @@ Add prefix/suffix	MainView		Legg til prefiks/suffiks
 AlTeRnAtInG cAsE	MainView		VeKsLeNdE sToRe/SmÅ
 Break lines on delimiter	MainView		Bryt linjer på skilletegn
 Capitalize	MainView		Stor forbokstav
+Clean and transform text easily with this lightweight tool.	MainView		Rydd og transformer tekst enkelt med dette lette verktøyet.
 Cleanup	MainView		Rydd opp
 Copy	MainView		Kopier
 Cut	MainView		Klipp ut
+Distributed under the terms of the MIT License.	MainView		Distribuert under vilkårene i MIT-lisensen.
 Edit	MainView		Rediger
 Encode/decode	MainView		Koding/dekoding
 File	MainView		Fil
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku er et operativsystem med åpen kildekode.\nDet er raskt, enkelt og elegant.\nUtviklere elsker den rene arkitekturen.\nBrukere setter pris på det intuitive grensesnittet.\nBegynn å utforske kraften til Haiku i dag.
 Help…	MainView		Hjelp…
+Humdinger for advice and review	MainView		Humdinger for råd og gjennomgang
 Indent lines	MainView		Linjeinnrykk
 Insert example text	MainView		Sett inn eksempeltekst
 Insert line breaks (width)	MainView		Bryt linjer (bredde)
@@ -103,6 +106,7 @@ Unindent lines	MainView		Reduser innrykk
 UPPERCASE	MainView		STORE BOKSTAVER
 URL decode	MainView		URL-dekoding
 URL encode	MainView		URL-koding
+ZuMi (Toolbar icons)	MainView		ZuMi (ikoner til verktøylinjen)
 Add	Sidebar	As short as possible	Legg til
 Alphabetical	Sidebar		Alfabetisk
 Apply	Sidebar		Bruk
@@ -111,9 +115,11 @@ Break after X characters…	Sidebar		Linjeskift etter X tegn…
 Break on…	Sidebar		Linjeskift på…
 By line length	Sidebar		Etter linjelengde
 Case sensitive	Sidebar		Skill mellom store/små bokst.
+Case sensitive	Sidebar	As short as possible	Samsv. store/små bokst.
 Chars:	Sidebar	As short as possible	Tegn:
 Cleanup	Sidebar		Rydd opp
 Descending	Sidebar		Synkende
+Full words	Sidebar	As short as possible	Hele ord
 Indent	Sidebar	As short as possible	Øk innrykk
 Indent size:	Sidebar		Innrykksstørrelse:
 Indent/unindent lines	Sidebar		Øk/reduser innrykk

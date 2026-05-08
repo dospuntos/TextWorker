@@ -445,8 +445,8 @@ MainWindow::QuitRequested()
 
 	if (IsDocumentModified() && fAskToSave) {
 		BAlert* alert = new BAlert("save-changes",
-			"Do you want to save changes to this document before closing?",
-			"Cancel", "Don't Save", "Save", B_WIDTH_AS_USUAL, B_WARNING_ALERT);
+			B_TRANSLATE("Save changes before closing?"),
+			B_TRANSLATE("Cancel"), B_TRANSLATE("Don't Save"), B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_WARNING_ALERT);
 		int32 choice = alert->Go();
 
 		switch (choice) {

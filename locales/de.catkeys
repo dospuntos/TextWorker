@@ -1,4 +1,4 @@
-1	German	application/x-vnd.jpw-TextWorker	686205747
+1	German	application/x-vnd.jpw-TextWorker	4267162439
 %d empty lines removed from entire text	Text utilities		%d leere Zeilen aus gesamten Text entfernt
 %d empty lines removed from selection	Text utilities		%d leere Zeilen in Auswahl entfernt
 %d occurrences of \"%s\" replaced in entire text	Text utilities		%d Vorkommen von \"%s\" im gesamten Text ersetzt
@@ -56,14 +56,17 @@ Add prefix/suffix	MainView		Präfix/Suffix hinzu
 AlTeRnAtInG cAsE	MainView		AbWeChSeLnD
 Break lines on delimiter	MainView		Zeilenumbruch an Trennzeichen
 Capitalize	MainView		Groß am Satzanfang
+Clean and transform text easily with this lightweight tool.	MainView		Ein kleines Tool um Texte einfach zu bereinigen und transformieren.
 Cleanup	MainView		Bereinigen
 Copy	MainView		Kopieren
 Cut	MainView		Ausschneiden
+Distributed under the terms of the MIT License.	MainView		Veröffentlicht unter der MIT Lizenz.
 Edit	MainView		Bearbeiten
 Encode/decode	MainView		En/Dekodieren
 File	MainView		Datei
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku ist ein quelloffenes Betriebssystem.\nEs ist schnell, einfach und elegant.\nEntwickler lieben die saubere Architektur.\nBenutzer freuen sich über die intuitive Oberfläche.\nErkunde Haikus Stärken noch heute!
 Help…	MainView		Hilfe…
+Humdinger for advice and review	MainView		Humdinger für Ratschläge und Testen
 Indent lines	MainView		Zeilen einrücken
 Insert example text	MainView		Beispieltext einfügen
 Insert line breaks (width)	MainView		Zeilenumbrüche einfügen (Breite)
@@ -103,6 +106,7 @@ Unindent lines	MainView		Zeilen ausrücken
 UPPERCASE	MainView		GROSS
 URL decode	MainView		URL dekodieren
 URL encode	MainView		URL kodieren
+ZuMi (Toolbar icons)	MainView		ZuMi (Icons der Werkzeugleiste)
 Add	Sidebar	As short as possible	Hinzu
 Alphabetical	Sidebar		Alphabetisch
 Apply	Sidebar		Anwenden
@@ -111,9 +115,11 @@ Break after X characters…	Sidebar		Zeilenumbruch nach x Zeichen …
 Break on…	Sidebar		Zeilenumbruch bei …
 By line length	Sidebar		Nach Zeilenlänge
 Case sensitive	Sidebar		Groß/Kleinschreibung beachten
+Case sensitive	Sidebar	As short as possible	Groß/Klein
 Chars:	Sidebar	As short as possible	Zeichen:
 Cleanup	Sidebar		Bereinigen
 Descending	Sidebar		Absteigend
+Full words	Sidebar	As short as possible	Ganze Worte
 Indent	Sidebar	As short as possible	Einrücken
 Indent size:	Sidebar		Einzug:
 Indent/unindent lines	Sidebar		Zeilen Ein/Ausrücken
