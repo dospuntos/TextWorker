@@ -487,6 +487,91 @@ URLDecode(BTextView* textView)
 
 
 void
+Base64(BTextView* textView)
+{
+	BString text = GetText(textView, false);
+
+	// Auto-detect: if text looks like Base64, decode — otherwise encode
+	bool isBase64 = true;
+	int32 len = text.Length();
+
+	// Basic checks: non-empty, length multiple of 4, valid charset
+	if (len == 0 || len % 4 != 0) {
+		isBase64 = false;
+	} else {
+		for (int32 i = 0; i < len && isBase64; ++i) {
+			char c = text.ByteAt(i);
+			bool validChar = std::isalnum(c) || c == '+' || c == '/' || c == '=';
+			if (!validChar)
+				isBase64 = false;
+			// Padding '=' is only valid at the end
+			if (c == '=' && i < len - 2)
+				isBase64 = false;
+		}
+	}
+
+	BString result;
+
+	if (isBase64) {
+		// === Decode ===
+		const char* kChars
+			= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		auto indexOf = [&](char c) -> int {
+			const char* p = strchr(kChars, c);
+			return p ? (int)(p - kChars) : -1;
+		};
+
+		for (int32 i = 0; i < len; i += 4) {
+			int b0 = indexOf(text.ByteAt(i));
+			int b1 = indexOf(text.ByteAt(i + 1));
+			int b2 = text.ByteAt(i + 2) != '=' ? indexOf(text.ByteAt(i + 2)) : -1;
+			int b3 = text.ByteAt(i + 3) != '=' ? indexOf(text.ByteAt(i + 3)) : -1;
+
+			result += (char)((b0 << 2) | (b1 >> 4));
+			if (b2 != -1)
+				result += (char)(((b1 & 0xF) << 4) | (b2 >> 2));
+			if (b3 != -1)
+				result += (char)(((b2 & 0x3) << 6) | b3);
+		}
+	} else {
+		// === Encode ===
+		const char* kChars
+			= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+		int32 i = 0;
+		while (i < len) {
+			unsigned char b0 = (unsigned char)text.ByteAt(i++);
+			unsigned char b1 = i < len ? (unsigned char)text.ByteAt(i++) : 0;
+			unsigned char b2 = i < len ? (unsigned char)text.ByteAt(i++) : 0;
+
+			result += kChars[b0 >> 2];
+			result += kChars[((b0 & 0x3) << 4) | (b1 >> 4)];
+			result += (i - 1 > len) ? '=' : kChars[((b1 & 0xF) << 2) | (b2 >> 6)];
+			result += (i > len)     ? '=' : kChars[b2 & 0x3F];
+		}
+	}
+
+	textView->Delete(selStart, selEnd);
+	textView->Insert(selStart, result.String(), result.Length());
+
+	BString status;
+	if (isBase64) {
+		if (appliedToSelection)
+			status.Append(B_TRANSLATE("Selected text Base64-decoded"));
+		else
+			status.Append(B_TRANSLATE("Entire text Base64-decoded"));
+	} else {
+		if (appliedToSelection)
+			status.Append(B_TRANSLATE("Selected text Base64-encoded"));
+		else
+			status.Append(B_TRANSLATE("Entire text Base64-encoded"));
+	}
+	SendStatusMessage(status);
+	RestoreCursorPosition(textView, result.Length());
+}
+
+
+void
 AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString)
 {
 	BString text = GetText(textView, true);

@@ -336,6 +336,9 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_TRANSFORM_DECODE_URL:
 			URLDecode(fTextView);
 			break;
+		case M_TRANSFORM_BASE64:
+			Base64(fTextView);
+			break;
 		case M_SORT_LINES:
 		{
 			bool sortAlphabetically = fSidebar->getAlphaSortRadio();

@@ -33,6 +33,7 @@ Sidebar::Sidebar()
 	_BuildLineTab();
 	_BuildPrefixTab();
 	_BuildSortTab();
+	_BuildEncodeTab();
 }
 
 
@@ -397,6 +398,78 @@ Sidebar::_BuildSortTab()
 	BTab* sortTab = new BTab();
 	AddTab(sortingView, sortTab);
 	sortTab->SetLabel(B_TRANSLATE_COMMENT("Sort lines", "As short as possible"));
+}
+
+
+void
+Sidebar::_BuildEncodeTab()
+{
+	// === ROT-13 Box ===
+	BBox* rot13Box = new BBox("rot13Box");
+	rot13Box->SetLabel(B_TRANSLATE("ROT-13"));
+	BButton* rot13Button
+		= new BButton("rot13Btn", B_TRANSLATE("Encode / decode"), new BMessage(M_TRANSFORM_ROT13));
+	rot13Button->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	BView* rot13View = new BView("rot13View", B_WILL_DRAW);
+	// clang-format off
+	BLayoutBuilder::Group<>(rot13View, B_VERTICAL)
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
+		.Add(rot13Button)
+		.End();
+	// clang-format on
+	rot13Box->AddChild(rot13View);
+
+	// === URL Encoding Box ===
+	BBox* urlBox = new BBox("urlBox");
+	urlBox->SetLabel(B_TRANSLATE("URL encoding"));
+	BButton* urlEncodeButton
+		= new BButton("urlEncBtn", B_TRANSLATE("Encode"), new BMessage(M_TRANSFORM_ENCODE_URL));
+	urlEncodeButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	BButton* urlDecodeButton
+		= new BButton("urlDecBtn", B_TRANSLATE("Decode"), new BMessage(M_TRANSFORM_DECODE_URL));
+	urlDecodeButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	BView* urlView = new BView("urlView", B_WILL_DRAW);
+	// clang-format off
+	BLayoutBuilder::Group<>(urlView, B_VERTICAL)
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
+		.Add(urlEncodeButton)
+		.Add(urlDecodeButton)
+		.End();
+	// clang-format on
+	urlBox->AddChild(urlView);
+
+	// === Base64 Box ===
+	BBox* base64Box = new BBox("base64Box");
+	base64Box->SetLabel(B_TRANSLATE("Base64"));
+	BButton* base64Button
+		= new BButton("base64Btn", B_TRANSLATE("Encode / decode"), new BMessage(M_TRANSFORM_BASE64));
+	base64Button->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	BView* base64View = new BView("base64View", B_WILL_DRAW);
+	// clang-format off
+	BLayoutBuilder::Group<>(base64View, B_VERTICAL)
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
+		.Add(base64Button)
+		.End();
+	// clang-format on
+	base64Box->AddChild(base64View);
+
+	// === Encode Tab ===
+	BView* encodeView = new BView("encodeView", B_WILL_DRAW);
+	// clang-format off
+	BLayoutBuilder::Group<>(encodeView, B_VERTICAL, B_USE_SMALL_SPACING)
+		.SetInsets(B_USE_ITEM_INSETS)
+		.Add(rot13Box)
+		.Add(urlBox)
+		.Add(base64Box)
+		.AddGlue()
+		.End();
+	// clang-format on
+	BTab* encodeTab = new BTab();
+	AddTab(encodeView, encodeTab);
+	encodeTab->SetLabel(B_TRANSLATE_COMMENT("Encode/Decode", "As short as possible"));
 }
 
 

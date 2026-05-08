@@ -69,6 +69,7 @@ private:
 	void _BuildLineTab();
 	void _BuildPrefixTab();
 	void _BuildSortTab();
+	void _BuildEncodeTab();
 	float fMaxLabelWidth;
 	BTextControl* fPrefixInput;
 	BTextControl* fSuffixInput;

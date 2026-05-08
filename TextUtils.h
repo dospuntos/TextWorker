@@ -33,6 +33,7 @@ void ReplaceAll(BTextView* textView, BString find, BString replaceWith, bool cas
 
 void URLEncode(BTextView* textView);
 void URLDecode(BTextView* textView);
+void Base64(BTextView* textView);
 void ConvertToROT13(BTextView* textView);
 void AddStringsToEachLine(BTextView* textView, const BString& startString,
 	const BString& endString);
