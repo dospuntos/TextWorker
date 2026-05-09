@@ -456,6 +456,31 @@ Sidebar::_BuildEncodeTab()
 	// clang-format on
 	base64Box->AddChild(base64View);
 
+	// === HTML entities Box ===
+	BBox* htmlBox = new BBox("base64Box");
+	htmlBox->SetLabel(B_TRANSLATE("HTML Entities"));
+	BButton* htmlButton
+		= new BButton("htmlBtn", B_TRANSLATE("Encode as names"), new BMessage(M_TRANSFORM_HTML_ENCODE_NAME));
+	htmlButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	BButton* html2Button
+		= new BButton("html2Btn", B_TRANSLATE("Encode as numbers"), new BMessage(M_TRANSFORM_HTML_ENCODE_NUM));
+	html2Button->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	BButton* htmlDecodeButton
+		= new BButton("htmlDecodeBtn", B_TRANSLATE("Decode entities"), new BMessage(M_TRANSFORM_HTML_DECODE));
+	htmlDecodeButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+
+	BView* htmlView = new BView("htmlView", B_WILL_DRAW);
+	// clang-format off
+	BLayoutBuilder::Group<>(htmlView, B_VERTICAL)
+		.SetInsets(B_USE_HALF_ITEM_INSETS, B_USE_ITEM_INSETS,
+			B_USE_HALF_ITEM_INSETS, B_USE_HALF_ITEM_INSETS)
+		.Add(htmlButton)
+		.Add(html2Button)
+		.Add(htmlDecodeButton)
+		.End();
+	// clang-format on
+	htmlBox->AddChild(htmlView);
+
 	// === Encode Tab ===
 	BView* encodeView = new BView("encodeView", B_WILL_DRAW);
 	// clang-format off
@@ -464,6 +489,7 @@ Sidebar::_BuildEncodeTab()
 		.Add(rot13Box)
 		.Add(urlBox)
 		.Add(base64Box)
+		.Add(htmlBox)
 		.AddGlue()
 		.End();
 	// clang-format on

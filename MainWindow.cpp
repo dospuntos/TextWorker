@@ -279,11 +279,11 @@ MainWindow::MessageReceived(BMessage* msg)
 			ToggleCase(fTextView);
 			break;
 		case M_REMOVE_LINE_BREAKS_DEFAULT:
-			RemoveLineBreaks(fTextView, "");
+			RemoveLineBreaks(fTextView);
 			break;
 		case M_REMOVE_LINE_BREAKS:
 			if (fSidebar->getBreakMode() == BREAK_REMOVE_ALL) {
-				RemoveLineBreaks(fTextView, "");
+				RemoveLineBreaks(fTextView);
 			} else if (fSidebar->getBreakMode() == BREAK_ON) {
 				BreakLinesOnDelimiter(fTextView, fSidebar->getBreakModeInput(),
 					fSidebar->getKeepDelimiterValue());
@@ -338,6 +338,15 @@ MainWindow::MessageReceived(BMessage* msg)
 			break;
 		case M_TRANSFORM_BASE64:
 			Base64(fTextView);
+			break;
+		case M_TRANSFORM_HTML_ENCODE_NAME:
+			EncodeHTMLEntities(fTextView, true);
+			break;
+		case M_TRANSFORM_HTML_ENCODE_NUM:
+			EncodeHTMLEntities(fTextView, false);
+			break;
+		case M_TRANSFORM_HTML_DECODE:
+			DecodeHTMLEntities(fTextView);
 			break;
 		case M_SORT_LINES:
 		{

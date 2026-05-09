@@ -572,6 +572,213 @@ Base64(BTextView* textView)
 
 
 void
+EncodeHTMLEntities(BTextView* textView, bool encodeByName)
+{
+	BString text = GetText(textView, false);
+	BString result;
+
+	int32 len = text.Length();
+
+	for (int32 i = 0; i < len; ) {
+
+		unsigned char b0 = (unsigned char)text.ByteAt(i);
+
+		uint32 codepoint = 0;
+		int32 seqLen = 1;
+
+		if (b0 < 0x80) {
+			codepoint = b0;
+		} else if ((b0 & 0xE0) == 0xC0 && i + 1 < len) {
+
+			codepoint =
+				(b0 & 0x1F) << 6
+				| ((unsigned char)text.ByteAt(i + 1) & 0x3F);
+
+			seqLen = 2;
+
+		} else if ((b0 & 0xF0) == 0xE0 && i + 2 < len) {
+
+			codepoint =
+				(b0 & 0x0F) << 12
+				| ((unsigned char)text.ByteAt(i + 1) & 0x3F) << 6
+				| ((unsigned char)text.ByteAt(i + 2) & 0x3F);
+
+			seqLen = 3;
+
+		} else if ((b0 & 0xF8) == 0xF0 && i + 3 < len) {
+
+			codepoint =
+				(b0 & 0x07) << 18
+				| ((unsigned char)text.ByteAt(i + 1) & 0x3F) << 12
+				| ((unsigned char)text.ByteAt(i + 2) & 0x3F) << 6
+				| ((unsigned char)text.ByteAt(i + 3) & 0x3F);
+
+			seqLen = 4;
+		}
+
+		i += seqLen;
+
+		bool found = false;
+
+		for (int32 e = 0; e < kEntityCount; ++e) {
+
+			if (kEntities[e].codepoint != codepoint)
+				continue;
+
+			result += '&';
+
+			if (encodeByName) {
+				result += kEntities[e].name;
+			} else {
+				result += '#';
+				result << codepoint;
+			}
+
+			result += ';';
+
+			found = true;
+			break;
+		}
+
+		if (!found) {
+
+			if (codepoint >= 128) {
+
+				result += '&';
+				result += '#';
+				result << codepoint;
+				result += ';';
+
+			} else {
+				result += (char)codepoint;
+			}
+		}
+	}
+
+	textView->SetText(result.String());
+
+	SendStatusMessage(
+		encodeByName
+			? B_TRANSLATE("Text HTML-encoded (named entities)")
+			: B_TRANSLATE("Text HTML-encoded (numeric entities)"));
+}
+
+
+void
+DecodeHTMLEntities(BTextView* textView)
+{
+	BString text = GetText(textView, false);
+	BString result;
+
+	int32 len = text.Length();
+
+	for (int32 i = 0; i < len; ) {
+
+		char c = text.ByteAt(i);
+
+		if (c != '&') {
+			result += c;
+			++i;
+			continue;
+		}
+
+		int32 semi = text.FindFirst(';', i + 1);
+
+		if (semi < 0 || semi - i > 16) {
+			result += c;
+			++i;
+			continue;
+		}
+
+		BString entity;
+		text.CopyInto(entity, i + 1, semi - i - 1);
+
+		uint32 codepoint = 0;
+		bool found = false;
+
+		// Numeric
+		if (entity.ByteAt(0) == '#') {
+
+			found = true;
+
+			if (entity.ByteAt(1) == 'x'
+				|| entity.ByteAt(1) == 'X') {
+
+				BString hex;
+				entity.CopyInto(hex, 2,
+					entity.Length() - 2);
+
+				codepoint = (uint32)strtoul(
+					hex.String(), nullptr, 16);
+
+			} else {
+
+				BString dec;
+				entity.CopyInto(dec, 1,
+					entity.Length() - 1);
+
+				codepoint = (uint32)strtoul(
+					dec.String(), nullptr, 10);
+			}
+
+		} else {
+
+			// Named
+			for (int32 e = 0;
+				e < kEntityCount;
+				++e) {
+
+				if (entity != kEntities[e].name)
+					continue;
+
+				codepoint = kEntities[e].codepoint;
+				found = true;
+				break;
+			}
+		}
+
+		if (found && codepoint > 0) {
+
+			if (codepoint < 0x80) {
+
+				result += (char)codepoint;
+
+			} else if (codepoint < 0x800) {
+
+				result += (char)(0xC0 | (codepoint >> 6));
+				result += (char)(0x80 | (codepoint & 0x3F));
+
+			} else if (codepoint < 0x10000) {
+
+				result += (char)(0xE0 | (codepoint >> 12));
+				result += (char)(0x80 | ((codepoint >> 6) & 0x3F));
+				result += (char)(0x80 | (codepoint & 0x3F));
+
+			} else {
+
+				result += (char)(0xF0 | (codepoint >> 18));
+				result += (char)(0x80 | ((codepoint >> 12) & 0x3F));
+				result += (char)(0x80 | ((codepoint >> 6) & 0x3F));
+				result += (char)(0x80 | (codepoint & 0x3F));
+			}
+
+			i = semi + 1;
+
+		} else {
+
+			result += c;
+			++i;
+		}
+	}
+
+	textView->SetText(result.String());
+
+	SendStatusMessage(
+		B_TRANSLATE("Text HTML-decoded"));
+}
+
+
+void
 AddStringsToEachLine(BTextView* textView, const BString& startString, const BString& endString)
 {
 	BString text = GetText(textView, true);
