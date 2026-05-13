@@ -28,6 +28,7 @@ public:
 	void OpenFile(const entry_ref& ref);
 	status_t SaveFile(const char* path);
 	void MenusBeginning();
+	void _ApplySettings(const BMessage& msg);
 	void DispatchMessage(BMessage* message, BHandler* target);
 
 private:
@@ -76,6 +77,9 @@ private:
 
 	BString fLastSavedText;
 	bool IsDocumentModified() const;
+	bool _CheckSaveAndContinue(BMessage* pendingMessage);
+	void _OnSaveComplete();
+	BMessage* fPendingMessage;
 };
 
 #endif

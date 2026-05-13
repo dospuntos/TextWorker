@@ -206,6 +206,14 @@ UndoableTextView::Redo()
 
 
 void
+UndoableTextView::ClearHistory()
+{
+	while (!fUndoStack.empty()) fUndoStack.pop();
+	while (!fRedoStack.empty()) fRedoStack.pop();
+}
+
+
+void
 UndoableTextView::PushUndoSnapshot()
 {
 	TextSnapshot snapshot;

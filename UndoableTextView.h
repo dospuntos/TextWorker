@@ -35,6 +35,7 @@ public:
 	void SetTextWithUndo(const BString& newText);
 	void Undo();
 	void Redo();
+	void ClearHistory();
 
 	bool CanUndo() const { return !fUndoStack.empty(); }
 	bool CanRedo() const { return !fRedoStack.empty(); }

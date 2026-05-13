@@ -44,7 +44,9 @@ static const char* kIssueTracker = "https://github.com/dospuntos/TextWorker/issu
 MainWindow::MainWindow(void)
 	:
 	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_DOCUMENT_WINDOW,
-		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
+		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE),
+		fSettingsWindow(nullptr),
+		fPendingMessage(nullptr)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -64,8 +66,6 @@ MainWindow::MainWindow(void)
 	fStatusBar->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT, B_ALIGN_VERTICAL_CENTER));
 	fMessageBar = new BStringView("MessageBar", "");
 	fMessageBar->SetExplicitAlignment(BAlignment(B_ALIGN_RIGHT, B_ALIGN_VERTICAL_CENTER));
-
-	fSettingsWindow = nullptr;
 
 	BSplitView* splitView = new BSplitView(B_HORIZONTAL);
 	splitView->SetCollapsible(false); // Todo: make collapsible with toolbar button
@@ -89,18 +89,10 @@ MainWindow::MainWindow(void)
 		.End();
 	// clang-format on
 
-	_UpdateWindowTitle();
 	BMessage settings;
 	_LoadSettings(settings);
 	_RestoreValues(settings);
-
-
-	// Set min size of main window
-	BSize toolbarSize = fToolbar->PreferredSize();
-	BSize sidebarSize = fSidebar->PreferredSize();
-	const float minWidth = toolbarSize.width + 20;
-	const float minHeight = sidebarSize.height + 100;
-	SetSizeLimits(minWidth, B_SIZE_UNLIMITED, minHeight, B_SIZE_UNLIMITED);
+	_UpdateWindowTitle();
 
 	BMessenger messenger(this);
 	fOpenPanel = new BFilePanel(B_OPEN_PANEL, &messenger, NULL, B_FILE_NODE, false);
@@ -111,13 +103,19 @@ MainWindow::MainWindow(void)
 		MoveTo(frame.LeftTop());
 		ResizeTo(frame.Width(), frame.Height());
 	}
+	// Set min size of main window
+	BSize toolbarSize = fToolbar->PreferredSize();
+	BSize sidebarSize = fSidebar->PreferredSize();
+	const float minWidth = toolbarSize.width + 20;
+	const float minHeight = sidebarSize.height + 100;
+	SetSizeLimits(minWidth, B_SIZE_UNLIMITED, minHeight, B_SIZE_UNLIMITED);
 	MoveOnScreen();
-
 
 	if (!fSaveTextOnExit && fInsertClipboard) {
 		BString clipboardText;
 		if (_GetClipboardText(clipboardText)) {
 			fTextView->SetText(clipboardText);
+			fTextView->ClearHistory();
 			fLastSavedText = clipboardText;
 		}
 	}
@@ -155,10 +153,14 @@ MainWindow::MessageReceived(BMessage* msg)
 				messenger.SendMessage(msg);
 				return;
 			}
-		}
+		} break;
 		case M_FILE_NEW:
 		{
+			// Ask to save
+			if (!_CheckSaveAndContinue(new BMessage(M_FILE_NEW)))
+				break;
 			fTextView->SetText("");
+			fTextView->ClearHistory();
 			fFilePath = "";
 			fLastSavedText = "";
 			_UpdateWindowTitle();
@@ -170,8 +172,15 @@ MainWindow::MessageReceived(BMessage* msg)
 			entry_ref ref;
 			if (msg->FindRef("refs", &ref) != B_OK)
 				break;
+
+			// Add refs to new message, and ask to save
+			BMessage pending(B_REFS_RECEIVED);
+			pending.AddRef("refs", &ref);
+			if (!_CheckSaveAndContinue(new BMessage(pending)))
+				break;
 			OpenFile(ref);
 		} break;
+
 		case B_SAVE_REQUESTED:
 		{
 			entry_ref dir;
@@ -221,40 +230,7 @@ MainWindow::MessageReceived(BMessage* msg)
 		}
 		case M_APPLY_SETTINGS:
 		{
-			bool flag;
-			int32 number;
-			BString text;
-			if (msg->FindBool("saveText", &flag) == B_OK)
-				fSaveTextOnExit = flag;
-
-			if (msg->FindBool("saveSettings", &flag) == B_OK)
-				fSaveFieldsOnExit = flag;
-
-			if (msg->FindBool("insertClipboard", &flag) == B_OK)
-				fInsertClipboard = flag;
-
-			if (msg->FindBool("clearSettings", &flag) == B_OK)
-				fClearSettingsAfterUse = flag;
-
-			if (msg->FindInt32("fontSize", &number) == B_OK)
-				fFontSize = number;
-
-			if (msg->FindString("fontFamily", &text) == B_OK)
-				fFontFamily = text;
-
-			if (msg->FindBool("closeOnEsc", &flag) == B_OK)
-				fCloseOnEsc = flag;
-
-			if (msg->FindBool("askToSave", &flag) == B_OK)
-				fAskToSave = flag;
-
-			// Apply font to the textView
-			BFont newFont(be_fixed_font); // Default fallback
-			if (!fFontFamily.IsEmpty() || fFontFamily != "System default")
-				newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
-			newFont.SetSize(fFontSize);
-			fTextView->SetFontAndColor(&newFont);
-			_UpdateStatusMessage("Settings updated");
+			_ApplySettings(*msg);
 			break;
 		}
 		case M_TRANSFORM_UPPERCASE:
@@ -455,25 +431,8 @@ MainWindow::QuitRequested()
 		fSettingsWindow = nullptr;
 	}
 
-	if (IsDocumentModified() && fAskToSave) {
-		BAlert* alert = new BAlert("save-changes",
-			B_TRANSLATE("Save changes before closing?"),
-			B_TRANSLATE("Cancel"), B_TRANSLATE("Don't Save"), B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_WARNING_ALERT);
-		int32 choice = alert->Go();
-
-		switch (choice) {
-			case 0: // Cancel
-				return false;
-
-			case 1: // Don't Save
-				return true;
-
-			case 2: // Save
-				fPendingQuitAfterSave = true;
-				PostMessage(M_FILE_SAVE);
-				return false; // Wait for save to finish
-		}
-	}
+	if (!_CheckSaveAndContinue(new BMessage(B_QUIT_REQUESTED)))
+        return false;
 
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
@@ -805,6 +764,46 @@ MainWindow::_RestoreValues(BMessage& settings)
 
 
 void
+MainWindow::_ApplySettings(const BMessage& msg)
+{
+	bool flag;
+	int32 number;
+	BString text;
+	if (msg.FindBool("saveText", &flag) == B_OK)
+		fSaveTextOnExit = flag;
+
+	if (msg.FindBool("saveSettings", &flag) == B_OK)
+		fSaveFieldsOnExit = flag;
+
+	if (msg.FindBool("insertClipboard", &flag) == B_OK)
+		fInsertClipboard = flag;
+
+	if (msg.FindBool("clearSettings", &flag) == B_OK)
+		fClearSettingsAfterUse = flag;
+
+	if (msg.FindInt32("fontSize", &number) == B_OK)
+		fFontSize = number;
+
+	if (msg.FindString("fontFamily", &text) == B_OK)
+		fFontFamily = text;
+
+	if (msg.FindBool("closeOnEsc", &flag) == B_OK)
+		fCloseOnEsc = flag;
+
+	if (msg.FindBool("askToSave", &flag) == B_OK)
+		fAskToSave = flag;
+
+	// Apply font to the textView
+	BFont newFont(be_fixed_font); // Default fallback
+	if (!fFontFamily.IsEmpty() || fFontFamily != "System default")
+		newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
+	newFont.SetSize(fFontSize);
+	fTextView->SetFontAndColor(&newFont);
+	_UpdateStatusMessage("Settings updated");
+}
+
+
+void
 MainWindow::_UpdateStatusBar()
 {
 	// Calculate Row/column based on cursor position
@@ -868,7 +867,6 @@ MainWindow::OpenFile(const entry_ref& ref)
 		isText = true;
 
 	if (!isText) {
-		file.Seek(0, SEEK_SET);
 		const off_t kMaxCheckSize = 1024;
 		off_t fileSize;
 		if (file.GetSize(&fileSize) == B_OK) {
@@ -885,8 +883,9 @@ MainWindow::OpenFile(const entry_ref& ref)
 							break;
 					}
 				}
-				if (nonPrintable <= 10)
+				if (nonPrintable <= 10) {
 					isText = true;
+				}
 			}
 		}
 	}
@@ -904,7 +903,10 @@ MainWindow::OpenFile(const entry_ref& ref)
 	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
 		BPath path(&realRef);
 		fFilePath = path.Path();
+	} else {
+		fFilePath = "";
 	}
+	fTextView->ClearHistory();
 	fLastSavedText = fTextView->Text();
 	_UpdateWindowTitle();
 }
@@ -929,6 +931,7 @@ MainWindow::SaveFile(const char* path)
 
 	fLastSavedText = fTextView->Text();
 	_UpdateWindowTitle();
+	_OnSaveComplete();
 	return B_OK;
 }
 
@@ -1094,4 +1097,52 @@ MainWindow::DispatchMessage(BMessage* message, BHandler* target)
 	}
 
 	BWindow::DispatchMessage(message, target);
+}
+
+
+// Returns true if the caller should proceed,
+// false if the user cancelled or waiting for an async save to complete.
+// pendingMessage is posted after a successful async save (can be nullptr).
+bool
+MainWindow::_CheckSaveAndContinue(BMessage* pendingMessage)
+{
+    if (!IsDocumentModified() || !fAskToSave)
+        return true;
+
+    BString fileName = B_TRANSLATE("Untitled");
+    if (!fFilePath.IsEmpty()) {
+        BPath path(fFilePath);
+        fileName = path.Leaf();
+    }
+
+    BString text;
+    text.SetToFormat(B_TRANSLATE("Save changes to the file \"%s\"?"), fileName.String());
+    BAlert* alert = new BAlert("save-changes", text,
+        B_TRANSLATE("Cancel"), B_TRANSLATE("Don't Save"), B_TRANSLATE("Save"),
+        B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
+    alert->SetShortcut(0, B_ESCAPE);
+
+    switch (alert->Go()) {
+        case 0:
+            return false;
+        case 1: // Don't Save
+            return true;
+        case 2: // Save
+            if (pendingMessage)
+                fPendingMessage = new BMessage(*pendingMessage);
+            PostMessage(M_FILE_SAVE);
+            return false; // Caller must wait; save handler will resume
+    }
+    return false;
+}
+
+
+void
+MainWindow::_OnSaveComplete()
+{
+    if (fPendingMessage != nullptr) {
+        PostMessage(fPendingMessage);
+        delete fPendingMessage;
+        fPendingMessage = nullptr;
+    }
 }
