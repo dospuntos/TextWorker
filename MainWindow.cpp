@@ -92,7 +92,7 @@ MainWindow::MainWindow(void)
 	BMessage settings;
 	_LoadSettings(settings);
 	_RestoreValues(settings);
-	_UpdateWindowTitle();
+
 
 	BMessenger messenger(this);
 	fOpenPanel = new BFilePanel(B_OPEN_PANEL, &messenger, NULL, B_FILE_NODE, false);
@@ -117,8 +117,11 @@ MainWindow::MainWindow(void)
 			fTextView->SetText(clipboardText);
 			fTextView->ClearHistory();
 			fLastSavedText = clipboardText;
+			fFilePath = "";
 		}
 	}
+
+	_UpdateWindowTitle();
 }
 
 
@@ -426,6 +429,7 @@ MainWindow::MessageReceived(BMessage* msg)
 bool
 MainWindow::QuitRequested()
 {
+	_SaveSettings();
 	if (fSettingsWindow && fSettingsWindow->LockLooper()) {
 		fSettingsWindow->Quit();
 		fSettingsWindow = nullptr;
@@ -609,6 +613,7 @@ MainWindow::_SaveSettings()
 	settings.AddBool("wrapLines", fTextView->DoesWordWrap());
 	settings.AddBool("closeOnEsc", fCloseOnEsc);
 	settings.AddBool("askToSave", fAskToSave);
+	settings.AddString("filePath", fFilePath);
 
 	// Save textView
 	if (fTextView && fSaveTextOnExit)
@@ -663,6 +668,7 @@ MainWindow::_RestoreValues(BMessage& settings)
 	fClearSettingsAfterUse = false;
 	fCloseOnEsc = false;
 	fAskToSave = true;
+	fFilePath = "";
 
 	BString text;
 	int32 number;
@@ -696,6 +702,9 @@ MainWindow::_RestoreValues(BMessage& settings)
 	if (settings.FindBool("askToSave", &flag) == B_OK)
 		fAskToSave = flag;
 
+	if (settings.FindString("filePath", &text) == B_OK && fSaveTextOnExit)
+		fFilePath = text;
+
 	// Apply the restored font settings to textView
 	BFont font;
 	if (fFontFamily == "System default")
@@ -706,10 +715,15 @@ MainWindow::_RestoreValues(BMessage& settings)
 	font.SetSize(fFontSize);
 	fTextView->SetFontAndColor(&font);
 
-	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit)
+	if (settings.FindString("textViewContent", &text) == B_OK && fSaveTextOnExit) {
 		fTextView->SetText(text);
-	else
+		fTextView->ClearHistory();
+		fLastSavedText = text;
+	} else {
 		fTextView->SetText("");
+		fTextView->ClearHistory();
+		fLastSavedText = text;
+	}
 
 	if (fSidebar && fSaveFieldsOnExit) {
 		if (settings.FindInt32("activeTab", &number) == B_OK)
@@ -756,6 +770,20 @@ MainWindow::_RestoreValues(BMessage& settings)
 			fSidebar->setSortAsc(flag);
 		if (settings.FindBool("sortCase", &flag) == B_OK)
 			fSidebar->setCaseSortCheck(flag);
+	}
+
+	// Restore last file if "Restore session"
+	if (fSaveTextOnExit && !fFilePath.IsEmpty()) {
+		BEntry entry(fFilePath);
+		if (entry.Exists()) { // Open file if it still exists
+			entry_ref ref;
+			entry.GetRef(&ref);
+			OpenFile(ref);
+		} else {
+			_UpdateStatusMessage(B_TRANSLATE("Could not restore previous file"));
+			fFilePath = "";
+			fTextView->ClearHistory();
+		}
 	}
 	_UpdateStatusBar();
 	_UpdateToolbarState();

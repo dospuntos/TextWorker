@@ -671,19 +671,14 @@ DecodeHTMLEntities(BTextView* textView)
 	BString result;
 
 	int32 len = text.Length();
-
-	for (int32 i = 0; i < len; ) {
-
+	for (int32 i = 0; i < len;) {
 		char c = text.ByteAt(i);
-
 		if (c != '&') {
 			result += c;
 			++i;
 			continue;
 		}
-
 		int32 semi = text.FindFirst(';', i + 1);
-
 		if (semi < 0 || semi - i > 16) {
 			result += c;
 			++i;
@@ -698,21 +693,12 @@ DecodeHTMLEntities(BTextView* textView)
 
 		// Numeric
 		if (entity.ByteAt(0) == '#') {
-
 			found = true;
-
-			if (entity.ByteAt(1) == 'x'
-				|| entity.ByteAt(1) == 'X') {
-
+			if (entity.ByteAt(1) == 'x' || entity.ByteAt(1) == 'X') {
 				BString hex;
-				entity.CopyInto(hex, 2,
-					entity.Length() - 2);
-
-				codepoint = (uint32)strtoul(
-					hex.String(), nullptr, 16);
-
+				entity.CopyInto(hex, 2, entity.Length() - 2);
+				codepoint = (uint32)strtoul(hex.String(), nullptr, 16);
 			} else {
-
 				BString dec;
 				entity.CopyInto(dec, 1,
 					entity.Length() - 1);
@@ -720,9 +706,7 @@ DecodeHTMLEntities(BTextView* textView)
 				codepoint = (uint32)strtoul(
 					dec.String(), nullptr, 10);
 			}
-
 		} else {
-
 			// Named
 			for (int32 e = 0;
 				e < kEntityCount;
@@ -738,41 +722,29 @@ DecodeHTMLEntities(BTextView* textView)
 		}
 
 		if (found && codepoint > 0) {
-
 			if (codepoint < 0x80) {
-
 				result += (char)codepoint;
-
 			} else if (codepoint < 0x800) {
-
 				result += (char)(0xC0 | (codepoint >> 6));
 				result += (char)(0x80 | (codepoint & 0x3F));
-
 			} else if (codepoint < 0x10000) {
-
 				result += (char)(0xE0 | (codepoint >> 12));
 				result += (char)(0x80 | ((codepoint >> 6) & 0x3F));
 				result += (char)(0x80 | (codepoint & 0x3F));
-
 			} else {
-
 				result += (char)(0xF0 | (codepoint >> 18));
 				result += (char)(0x80 | ((codepoint >> 12) & 0x3F));
 				result += (char)(0x80 | ((codepoint >> 6) & 0x3F));
 				result += (char)(0x80 | (codepoint & 0x3F));
 			}
-
 			i = semi + 1;
-
 		} else {
-
 			result += c;
 			++i;
 		}
 	}
 
 	textView->SetText(result.String());
-
 	SendStatusMessage(
 		B_TRANSLATE("Text HTML-decoded"));
 }
