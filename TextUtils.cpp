@@ -1526,9 +1526,10 @@ ShowTextStats(BTextView* textView)
 		if (++shown == 10)
 			break;
 	}
-	(new BAlert("Stats", statsMsg.String(), B_TRANSLATE("OK"), NULL, NULL, B_WIDTH_AS_USUAL,
-		 B_IDEA_ALERT))
-		->Go();
+	BAlert* alert = new BAlert("Stats", statsMsg.String(), B_TRANSLATE("OK"), NULL, NULL, B_WIDTH_AS_USUAL,
+		 B_IDEA_ALERT);
+	alert->SetShortcut(0, B_ESCAPE);
+	alert->Go();
 }
 
 

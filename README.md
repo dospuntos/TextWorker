@@ -16,6 +16,7 @@
 - Sort lines (ascending/descending, case-sensitive or insensitive, by length)
 - Add or remove prefixes/suffixes to/from each line
 - Indent or unindent lines using tabs or spaces
+- Encode/decode Base64, URL, HTML entities and ROT-13
 
 
 ---

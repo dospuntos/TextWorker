@@ -29,7 +29,6 @@ Sidebar::Sidebar()
 	BTabView("Sidebar")
 {
 	SetTabSide(BTabView::kLeftSide);
-	// === Create tabs ===
 	_BuildLineTab();
 	_BuildPrefixTab();
 	_BuildSortTab();

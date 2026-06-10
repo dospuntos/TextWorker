@@ -366,12 +366,15 @@ MainWindow::MessageReceived(BMessage* msg)
 										   "Start exploring the power of Haiku today."));
 			break;
 		case M_TRANSFORM_WIP:
-			(new BAlert("Not implemented",
+		{
+			BAlert* alert = new BAlert("Not implemented",
 				 B_TRANSLATE("Sorry, this functionality has not been implemented "
 							 "yet, but it is planned for the near future."),
-				 B_TRANSLATE("OK")))
-				->Go();
+				 B_TRANSLATE("OK"));
+			alert->SetShortcut(0, B_ESCAPE);
+			alert->Go();
 			break;
+		}
 		case M_TOGGLE_WORD_WRAP:
 			fTextView->SetWordWrap(!fTextView->DoesWordWrap());
 			fToolbar->SetActionPressed(M_TOGGLE_WORD_WRAP, fTextView->DoesWordWrap());
@@ -392,7 +395,9 @@ MainWindow::MessageReceived(BMessage* msg)
 							  "into the window.\n\n"
 							  "Undo changes with \"Edit → Undo\" or Alt+Z.\n\n"
 							  "Use \"Settings\" to configure font and save options.");
-			(new BAlert("Help", helpText.String(), B_TRANSLATE("OK")))->Go();
+			BAlert* alert = new BAlert("Help", helpText.String(), B_TRANSLATE("OK"));
+			alert->SetShortcut(0, B_ESCAPE);
+			alert->Go();
 			break;
 		}
 		case M_SHOW_STATS:
@@ -542,6 +547,14 @@ MainWindow::_BuildMenu()
 		new BMenuItem(B_TRANSLATE("URL decode"), new BMessage(M_TRANSFORM_DECODE_URL)));
 	transformMenu->AddItem(
 		new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13)));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Base64 encode/decode"), new BMessage(M_TRANSFORM_BASE64)));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Encode HTML entities (names)"), new BMessage(M_TRANSFORM_HTML_ENCODE_NAME)));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Encode HTML entities (numbers)"), new BMessage(M_TRANSFORM_HTML_ENCODE_NUM)));
+	transformMenu->AddItem(
+		new BMenuItem(B_TRANSLATE("Decode HTML entities"), new BMessage(M_TRANSFORM_HTML_DECODE)));
 
 	transformMenu->AddSeparatorItem();
 
@@ -867,9 +880,9 @@ MainWindow::_UpdateStatusMessage(BString message)
 	if (fStatusBar) {
 		fMessageBar->SetText(message.String());
 
-		// Set up 5-second timer to clear message
+		// Set up 8-second timer to clear message
 		BMessage clearMsg(M_CLEAR_STATUS);
-		BMessageRunner::StartSending(this, &clearMsg, 5000000, 1);
+		BMessageRunner::StartSending(this, &clearMsg, 8000000, 1);
 	}
 }
 
@@ -920,9 +933,10 @@ MainWindow::OpenFile(const entry_ref& ref)
 
 
 	if (!isText) {
-		(new BAlert("Error", B_TRANSLATE("The selected file is not a recognized text file."),
-			 B_TRANSLATE("OK")))
-			->Go();
+		BAlert* alert = new BAlert("Error", B_TRANSLATE("The selected file is not a recognized text file."),
+			 B_TRANSLATE("OK"));
+		alert->SetShortcut(0, B_ESCAPE);
+		alert->Go();
 		return;
 	}
 

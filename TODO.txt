@@ -1,8 +1,5 @@
-- Re-organize menu
-
 Coding:
 - HEX encode/decode
-- Base64 encode
 - Tabs <> space
 
 Other:

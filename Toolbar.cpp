@@ -94,6 +94,9 @@ CreateToolbar(BHandler* target)
 		ResourceToBitmap("URL_DECODE_ICON"), B_TRANSLATE("URL decode"), "", false);
 	toolbar->AddAction(new BMessage(M_TRANSFORM_ROT13), target, ResourceToBitmap("PUZZLE_ICON"),
 		B_TRANSLATE("ROT13 encode/decode"), "", false);
+	toolbar->AddAction(new BMessage(M_TRANSFORM_BASE64), target, ResourceToBitmap("B64_ICON"),
+		B_TRANSLATE("Base64 encode/decode"), "", false);
+
 
 	toolbar->AddGlue();
 
