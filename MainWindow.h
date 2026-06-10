@@ -15,6 +15,13 @@
 #include <Window.h>
 #include <private/shared/ToolBar.h>
 
+enum LineEnding {
+    LINE_ENDING_LF,    // Unix/Haiku \n
+    LINE_ENDING_CRLF,  // Windows \r\n
+    LINE_ENDING_CR,    // Old Mac \r
+    LINE_ENDING_MIXED
+};
+
 class MainWindow : public BWindow {
 public:
 	MainWindow(void);
@@ -74,12 +81,21 @@ private:
 	BMenuItem* fCopyItem;
 	BMenuItem* fPasteItem;
 	BMenuItem* fSelectAllItem;
+	BMenuItem* fLineEndingLfItem;
+	BMenuItem* fLineEndingCrlfItem;
+	BMenuItem* fLineEndingCrItem;
 
 	BString fLastSavedText;
 	bool IsDocumentModified() const;
 	bool _CheckSaveAndContinue(BMessage* pendingMessage);
 	void _OnSaveComplete();
 	BMessage* fPendingMessage;
+
+	LineEnding fLineEnding;
+	LineEnding _DetectLineEnding(BFile& file);
+	BString _LineEndingLabel() const;
+	BString _NormalizeLineEndings(const char* raw, ssize_t length);
+	BString _RestoreLineEndings(const BString& text) const;
 };
 
 #endif

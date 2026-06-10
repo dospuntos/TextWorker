@@ -64,6 +64,9 @@ enum {
 	M_SETTINGS_CLIPBOARD               = 'sclp',
 	M_TOGGLE_WORD_WRAP                 = 'tgww',
 	M_TOGGLE_APPLY_TO_SELECTION        = 'tgsl',
+	M_SET_LINE_ENDINGS_LF			   = 'lelf',
+	M_SET_LINE_ENDINGS_CRLF			   = 'crlf',
+	M_SET_LINE_ENDINGS_CR			   = 'lecr',
 
 	// UI / Status
 	M_UPDATE_STATUSBAR                 = 'stbr',

@@ -46,7 +46,8 @@ MainWindow::MainWindow(void)
 	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_DOCUMENT_WINDOW,
 		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE),
 		fSettingsWindow(nullptr),
-		fPendingMessage(nullptr)
+		fPendingMessage(nullptr),
+		fLineEnding(LINE_ENDING_LF)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -358,6 +359,18 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_REMOVE_DUPLICATES:
 			RemoveDuplicateLines(fTextView);
 			break;
+		case M_SET_LINE_ENDINGS_LF:
+			fLineEnding = LINE_ENDING_LF;
+			fLastSavedText = "";
+			break;
+		case M_SET_LINE_ENDINGS_CRLF:
+			fLineEnding = LINE_ENDING_CRLF;
+			fLastSavedText = "";
+			break;
+		case M_SET_LINE_ENDINGS_CR:
+			fLineEnding = LINE_ENDING_CR;
+			fLastSavedText = "";
+			break;
 		case M_INSERT_EXAMPLE_TEXT:
 			fTextView->SetText(B_TRANSLATE("Haiku is an open-source operating system.\n"
 										   "It is fast, simple and elegant.\n"
@@ -571,6 +584,26 @@ MainWindow::_BuildMenu()
 
 	// Add the whole Transform menu to the menu bar
 	menuBar->AddItem(transformMenu);
+
+	// Format menu (file encoding/line endings)
+	BMenu* formatMenu = new BMenu(B_TRANSLATE("Format"));
+
+	formatMenu->AddItem(new BMenuItem(B_TRANSLATE("UTF-8"), NULL));
+	formatMenu->AddItem(new BMenuItem(B_TRANSLATE("UTF-16 LE"), NULL));
+	formatMenu->AddItem(new BMenuItem(B_TRANSLATE("Latin-1/ISO-8859-1"), NULL));
+	formatMenu->AddSeparatorItem();
+
+	subMenu = new BMenu(B_TRANSLATE("Line endings"));
+	fLineEndingLfItem = new BMenuItem(B_TRANSLATE("Unix format"), new BMessage(M_SET_LINE_ENDINGS_LF));
+	subMenu->AddItem(fLineEndingLfItem);
+	fLineEndingCrlfItem = new BMenuItem(B_TRANSLATE("Windows format"), new BMessage(M_SET_LINE_ENDINGS_CRLF));
+	subMenu->AddItem(fLineEndingCrlfItem);
+	fLineEndingCrItem = new BMenuItem(B_TRANSLATE("Old Mac format"), new BMessage(M_SET_LINE_ENDINGS_CR));
+	subMenu->AddItem(fLineEndingCrItem);
+
+	formatMenu->AddItem(subMenu);
+
+	menuBar->AddItem(formatMenu);
 
 	return menuBar;
 }
@@ -870,6 +903,8 @@ MainWindow::_UpdateStatusBar()
 		row, col, charCount, wordCount, lineCount);
 	if (IsDocumentModified())
 		statusText << " | " << B_TRANSLATE("Modified");
+
+	statusText << " | " << _LineEndingLabel();
 	fStatusBar->SetText(statusText.String());
 }
 
@@ -940,9 +975,22 @@ MainWindow::OpenFile(const entry_ref& ref)
 		return;
 	}
 
+	// Detect line endings
+	fLineEnding = _DetectLineEnding(file);
+
 	fTextView->SetText("");
 
-	if (BTranslationUtils::GetStyledText(&file, fTextView) == B_OK) {
+	off_t fileSize;
+	if (file.GetSize(&fileSize) == B_OK && fileSize > 0) {
+		char* raw = new char[fileSize + 1];
+		ssize_t bytesRead = file.ReadAt(0, raw, fileSize);
+		if (bytesRead > 0) {
+			raw[bytesRead] = '\0';
+			BString normalized = _NormalizeLineEndings(raw, bytesRead);
+			fTextView->SetText(normalized.String());
+		}
+		delete[] raw;
+
 		BPath path(&realRef);
 		fFilePath = path.Path();
 	} else {
@@ -957,24 +1005,25 @@ MainWindow::OpenFile(const entry_ref& ref)
 status_t
 MainWindow::SaveFile(const char* path)
 {
-	BFile file;
-	status_t result = file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);
-	if (result != B_OK)
-		return result;
+    BFile file;
+    status_t result = file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);
+    if (result != B_OK)
+        return result;
 
-	result = BTranslationUtils::WriteStyledEditFile(fTextView, &file);
-	if (result != B_OK)
-		return result;
+    BString content = _RestoreLineEndings(fTextView->Text());
+    ssize_t written = file.Write(content.String(), content.Length());
+    if (written < 0)
+        return (status_t)written;
+    if (written < content.Length())
+        return B_IO_ERROR;
 
-	fFilePath = path;
-
-	BNodeInfo nodeInfo(&file);
-	nodeInfo.SetType("text/plain");
-
-	fLastSavedText = fTextView->Text();
-	_UpdateWindowTitle();
-	_OnSaveComplete();
-	return B_OK;
+    fFilePath = path;
+    BNodeInfo nodeInfo(&file);
+    nodeInfo.SetType("text/plain");
+    fLastSavedText = fTextView->Text();
+    _UpdateWindowTitle();
+    _OnSaveComplete();
+    return B_OK;
 }
 
 
@@ -1031,6 +1080,11 @@ MainWindow::MenusBeginning()
 	fSelectAllItem->SetEnabled(hasTextView);
 	fUndoItem->SetEnabled(fTextView->CanUndo());
 	fRedoItem->SetEnabled(fTextView->CanRedo());
+
+	fLineEndingCrlfItem->SetMarked(fLineEnding == LINE_ENDING_CRLF);
+	fLineEndingCrItem->SetMarked(fLineEnding == LINE_ENDING_CR);
+	fLineEndingLfItem->SetMarked(fLineEnding == LINE_ENDING_LF || fLineEnding == LINE_ENDING_MIXED);
+
 }
 
 
@@ -1188,3 +1242,92 @@ MainWindow::_OnSaveComplete()
         fPendingMessage = nullptr;
     }
 }
+
+LineEnding
+MainWindow::_DetectLineEnding(BFile& file)
+{
+    const off_t kMaxCheckSize = 8192;
+    off_t fileSize;
+    if (file.GetSize(&fileSize) != B_OK || fileSize == 0)
+        return LINE_ENDING_LF;
+
+    uint8 buffer[kMaxCheckSize];
+    ssize_t bytesRead = file.ReadAt(0, buffer, std::min(fileSize, kMaxCheckSize));
+    if (bytesRead <= 0)
+        return LINE_ENDING_LF;
+
+    bool hasCRLF = false;
+    bool hasLF   = false;
+    bool hasCR   = false;
+
+    for (ssize_t i = 0; i < bytesRead; i++) {
+        if (buffer[i] == '\r') {
+            if (i + 1 < bytesRead && buffer[i + 1] == '\n') {
+                hasCRLF = true;
+                i++; // skip the \n, we already counted it
+            } else {
+                hasCR = true;
+            }
+        } else if (buffer[i] == '\n') {
+            hasLF = true;
+        }
+    }
+
+    int stylesFound = (hasCRLF ? 1 : 0) + (hasLF ? 1 : 0) + (hasCR ? 1 : 0);
+    if (stylesFound > 1)  return LINE_ENDING_MIXED;
+    if (hasCRLF)          return LINE_ENDING_CRLF;
+    if (hasCR)            return LINE_ENDING_CR;
+    return LINE_ENDING_LF; // default
+}
+
+BString
+MainWindow::_LineEndingLabel() const
+{
+    switch (fLineEnding) {
+        case LINE_ENDING_CRLF:  return "CRLF";
+        case LINE_ENDING_CR:    return "CR";
+        case LINE_ENDING_MIXED: return "Mixed";
+        case LINE_ENDING_LF:
+        default:                return "LF";
+    }
+}
+
+BString
+MainWindow::_NormalizeLineEndings(const char* raw, ssize_t length)
+{
+    BString result;
+
+    for (ssize_t i = 0; i < length; i++) {
+        if (raw[i] == '\r') {
+            result.Append('\n', 1);
+            if (i + 1 < length && raw[i + 1] == '\n')
+                i++; // skip the \n in \r\n pair
+        } else {
+            result.Append(raw[i], 1);
+        }
+    }
+    return result;
+}
+
+BString
+MainWindow::_RestoreLineEndings(const BString& text) const
+{
+    if (fLineEnding == LINE_ENDING_LF)
+        return text; // nothing to do
+
+    BString result(text);
+    switch (fLineEnding) {
+        case LINE_ENDING_CRLF:
+            result.ReplaceAll("\n", "\r\n");
+            break;
+        case LINE_ENDING_CR:
+            result.ReplaceAll("\n", "\r");
+            break;
+        case LINE_ENDING_MIXED: // Fallback to LF
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+
