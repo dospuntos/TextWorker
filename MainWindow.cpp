@@ -604,7 +604,8 @@ MainWindow::_BuildMenu()
 
 	formatMenu->AddItem(subMenu);
 
-	menuBar->AddItem(formatMenu);
+	// ToDo: Enable when working
+	//menuBar->AddItem(formatMenu);
 
 	return menuBar;
 }
@@ -874,7 +875,7 @@ MainWindow::_ApplySettings(const BMessage& msg)
 		newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
 	newFont.SetSize(fFontSize);
 	fTextView->SetFontAndColor(&newFont);
-	_UpdateStatusMessage("Settings updated");
+	_UpdateStatusMessage(B_TRANSLATE("Settings updated"));
 }
 
 
@@ -1426,7 +1427,6 @@ MainWindow::_DetectEncoding(const char* raw, ssize_t length, size_t& outDataStar
 
 	fHasBOM = false;
 
-	// No BOM — use ICU to detect
 	UErrorCode status = U_ZERO_ERROR;
 	UCharsetDetector* detector = ucsdet_open(&status);
 	if (U_FAILURE(status))
@@ -1439,7 +1439,6 @@ MainWindow::_DetectEncoding(const char* raw, ssize_t length, size_t& outDataStar
 	if (U_SUCCESS(status) && match != NULL) {
 		const char* name = ucsdet_getName(match, &status);
 		int32_t confidence = ucsdet_getConfidence(match, &status);
-		fprintf(stderr, "ICU detected: %s, confidence: %d\n", name, confidence);
 
 		if (U_SUCCESS(status) && confidence >= 10) {
 			BString icuName(name);
