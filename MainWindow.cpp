@@ -869,7 +869,7 @@ MainWindow::_ApplySettings(const BMessage& msg)
 
 	// Apply font to the textView
 	BFont newFont(be_fixed_font); // Default fallback
-	if (!fFontFamily.IsEmpty() || fFontFamily != "System default")
+	if (!fFontFamily.IsEmpty() && fFontFamily != "System default")
 		newFont.SetFamilyAndStyle(fFontFamily.String(), NULL);
 	newFont.SetSize(fFontSize);
 	fTextView->SetFontAndColor(&newFont);
