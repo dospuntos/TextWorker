@@ -12,6 +12,8 @@
 #include <SupportDefs.h>
 #include <TextControl.h>
 #include <TextView.h>
+#include <unicode/ucsdet.h>
+#include <unicode/ucnv.h>
 #include <Window.h>
 #include <private/shared/ToolBar.h>
 
@@ -20,6 +22,15 @@ enum LineEnding {
     LINE_ENDING_CRLF,  // Windows \r\n
     LINE_ENDING_CR,    // Old Mac \r
     LINE_ENDING_MIXED
+};
+
+enum TextEncoding {
+    ENCODING_UTF8,
+    ENCODING_UTF16_LE,
+    ENCODING_UTF16_BE,
+    ENCODING_LATIN1,
+    ENCODING_WINDOWS1252,
+    ENCODING_UNKNOWN
 };
 
 class MainWindow : public BWindow {
@@ -96,6 +107,14 @@ private:
 	BString _LineEndingLabel() const;
 	BString _NormalizeLineEndings(const char* raw, ssize_t length);
 	BString _RestoreLineEndings(const BString& text) const;
+
+	TextEncoding fEncoding;
+	bool fHasBOM;
+	TextEncoding    _DetectEncoding(const char* raw, ssize_t length, size_t& outDataStart);
+	BString         _DecodeToUTF8(const char* raw, ssize_t length, TextEncoding encoding);
+	BString         _EncodeFromUTF8(const BString& text, TextEncoding encoding);
+	BString		    _EncodingToICUName(TextEncoding encoding) const;
+	BString		    _EncodingLabel() const;
 };
 
 #endif

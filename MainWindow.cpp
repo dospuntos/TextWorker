@@ -904,7 +904,7 @@ MainWindow::_UpdateStatusBar()
 	if (IsDocumentModified())
 		statusText << " | " << B_TRANSLATE("Modified");
 
-	statusText << " | " << _LineEndingLabel();
+	statusText << " | " << _EncodingLabel() << " | " << _LineEndingLabel();
 	fStatusBar->SetText(statusText.String());
 }
 
@@ -948,6 +948,7 @@ MainWindow::OpenFile(const entry_ref& ref)
 		if (file.GetSize(&fileSize) == B_OK) {
 			uint8 buffer[kMaxCheckSize];
 			ssize_t bytesRead = file.ReadAt(0, buffer, std::min(fileSize, kMaxCheckSize));
+
 			if (bytesRead > 0) {
 
 				// Count non-printable characters
@@ -982,20 +983,26 @@ MainWindow::OpenFile(const entry_ref& ref)
 
 	off_t fileSize;
 	if (file.GetSize(&fileSize) == B_OK && fileSize > 0) {
-		char* raw = new char[fileSize + 1];
+		char* raw = new char[fileSize];
 		ssize_t bytesRead = file.ReadAt(0, raw, fileSize);
+
 		if (bytesRead > 0) {
-			raw[bytesRead] = '\0';
-			BString normalized = _NormalizeLineEndings(raw, bytesRead);
+			size_t dataStart = 0;
+			fEncoding = _DetectEncoding(raw, bytesRead, dataStart);
+
+			BString utf8 = _DecodeToUTF8(raw + dataStart, bytesRead - (ssize_t)dataStart, fEncoding);
+
+			BString normalized = _NormalizeLineEndings(utf8.String(), utf8.Length());
 			fTextView->SetText(normalized.String());
 		}
-		delete[] raw;
 
+		delete[] raw;
 		BPath path(&realRef);
 		fFilePath = path.Path();
 	} else {
 		fFilePath = "";
 	}
+
 	fTextView->ClearHistory();
 	fLastSavedText = fTextView->Text();
 	_UpdateWindowTitle();
@@ -1011,11 +1018,26 @@ MainWindow::SaveFile(const char* path)
         return result;
 
     BString content = _RestoreLineEndings(fTextView->Text());
-    ssize_t written = file.Write(content.String(), content.Length());
-    if (written < 0)
-        return (status_t)written;
-    if (written < content.Length())
-        return B_IO_ERROR;
+	BString encoded = _EncodeFromUTF8(content, fEncoding);
+
+	// Prepend BOM if the original file had one
+	if (fHasBOM && fEncoding == ENCODING_UTF8) {
+		BString withBOM;
+		withBOM.Append("\xEF\xBB\xBF", 3);
+		withBOM.Append(encoded);
+		encoded = withBOM;
+	} else if (fHasBOM && fEncoding == ENCODING_UTF16_LE) {
+		BString withBOM;
+		withBOM.Append("\xFF\xFE", 2);
+		withBOM.Append(encoded);
+		encoded = withBOM;
+	}
+
+	ssize_t written = file.Write(encoded.String(), encoded.Length());
+	if (written < 0)
+		return (status_t)written;
+	if (written < encoded.Length())
+		return B_IO_ERROR;
 
     fFilePath = path;
     BNodeInfo nodeInfo(&file);
@@ -1331,3 +1353,153 @@ MainWindow::_RestoreLineEndings(const BString& text) const
     return result;
 }
 
+
+BString
+MainWindow::_EncodingToICUName(TextEncoding encoding) const
+{
+    switch (encoding) {
+        case ENCODING_UTF16_LE:    return "UTF-16LE";
+        case ENCODING_UTF16_BE:    return "UTF-16BE";
+        case ENCODING_LATIN1:      return "ISO-8859-1";
+        case ENCODING_WINDOWS1252: return "windows-1252";
+        case ENCODING_UTF8:
+        default:                   return "UTF-8";
+    }
+}
+
+BString
+MainWindow::_EncodingLabel() const
+{
+    switch (fEncoding) {
+        case ENCODING_UTF16_LE:    return "UTF-16 LE";
+        case ENCODING_UTF16_BE:    return "UTF-16 BE";
+        case ENCODING_LATIN1:      return "Latin-1";
+        case ENCODING_WINDOWS1252: return "Windows-1252";
+        case ENCODING_UTF8:
+        default:                   return "UTF-8";
+    }
+}
+
+TextEncoding
+MainWindow::_DetectEncoding(const char* raw, ssize_t length, size_t& outDataStart)
+{
+    outDataStart = 0;
+
+    // Detect BOM
+    if (length >= 3 &&
+        (uint8)raw[0] == 0xEF &&
+        (uint8)raw[1] == 0xBB &&
+        (uint8)raw[2] == 0xBF) {
+        fHasBOM = true;
+        outDataStart = 3;
+        return ENCODING_UTF8;
+    }
+    if (length >= 2 &&
+        (uint8)raw[0] == 0xFF &&
+        (uint8)raw[1] == 0xFE) {
+        fHasBOM = true;
+        outDataStart = 2;
+        return ENCODING_UTF16_LE;
+    }
+    if (length >= 2 &&
+        (uint8)raw[0] == 0xFE &&
+        (uint8)raw[1] == 0xFF) {
+        fHasBOM = true;
+        outDataStart = 2;
+        return ENCODING_UTF16_BE;
+    }
+
+    fHasBOM = false;
+
+    // No BOM — use ICU to detect
+    UErrorCode status = U_ZERO_ERROR;
+    UCharsetDetector* detector = ucsdet_open(&status);
+    if (U_FAILURE(status))
+        return ENCODING_UTF8; //fallback
+
+    ucsdet_setText(detector, raw, (int32_t)length, &status);
+    const UCharsetMatch* match = ucsdet_detect(detector, &status);
+
+    TextEncoding result = ENCODING_UTF8;
+    if (U_SUCCESS(status) && match != NULL) {
+        const char* name = ucsdet_getName(match, &status);
+        int32_t confidence = ucsdet_getConfidence(match, &status);
+		fprintf(stderr, "ICU detected: %s, confidence: %d\n", name, confidence);
+
+        if (U_SUCCESS(status) && confidence >= 10) {
+            BString icuName(name);
+            if (icuName == "UTF-8")                         result = ENCODING_UTF8;
+            else if (icuName == "UTF-16LE")                 result = ENCODING_UTF16_LE;
+            else if (icuName == "UTF-16BE")                 result = ENCODING_UTF16_BE;
+            else if (icuName == "ISO-8859-1")               result = ENCODING_LATIN1;
+            else if (icuName.StartsWith("windows-1252"))    result = ENCODING_WINDOWS1252;
+            // for anything else fallback to UTF-8
+        }
+    }
+
+    ucsdet_close(detector);
+    return result;
+}
+
+
+BString
+MainWindow::_DecodeToUTF8(const char* raw, ssize_t length, TextEncoding encoding)
+{
+    if (encoding == ENCODING_UTF8)
+        return BString(raw, length); //already UTF-8, early return
+
+    UErrorCode status = U_ZERO_ERROR;
+    const char* icuName = _EncodingToICUName(encoding);
+
+    //calculate required buffer size
+    int32_t destSize = 0;
+    ucnv_convert("UTF-8", icuName, NULL, 0, raw, (int32_t)length, &status);
+
+    if (status == U_BUFFER_OVERFLOW_ERROR) {
+        destSize = -1; // trigger proper sizing below
+        status = U_ZERO_ERROR;
+    }
+
+    // get exact size
+    status = U_ZERO_ERROR;
+    int32_t needed = ucnv_convert("UTF-8", icuName, NULL, 0, raw, (int32_t)length, &status);
+    // U_BUFFER_OVERFLOW_ERROR
+    status = U_ZERO_ERROR;
+
+    char* dest = new char[needed + 1];
+    int32_t written = ucnv_convert("UTF-8", icuName, dest, needed + 1, raw, (int32_t)length, &status);
+
+    BString result;
+    if (U_SUCCESS(status))
+        result.SetTo(dest, written);
+
+    delete[] dest;
+    return result;
+}
+
+
+BString
+MainWindow::_EncodeFromUTF8(const BString& text, TextEncoding encoding)
+{
+    if (encoding == ENCODING_UTF8)
+        return text; // No conversion, early return
+
+    UErrorCode status = U_ZERO_ERROR;
+    const char* icuName = _EncodingToICUName(encoding);
+    const char* src = text.String();
+    int32_t srcLen = (int32_t)text.Length();
+
+    // get exact size
+    int32_t needed = ucnv_convert(icuName, "UTF-8", NULL, 0, src, srcLen, &status);
+    status = U_ZERO_ERROR;
+
+    char* dest = new char[needed + 2]; //for possible UTF-16 null terminator
+    int32_t written = ucnv_convert(icuName, "UTF-8", dest, needed + 2, src, srcLen, &status);
+
+    BString result;
+    if (U_SUCCESS(status))
+        result.SetTo(dest, written);
+
+    delete[] dest;
+    return result;
+}

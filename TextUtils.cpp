@@ -491,21 +491,46 @@ Base64(BTextView* textView)
 {
 	BString text = GetText(textView, false);
 
-	// Auto-detect: if text looks like Base64, decode — otherwise encode
+	// Auto-detect: if text looks like Base64, decode, otherwise encode
 	bool isBase64 = true;
 	int32 len = text.Length();
 
-	// Basic checks: non-empty, length multiple of 4, valid charset
 	if (len == 0 || len % 4 != 0) {
 		isBase64 = false;
 	} else {
-		for (int32 i = 0; i < len && isBase64; ++i) {
+		const char* kChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+		bool foundPadding = false;
+		int paddingCount = 0;
+
+		for (int32 i = 0; i < len; ++i) {
 			char c = text.ByteAt(i);
-			bool validChar = std::isalnum(c) || c == '+' || c == '/' || c == '=';
-			if (!validChar)
+
+			if (c == '=') {
+				foundPadding = true;
+				paddingCount++;
+
+				// Maximum two padding characters, only at the end
+				if (paddingCount > 2 || i < len - 2) {
+					isBase64 = false;
+					break;
+				}
+			} else {
+				// No characters allowed after padding
+				if (foundPadding || strchr(kChars, c) == nullptr) {
+					isBase64 = false;
+					break;
+				}
+			}
+		}
+
+		// Padding must be consistent with the final quartet
+		if (isBase64 && paddingCount > 0) {
+			if (paddingCount == 1 && text.ByteAt(len - 1) != '=')
 				isBase64 = false;
-			// Padding '=' is only valid at the end
-			if (c == '=' && i < len - 2)
+
+			if (paddingCount == 2
+				&& (text.ByteAt(len - 2) != '=' || text.ByteAt(len - 1) != '='))
 				isBase64 = false;
 		}
 	}
@@ -513,9 +538,8 @@ Base64(BTextView* textView)
 	BString result;
 
 	if (isBase64) {
-		// === Decode ===
-		const char* kChars
-			= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		// Decode
+		const char* kChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 		auto indexOf = [&](char c) -> int {
 			const char* p = strchr(kChars, c);
 			return p ? (int)(p - kChars) : -1;
@@ -534,20 +558,21 @@ Base64(BTextView* textView)
 				result += (char)(((b2 & 0x3) << 6) | b3);
 		}
 	} else {
-		// === Encode ===
-		const char* kChars
-			= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
+		// Encode
+		const char* kChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 		int32 i = 0;
+
 		while (i < len) {
+			int32 remaining = len - i;
+
 			unsigned char b0 = (unsigned char)text.ByteAt(i++);
-			unsigned char b1 = i < len ? (unsigned char)text.ByteAt(i++) : 0;
-			unsigned char b2 = i < len ? (unsigned char)text.ByteAt(i++) : 0;
+			unsigned char b1 = remaining > 1 ? (unsigned char)text.ByteAt(i++) : 0;
+			unsigned char b2 = remaining > 2 ? (unsigned char)text.ByteAt(i++) : 0;
 
 			result += kChars[b0 >> 2];
 			result += kChars[((b0 & 0x3) << 4) | (b1 >> 4)];
-			result += (i - 1 > len) ? '=' : kChars[((b1 & 0xF) << 2) | (b2 >> 6)];
-			result += (i > len)     ? '=' : kChars[b2 & 0x3F];
+			result += remaining > 1 ? kChars[((b1 & 0xF) << 2) | (b2 >> 6)] : '=';
+			result += remaining > 2 ? kChars[b2 & 0x3F] : '=';
 		}
 	}
 

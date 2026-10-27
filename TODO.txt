@@ -4,4 +4,9 @@ Coding:
 
 Other:
 - Regex
-- Word count by occurence
+- Display removed duplicates
+- Add number to each line, with prefix/suffix
+- Text <> binary
+- Remove x characters from each line (start/end)
+- Shuffle lines
+- Generate list of numbers?
