@@ -529,8 +529,7 @@ Base64(BTextView* textView)
 			if (paddingCount == 1 && text.ByteAt(len - 1) != '=')
 				isBase64 = false;
 
-			if (paddingCount == 2
-				&& (text.ByteAt(len - 2) != '=' || text.ByteAt(len - 1) != '='))
+			if (paddingCount == 2 && (text.ByteAt(len - 2) != '=' || text.ByteAt(len - 1) != '='))
 				isBase64 = false;
 		}
 	}
@@ -604,7 +603,7 @@ EncodeHTMLEntities(BTextView* textView, bool encodeByName)
 
 	int32 len = text.Length();
 
-	for (int32 i = 0; i < len; ) {
+	for (int32 i = 0; i < len;) {
 
 		unsigned char b0 = (unsigned char)text.ByteAt(i);
 
@@ -615,26 +614,20 @@ EncodeHTMLEntities(BTextView* textView, bool encodeByName)
 			codepoint = b0;
 		} else if ((b0 & 0xE0) == 0xC0 && i + 1 < len) {
 
-			codepoint =
-				(b0 & 0x1F) << 6
-				| ((unsigned char)text.ByteAt(i + 1) & 0x3F);
+			codepoint = (b0 & 0x1F) << 6 | ((unsigned char)text.ByteAt(i + 1) & 0x3F);
 
 			seqLen = 2;
 
 		} else if ((b0 & 0xF0) == 0xE0 && i + 2 < len) {
 
-			codepoint =
-				(b0 & 0x0F) << 12
-				| ((unsigned char)text.ByteAt(i + 1) & 0x3F) << 6
+			codepoint = (b0 & 0x0F) << 12 | ((unsigned char)text.ByteAt(i + 1) & 0x3F) << 6
 				| ((unsigned char)text.ByteAt(i + 2) & 0x3F);
 
 			seqLen = 3;
 
 		} else if ((b0 & 0xF8) == 0xF0 && i + 3 < len) {
 
-			codepoint =
-				(b0 & 0x07) << 18
-				| ((unsigned char)text.ByteAt(i + 1) & 0x3F) << 12
+			codepoint = (b0 & 0x07) << 18 | ((unsigned char)text.ByteAt(i + 1) & 0x3F) << 12
 				| ((unsigned char)text.ByteAt(i + 2) & 0x3F) << 6
 				| ((unsigned char)text.ByteAt(i + 3) & 0x3F);
 
@@ -682,10 +675,8 @@ EncodeHTMLEntities(BTextView* textView, bool encodeByName)
 
 	textView->SetText(result.String());
 
-	SendStatusMessage(
-		encodeByName
-			? B_TRANSLATE("Text HTML-encoded (named entities)")
-			: B_TRANSLATE("Text HTML-encoded (numeric entities)"));
+	SendStatusMessage(encodeByName ? B_TRANSLATE("Text HTML-encoded (named entities)")
+								   : B_TRANSLATE("Text HTML-encoded (numeric entities)"));
 }
 
 
@@ -725,17 +716,13 @@ DecodeHTMLEntities(BTextView* textView)
 				codepoint = (uint32)strtoul(hex.String(), nullptr, 16);
 			} else {
 				BString dec;
-				entity.CopyInto(dec, 1,
-					entity.Length() - 1);
+				entity.CopyInto(dec, 1, entity.Length() - 1);
 
-				codepoint = (uint32)strtoul(
-					dec.String(), nullptr, 10);
+				codepoint = (uint32)strtoul(dec.String(), nullptr, 10);
 			}
 		} else {
 			// Named
-			for (int32 e = 0;
-				e < kEntityCount;
-				++e) {
+			for (int32 e = 0; e < kEntityCount; ++e) {
 
 				if (entity != kEntities[e].name)
 					continue;
@@ -770,8 +757,7 @@ DecodeHTMLEntities(BTextView* textView)
 	}
 
 	textView->SetText(result.String());
-	SendStatusMessage(
-		B_TRANSLATE("Text HTML-decoded"));
+	SendStatusMessage(B_TRANSLATE("Text HTML-decoded"));
 }
 
 
@@ -1551,8 +1537,8 @@ ShowTextStats(BTextView* textView)
 		if (++shown == 10)
 			break;
 	}
-	BAlert* alert = new BAlert("Stats", statsMsg.String(), B_TRANSLATE("OK"), NULL, NULL, B_WIDTH_AS_USUAL,
-		 B_IDEA_ALERT);
+	BAlert* alert = new BAlert("Stats", statsMsg.String(), B_TRANSLATE("OK"), NULL, NULL,
+		B_WIDTH_AS_USUAL, B_IDEA_ALERT);
 	alert->SetShortcut(0, B_ESCAPE);
 	alert->Go();
 }

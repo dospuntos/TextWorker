@@ -45,9 +45,9 @@ MainWindow::MainWindow(void)
 	:
 	BWindow(BRect(100, 100, 900, 800), kApplicationName, B_DOCUMENT_WINDOW,
 		B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE),
-		fSettingsWindow(nullptr),
-		fPendingMessage(nullptr),
-		fLineEnding(LINE_ENDING_LF)
+	fSettingsWindow(nullptr),
+	fPendingMessage(nullptr),
+	fLineEnding(LINE_ENDING_LF)
 {
 	BMenuBar* menuBar = _BuildMenu();
 
@@ -204,9 +204,8 @@ MainWindow::MessageReceived(BMessage* msg)
 				// First time save, show Save As panel
 				fSavePanel->Show();
 			} else {
-				if (SaveFile(fFilePath.String()) == B_OK && fPendingQuitAfterSave) {
+				if (SaveFile(fFilePath.String()) == B_OK && fPendingQuitAfterSave)
 					be_app->PostMessage(B_QUIT_REQUESTED);
-				}
 			}
 			break;
 		case M_FILE_SAVE_AS:
@@ -343,11 +342,10 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_INDENT_LINES:
 		case M_UNINDENT_LINES:
 		{
-			if (msg->what == M_INDENT_LINES) {
+			if (msg->what == M_INDENT_LINES)
 				IndentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
-			} else {
+			else
 				UnindentLines(fTextView, fSidebar->getTabsRadio(), fSidebar->getIndentSpinner());
-			}
 			break;
 		}
 		case M_MODE_REMOVE_ALL:
@@ -381,9 +379,9 @@ MainWindow::MessageReceived(BMessage* msg)
 		case M_TRANSFORM_WIP:
 		{
 			BAlert* alert = new BAlert("Not implemented",
-				 B_TRANSLATE("Sorry, this functionality has not been implemented "
-							 "yet, but it is planned for the near future."),
-				 B_TRANSLATE("OK"));
+				B_TRANSLATE("Sorry, this functionality has not been implemented "
+							"yet, but it is planned for the near future."),
+				B_TRANSLATE("OK"));
 			alert->SetShortcut(0, B_ESCAPE);
 			alert->Go();
 			break;
@@ -454,7 +452,7 @@ MainWindow::QuitRequested()
 	}
 
 	if (!_CheckSaveAndContinue(new BMessage(B_QUIT_REQUESTED)))
-        return false;
+		return false;
 
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
@@ -562,10 +560,10 @@ MainWindow::_BuildMenu()
 		new BMenuItem(B_TRANSLATE("ROT-13 encode/decode"), new BMessage(M_TRANSFORM_ROT13)));
 	transformMenu->AddItem(
 		new BMenuItem(B_TRANSLATE("Base64 encode/decode"), new BMessage(M_TRANSFORM_BASE64)));
-	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Encode HTML entities (names)"), new BMessage(M_TRANSFORM_HTML_ENCODE_NAME)));
-	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Encode HTML entities (numbers)"), new BMessage(M_TRANSFORM_HTML_ENCODE_NUM)));
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Encode HTML entities (names)"),
+		new BMessage(M_TRANSFORM_HTML_ENCODE_NAME)));
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Encode HTML entities (numbers)"),
+		new BMessage(M_TRANSFORM_HTML_ENCODE_NUM)));
 	transformMenu->AddItem(
 		new BMenuItem(B_TRANSLATE("Decode HTML entities"), new BMessage(M_TRANSFORM_HTML_DECODE)));
 
@@ -579,8 +577,8 @@ MainWindow::_BuildMenu()
 	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove duplicate lines"),
 		new BMessage(M_REMOVE_DUPLICATES), 'R'));
 	transformMenu->AddSeparatorItem();
-	transformMenu->AddItem(
-		new BMenuItem(B_TRANSLATE("Remove line breaks"), new BMessage(M_REMOVE_LINE_BREAKS_DEFAULT), 'B'));
+	transformMenu->AddItem(new BMenuItem(B_TRANSLATE("Remove line breaks"),
+		new BMessage(M_REMOVE_LINE_BREAKS_DEFAULT), 'B'));
 
 	// Add the whole Transform menu to the menu bar
 	menuBar->AddItem(transformMenu);
@@ -594,11 +592,14 @@ MainWindow::_BuildMenu()
 	formatMenu->AddSeparatorItem();
 
 	subMenu = new BMenu(B_TRANSLATE("Line endings"));
-	fLineEndingLfItem = new BMenuItem(B_TRANSLATE("Unix format"), new BMessage(M_SET_LINE_ENDINGS_LF));
+	fLineEndingLfItem
+		= new BMenuItem(B_TRANSLATE("Unix format"), new BMessage(M_SET_LINE_ENDINGS_LF));
 	subMenu->AddItem(fLineEndingLfItem);
-	fLineEndingCrlfItem = new BMenuItem(B_TRANSLATE("Windows format"), new BMessage(M_SET_LINE_ENDINGS_CRLF));
+	fLineEndingCrlfItem
+		= new BMenuItem(B_TRANSLATE("Windows format"), new BMessage(M_SET_LINE_ENDINGS_CRLF));
 	subMenu->AddItem(fLineEndingCrlfItem);
-	fLineEndingCrItem = new BMenuItem(B_TRANSLATE("Old Mac format"), new BMessage(M_SET_LINE_ENDINGS_CR));
+	fLineEndingCrItem
+		= new BMenuItem(B_TRANSLATE("Old Mac format"), new BMessage(M_SET_LINE_ENDINGS_CR));
 	subMenu->AddItem(fLineEndingCrItem);
 
 	formatMenu->AddItem(subMenu);
@@ -960,17 +961,16 @@ MainWindow::OpenFile(const entry_ref& ref)
 							break;
 					}
 				}
-				if (nonPrintable <= 10) {
+				if (nonPrintable <= 10)
 					isText = true;
-				}
 			}
 		}
 	}
 
 
 	if (!isText) {
-		BAlert* alert = new BAlert("Error", B_TRANSLATE("The selected file is not a recognized text file."),
-			 B_TRANSLATE("OK"));
+		BAlert* alert = new BAlert("Error",
+			B_TRANSLATE("The selected file is not a recognized text file."), B_TRANSLATE("OK"));
 		alert->SetShortcut(0, B_ESCAPE);
 		alert->Go();
 		return;
@@ -990,7 +990,8 @@ MainWindow::OpenFile(const entry_ref& ref)
 			size_t dataStart = 0;
 			fEncoding = _DetectEncoding(raw, bytesRead, dataStart);
 
-			BString utf8 = _DecodeToUTF8(raw + dataStart, bytesRead - (ssize_t)dataStart, fEncoding);
+			BString utf8
+				= _DecodeToUTF8(raw + dataStart, bytesRead - (ssize_t)dataStart, fEncoding);
 
 			BString normalized = _NormalizeLineEndings(utf8.String(), utf8.Length());
 			fTextView->SetText(normalized.String());
@@ -1012,12 +1013,12 @@ MainWindow::OpenFile(const entry_ref& ref)
 status_t
 MainWindow::SaveFile(const char* path)
 {
-    BFile file;
-    status_t result = file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);
-    if (result != B_OK)
-        return result;
+	BFile file;
+	status_t result = file.SetTo(path, B_READ_WRITE | B_CREATE_FILE | B_ERASE_FILE);
+	if (result != B_OK)
+		return result;
 
-    BString content = _RestoreLineEndings(fTextView->Text());
+	BString content = _RestoreLineEndings(fTextView->Text());
 	BString encoded = _EncodeFromUTF8(content, fEncoding);
 
 	// Prepend BOM if the original file had one
@@ -1039,13 +1040,13 @@ MainWindow::SaveFile(const char* path)
 	if (written < encoded.Length())
 		return B_IO_ERROR;
 
-    fFilePath = path;
-    BNodeInfo nodeInfo(&file);
-    nodeInfo.SetType("text/plain");
-    fLastSavedText = fTextView->Text();
-    _UpdateWindowTitle();
-    _OnSaveComplete();
-    return B_OK;
+	fFilePath = path;
+	BNodeInfo nodeInfo(&file);
+	nodeInfo.SetType("text/plain");
+	fLastSavedText = fTextView->Text();
+	_UpdateWindowTitle();
+	_OnSaveComplete();
+	return B_OK;
 }
 
 
@@ -1106,7 +1107,6 @@ MainWindow::MenusBeginning()
 	fLineEndingCrlfItem->SetMarked(fLineEnding == LINE_ENDING_CRLF);
 	fLineEndingCrItem->SetMarked(fLineEnding == LINE_ENDING_CR);
 	fLineEndingLfItem->SetMarked(fLineEnding == LINE_ENDING_LF || fLineEnding == LINE_ENDING_MIXED);
-
 }
 
 
@@ -1149,7 +1149,6 @@ MainWindow::_UpdateWindowTitle()
 	}
 	SetTitle(windowTitle);
 }
-
 
 
 bool
@@ -1201,14 +1200,14 @@ MainWindow::IsDocumentModified() const
 	return currentText != fLastSavedText;
 }
 
+
 void
 MainWindow::DispatchMessage(BMessage* message, BHandler* target)
 {
 	if (message->what == B_KEY_DOWN) {
 		const char* bytes;
 
-		if (message->FindString("bytes", &bytes) == B_OK
-			&& bytes[0] == B_ESCAPE && fCloseOnEsc) {
+		if (message->FindString("bytes", &bytes) == B_OK && bytes[0] == B_ESCAPE && fCloseOnEsc) {
 			PostMessage(B_QUIT_REQUESTED);
 			return;
 		}
@@ -1224,282 +1223,304 @@ MainWindow::DispatchMessage(BMessage* message, BHandler* target)
 bool
 MainWindow::_CheckSaveAndContinue(BMessage* pendingMessage)
 {
-    if (!IsDocumentModified() || !fAskToSave)
-        return true;
+	if (!IsDocumentModified() || !fAskToSave)
+		return true;
 
-    BString fileName = B_TRANSLATE("Untitled");
-    if (!fFilePath.IsEmpty()) {
-        BPath path(fFilePath);
-        fileName = path.Leaf();
-    }
+	BString fileName = B_TRANSLATE("Untitled");
+	if (!fFilePath.IsEmpty()) {
+		BPath path(fFilePath);
+		fileName = path.Leaf();
+	}
 
-    BString text;
-    text.SetToFormat(B_TRANSLATE("Save changes to the file \"%s\"?"), fileName.String());
-    BAlert* alert = new BAlert("save-changes", text,
-        B_TRANSLATE("Cancel"), B_TRANSLATE("Don't Save"), B_TRANSLATE("Save"),
-        B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
-    alert->SetShortcut(0, B_ESCAPE);
+	BString text;
+	text.SetToFormat(B_TRANSLATE("Save changes to the file \"%s\"?"), fileName.String());
+	BAlert* alert
+		= new BAlert("save-changes", text, B_TRANSLATE("Cancel"), B_TRANSLATE("Don't Save"),
+			B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
+	alert->SetShortcut(0, B_ESCAPE);
 
-    switch (alert->Go()) {
-        case 0:
-            return false;
-        case 1: // Don't Save
-            return true;
-        case 2: // Save
-            if (pendingMessage)
-                fPendingMessage = new BMessage(*pendingMessage);
-            PostMessage(M_FILE_SAVE);
-            return false; // Caller must wait; save handler will resume
-    }
-    return false;
+	switch (alert->Go()) {
+		case 0:
+			return false;
+		case 1: // Don't Save
+			return true;
+		case 2: // Save
+			if (pendingMessage)
+				fPendingMessage = new BMessage(*pendingMessage);
+			PostMessage(M_FILE_SAVE);
+			return false; // Caller must wait; save handler will resume
+	}
+	return false;
 }
 
 
 void
 MainWindow::_OnSaveComplete()
 {
-    if (fPendingMessage != nullptr) {
-        PostMessage(fPendingMessage);
-        delete fPendingMessage;
-        fPendingMessage = nullptr;
-    }
+	if (fPendingMessage != nullptr) {
+		PostMessage(fPendingMessage);
+		delete fPendingMessage;
+		fPendingMessage = nullptr;
+	}
 }
+
 
 LineEnding
 MainWindow::_DetectLineEnding(BFile& file)
 {
-    const off_t kMaxCheckSize = 8192;
-    off_t fileSize;
-    if (file.GetSize(&fileSize) != B_OK || fileSize == 0)
-        return LINE_ENDING_LF;
+	const off_t kMaxCheckSize = 8192;
+	off_t fileSize;
+	if (file.GetSize(&fileSize) != B_OK || fileSize == 0)
+		return LINE_ENDING_LF;
 
-    uint8 buffer[kMaxCheckSize];
-    ssize_t bytesRead = file.ReadAt(0, buffer, std::min(fileSize, kMaxCheckSize));
-    if (bytesRead <= 0)
-        return LINE_ENDING_LF;
+	uint8 buffer[kMaxCheckSize];
+	ssize_t bytesRead = file.ReadAt(0, buffer, std::min(fileSize, kMaxCheckSize));
+	if (bytesRead <= 0)
+		return LINE_ENDING_LF;
 
-    bool hasCRLF = false;
-    bool hasLF   = false;
-    bool hasCR   = false;
+	bool hasCRLF = false;
+	bool hasLF = false;
+	bool hasCR = false;
 
-    for (ssize_t i = 0; i < bytesRead; i++) {
-        if (buffer[i] == '\r') {
-            if (i + 1 < bytesRead && buffer[i + 1] == '\n') {
-                hasCRLF = true;
-                i++; // skip the \n, we already counted it
-            } else {
-                hasCR = true;
-            }
-        } else if (buffer[i] == '\n') {
-            hasLF = true;
-        }
-    }
+	for (ssize_t i = 0; i < bytesRead; i++) {
+		if (buffer[i] == '\r') {
+			if (i + 1 < bytesRead && buffer[i + 1] == '\n') {
+				hasCRLF = true;
+				i++; // skip the \n, we already counted it
+			} else {
+				hasCR = true;
+			}
+		} else if (buffer[i] == '\n') {
+			hasLF = true;
+		}
+	}
 
-    int stylesFound = (hasCRLF ? 1 : 0) + (hasLF ? 1 : 0) + (hasCR ? 1 : 0);
-    if (stylesFound > 1)  return LINE_ENDING_MIXED;
-    if (hasCRLF)          return LINE_ENDING_CRLF;
-    if (hasCR)            return LINE_ENDING_CR;
-    return LINE_ENDING_LF; // default
+	int stylesFound = (hasCRLF ? 1 : 0) + (hasLF ? 1 : 0) + (hasCR ? 1 : 0);
+	if (stylesFound > 1)
+		return LINE_ENDING_MIXED;
+	if (hasCRLF)
+		return LINE_ENDING_CRLF;
+	if (hasCR)
+		return LINE_ENDING_CR;
+	return LINE_ENDING_LF; // default
 }
+
 
 BString
 MainWindow::_LineEndingLabel() const
 {
-    switch (fLineEnding) {
-        case LINE_ENDING_CRLF:  return "CRLF";
-        case LINE_ENDING_CR:    return "CR";
-        case LINE_ENDING_MIXED: return "Mixed";
-        case LINE_ENDING_LF:
-        default:                return "LF";
-    }
+	switch (fLineEnding) {
+		case LINE_ENDING_CRLF:
+			return "CRLF";
+		case LINE_ENDING_CR:
+			return "CR";
+		case LINE_ENDING_MIXED:
+			return "Mixed";
+		case LINE_ENDING_LF:
+		default:
+			return "LF";
+	}
 }
+
 
 BString
 MainWindow::_NormalizeLineEndings(const char* raw, ssize_t length)
 {
-    BString result;
+	BString result;
 
-    for (ssize_t i = 0; i < length; i++) {
-        if (raw[i] == '\r') {
-            result.Append('\n', 1);
-            if (i + 1 < length && raw[i + 1] == '\n')
-                i++; // skip the \n in \r\n pair
-        } else {
-            result.Append(raw[i], 1);
-        }
-    }
-    return result;
+	for (ssize_t i = 0; i < length; i++) {
+		if (raw[i] == '\r') {
+			result.Append('\n', 1);
+			if (i + 1 < length && raw[i + 1] == '\n')
+				i++; // skip the \n in \r\n pair
+		} else {
+			result.Append(raw[i], 1);
+		}
+	}
+	return result;
 }
+
 
 BString
 MainWindow::_RestoreLineEndings(const BString& text) const
 {
-    if (fLineEnding == LINE_ENDING_LF)
-        return text; // nothing to do
+	if (fLineEnding == LINE_ENDING_LF)
+		return text; // nothing to do
 
-    BString result(text);
-    switch (fLineEnding) {
-        case LINE_ENDING_CRLF:
-            result.ReplaceAll("\n", "\r\n");
-            break;
-        case LINE_ENDING_CR:
-            result.ReplaceAll("\n", "\r");
-            break;
-        case LINE_ENDING_MIXED: // Fallback to LF
-            break;
-        default:
-            break;
-    }
-    return result;
+	BString result(text);
+	switch (fLineEnding) {
+		case LINE_ENDING_CRLF:
+			result.ReplaceAll("\n", "\r\n");
+			break;
+		case LINE_ENDING_CR:
+			result.ReplaceAll("\n", "\r");
+			break;
+		case LINE_ENDING_MIXED: // Fallback to LF
+			break;
+		default:
+			break;
+	}
+	return result;
 }
 
 
 BString
 MainWindow::_EncodingToICUName(TextEncoding encoding) const
 {
-    switch (encoding) {
-        case ENCODING_UTF16_LE:    return "UTF-16LE";
-        case ENCODING_UTF16_BE:    return "UTF-16BE";
-        case ENCODING_LATIN1:      return "ISO-8859-1";
-        case ENCODING_WINDOWS1252: return "windows-1252";
-        case ENCODING_UTF8:
-        default:                   return "UTF-8";
-    }
+	switch (encoding) {
+		case ENCODING_UTF16_LE:
+			return "UTF-16LE";
+		case ENCODING_UTF16_BE:
+			return "UTF-16BE";
+		case ENCODING_LATIN1:
+			return "ISO-8859-1";
+		case ENCODING_WINDOWS1252:
+			return "windows-1252";
+		case ENCODING_UTF8:
+		default:
+			return "UTF-8";
+	}
 }
+
 
 BString
 MainWindow::_EncodingLabel() const
 {
-    switch (fEncoding) {
-        case ENCODING_UTF16_LE:    return "UTF-16 LE";
-        case ENCODING_UTF16_BE:    return "UTF-16 BE";
-        case ENCODING_LATIN1:      return "Latin-1";
-        case ENCODING_WINDOWS1252: return "Windows-1252";
-        case ENCODING_UTF8:
-        default:                   return "UTF-8";
-    }
+	switch (fEncoding) {
+		case ENCODING_UTF16_LE:
+			return "UTF-16 LE";
+		case ENCODING_UTF16_BE:
+			return "UTF-16 BE";
+		case ENCODING_LATIN1:
+			return "Latin-1";
+		case ENCODING_WINDOWS1252:
+			return "Windows-1252";
+		case ENCODING_UTF8:
+		default:
+			return "UTF-8";
+	}
 }
+
 
 TextEncoding
 MainWindow::_DetectEncoding(const char* raw, ssize_t length, size_t& outDataStart)
 {
-    outDataStart = 0;
+	outDataStart = 0;
 
-    // Detect BOM
-    if (length >= 3 &&
-        (uint8)raw[0] == 0xEF &&
-        (uint8)raw[1] == 0xBB &&
-        (uint8)raw[2] == 0xBF) {
-        fHasBOM = true;
-        outDataStart = 3;
-        return ENCODING_UTF8;
-    }
-    if (length >= 2 &&
-        (uint8)raw[0] == 0xFF &&
-        (uint8)raw[1] == 0xFE) {
-        fHasBOM = true;
-        outDataStart = 2;
-        return ENCODING_UTF16_LE;
-    }
-    if (length >= 2 &&
-        (uint8)raw[0] == 0xFE &&
-        (uint8)raw[1] == 0xFF) {
-        fHasBOM = true;
-        outDataStart = 2;
-        return ENCODING_UTF16_BE;
-    }
+	// Detect BOM
+	if (length >= 3 && (uint8)raw[0] == 0xEF && (uint8)raw[1] == 0xBB && (uint8)raw[2] == 0xBF) {
+		fHasBOM = true;
+		outDataStart = 3;
+		return ENCODING_UTF8;
+	}
+	if (length >= 2 && (uint8)raw[0] == 0xFF && (uint8)raw[1] == 0xFE) {
+		fHasBOM = true;
+		outDataStart = 2;
+		return ENCODING_UTF16_LE;
+	}
+	if (length >= 2 && (uint8)raw[0] == 0xFE && (uint8)raw[1] == 0xFF) {
+		fHasBOM = true;
+		outDataStart = 2;
+		return ENCODING_UTF16_BE;
+	}
 
-    fHasBOM = false;
+	fHasBOM = false;
 
-    // No BOM — use ICU to detect
-    UErrorCode status = U_ZERO_ERROR;
-    UCharsetDetector* detector = ucsdet_open(&status);
-    if (U_FAILURE(status))
-        return ENCODING_UTF8; //fallback
+	// No BOM — use ICU to detect
+	UErrorCode status = U_ZERO_ERROR;
+	UCharsetDetector* detector = ucsdet_open(&status);
+	if (U_FAILURE(status))
+		return ENCODING_UTF8; // fallback
 
-    ucsdet_setText(detector, raw, (int32_t)length, &status);
-    const UCharsetMatch* match = ucsdet_detect(detector, &status);
+	ucsdet_setText(detector, raw, (int32_t)length, &status);
+	const UCharsetMatch* match = ucsdet_detect(detector, &status);
 
-    TextEncoding result = ENCODING_UTF8;
-    if (U_SUCCESS(status) && match != NULL) {
-        const char* name = ucsdet_getName(match, &status);
-        int32_t confidence = ucsdet_getConfidence(match, &status);
+	TextEncoding result = ENCODING_UTF8;
+	if (U_SUCCESS(status) && match != NULL) {
+		const char* name = ucsdet_getName(match, &status);
+		int32_t confidence = ucsdet_getConfidence(match, &status);
 		fprintf(stderr, "ICU detected: %s, confidence: %d\n", name, confidence);
 
-        if (U_SUCCESS(status) && confidence >= 10) {
-            BString icuName(name);
-            if (icuName == "UTF-8")                         result = ENCODING_UTF8;
-            else if (icuName == "UTF-16LE")                 result = ENCODING_UTF16_LE;
-            else if (icuName == "UTF-16BE")                 result = ENCODING_UTF16_BE;
-            else if (icuName == "ISO-8859-1")               result = ENCODING_LATIN1;
-            else if (icuName.StartsWith("windows-1252"))    result = ENCODING_WINDOWS1252;
-            // for anything else fallback to UTF-8
-        }
-    }
+		if (U_SUCCESS(status) && confidence >= 10) {
+			BString icuName(name);
+			if (icuName == "UTF-8")
+				result = ENCODING_UTF8;
+			else if (icuName == "UTF-16LE")
+				result = ENCODING_UTF16_LE;
+			else if (icuName == "UTF-16BE")
+				result = ENCODING_UTF16_BE;
+			else if (icuName == "ISO-8859-1")
+				result = ENCODING_LATIN1;
+			else if (icuName.StartsWith("windows-1252"))
+				result = ENCODING_WINDOWS1252;
+			// for anything else fallback to UTF-8
+		}
+	}
 
-    ucsdet_close(detector);
-    return result;
+	ucsdet_close(detector);
+	return result;
 }
 
 
 BString
 MainWindow::_DecodeToUTF8(const char* raw, ssize_t length, TextEncoding encoding)
 {
-    if (encoding == ENCODING_UTF8)
-        return BString(raw, length); //already UTF-8, early return
+	if (encoding == ENCODING_UTF8)
+		return BString(raw, length); // already UTF-8, early return
 
-    UErrorCode status = U_ZERO_ERROR;
-    const char* icuName = _EncodingToICUName(encoding);
+	UErrorCode status = U_ZERO_ERROR;
+	const char* icuName = _EncodingToICUName(encoding);
 
-    //calculate required buffer size
-    int32_t destSize = 0;
-    ucnv_convert("UTF-8", icuName, NULL, 0, raw, (int32_t)length, &status);
+	// calculate required buffer size
+	int32_t destSize = 0;
+	ucnv_convert("UTF-8", icuName, NULL, 0, raw, (int32_t)length, &status);
 
-    if (status == U_BUFFER_OVERFLOW_ERROR) {
-        destSize = -1; // trigger proper sizing below
-        status = U_ZERO_ERROR;
-    }
+	if (status == U_BUFFER_OVERFLOW_ERROR) {
+		destSize = -1; // trigger proper sizing below
+		status = U_ZERO_ERROR;
+	}
 
-    // get exact size
-    status = U_ZERO_ERROR;
-    int32_t needed = ucnv_convert("UTF-8", icuName, NULL, 0, raw, (int32_t)length, &status);
-    // U_BUFFER_OVERFLOW_ERROR
-    status = U_ZERO_ERROR;
+	// get exact size
+	status = U_ZERO_ERROR;
+	int32_t needed = ucnv_convert("UTF-8", icuName, NULL, 0, raw, (int32_t)length, &status);
+	// U_BUFFER_OVERFLOW_ERROR
+	status = U_ZERO_ERROR;
 
-    char* dest = new char[needed + 1];
-    int32_t written = ucnv_convert("UTF-8", icuName, dest, needed + 1, raw, (int32_t)length, &status);
+	char* dest = new char[needed + 1];
+	int32_t written
+		= ucnv_convert("UTF-8", icuName, dest, needed + 1, raw, (int32_t)length, &status);
 
-    BString result;
-    if (U_SUCCESS(status))
-        result.SetTo(dest, written);
+	BString result;
+	if (U_SUCCESS(status))
+		result.SetTo(dest, written);
 
-    delete[] dest;
-    return result;
+	delete[] dest;
+	return result;
 }
 
 
 BString
 MainWindow::_EncodeFromUTF8(const BString& text, TextEncoding encoding)
 {
-    if (encoding == ENCODING_UTF8)
-        return text; // No conversion, early return
+	if (encoding == ENCODING_UTF8)
+		return text; // No conversion, early return
 
-    UErrorCode status = U_ZERO_ERROR;
-    const char* icuName = _EncodingToICUName(encoding);
-    const char* src = text.String();
-    int32_t srcLen = (int32_t)text.Length();
+	UErrorCode status = U_ZERO_ERROR;
+	const char* icuName = _EncodingToICUName(encoding);
+	const char* src = text.String();
+	int32_t srcLen = (int32_t)text.Length();
 
-    // get exact size
-    int32_t needed = ucnv_convert(icuName, "UTF-8", NULL, 0, src, srcLen, &status);
-    status = U_ZERO_ERROR;
+	// get exact size
+	int32_t needed = ucnv_convert(icuName, "UTF-8", NULL, 0, src, srcLen, &status);
+	status = U_ZERO_ERROR;
 
-    char* dest = new char[needed + 2]; //for possible UTF-16 null terminator
-    int32_t written = ucnv_convert(icuName, "UTF-8", dest, needed + 2, src, srcLen, &status);
+	char* dest = new char[needed + 2]; // for possible UTF-16 null terminator
+	int32_t written = ucnv_convert(icuName, "UTF-8", dest, needed + 2, src, srcLen, &status);
 
-    BString result;
-    if (U_SUCCESS(status))
-        result.SetTo(dest, written);
+	BString result;
+	if (U_SUCCESS(status))
+		result.SetTo(dest, written);
 
-    delete[] dest;
-    return result;
+	delete[] dest;
+	return result;
 }
