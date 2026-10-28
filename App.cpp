@@ -43,7 +43,7 @@ App::AboutRequested()
 
 	BAboutWindow* about = new BAboutWindow(kApplicationName, kApplicationSignature);
 	about->AddDescription(B_TRANSLATE("Clean and transform text easily with this lightweight tool."));
-	about->AddCopyright(2025-2026, "Johan Wagenheim");
+	about->AddCopyright(2025, "Johan Wagenheim");
 	about->AddText(B_TRANSLATE("Distributed under the terms of the MIT License."));
 	about->AddAuthors(authors);
 	about->AddSpecialThanks(thanks);
