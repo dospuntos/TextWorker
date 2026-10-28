@@ -1236,7 +1236,7 @@ MainWindow::_CheckSaveAndContinue(BMessage* pendingMessage)
 	BString text;
 	text.SetToFormat(B_TRANSLATE("Save changes to the file \"%s\"?"), fileName.String());
 	BAlert* alert
-		= new BAlert("save-changes", text, B_TRANSLATE("Cancel"), B_TRANSLATE("Don't Save"),
+		= new BAlert("save-changes", text, B_TRANSLATE("Cancel"), B_TRANSLATE("Don't save"),
 			B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
 	alert->SetShortcut(0, B_ESCAPE);
 

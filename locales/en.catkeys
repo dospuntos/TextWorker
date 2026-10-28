@@ -1,4 +1,4 @@
-1	English	application/x-vnd.jpw-TextWorker	4108718970
+1	English	application/x-vnd.jpw-TextWorker	1852723354
 %i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
 Split on words	Sidebar	As short as possible	Split on words
 Whitespace trimmed from lines in selection	Text utilities		Whitespace trimmed from lines in selection
@@ -43,7 +43,6 @@ Undo	Toolbar		Undo
 %zu lines sorted by line length in %s order in selection	Text utilities		%zu lines sorted by line length in %s order in selection
 ROT13 encode/decode	Toolbar		ROT13 encode/decode
 Title Case	MainView		Title Case
-Don't Save	MainView		Don't Save
 %i duplicated lines removed from entire text	Text utilities		%i duplicated lines removed from entire text
 Paste clipboard contents on open	Settings		Paste clipboard contents on open
 Replace:	Sidebar	As short as possible	Replace:
@@ -158,6 +157,7 @@ URL decode	MainView		URL decode
 ZuMi (Toolbar icons)	MainView		ZuMi (Toolbar icons)
 Spaces	Sidebar		Spaces
 %i lines indented by %i %s	Text utilities		%i lines indented by %i %s
+Don't save	MainView		Don't save
 %d occurrences of \"%s\" replaced in entire text	Text utilities		%d occurrences of \"%s\" replaced in entire text
 lowercase	MainView		lowercase
 Trim whitespace	MainView		Trim whitespace
