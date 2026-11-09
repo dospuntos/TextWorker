@@ -1,4 +1,4 @@
-1	Catalan	application/x-vnd.jpw-TextWorker	4267162439
+1	Catalan	application/x-vnd.jpw-TextWorker	1852723354
 %d empty lines removed from entire text	Text utilities		S'han suprimit %d línies buides de tot el text.
 %d empty lines removed from selection	Text utilities		S'han suprimit %d línies buides de la selecció.
 %d occurrences of \"%s\" replaced in entire text	Text utilities		S'han substituït %d ocurrències de \"%s\" en tot el text.
@@ -27,6 +27,8 @@ ascending	Text utilities		ascendent
 breaking anywhere	Text utilities		trencament a qualsevol lloc
 breaking on words	Text utilities		trencament a les paraules
 descending	Text utilities		descendent
+Entire text Base64-decoded	Text utilities		Text complet descodificat en Base64
+Entire text Base64-encoded	Text utilities		Text complet codificat en Base64
 Entire text URL-decoded	Text utilities		Text complet descodificat per URL
 Entire text URL-encoded	Text utilities		Text complet codificat per URL
 kept	Text utilities		mantingudes
@@ -43,38 +45,47 @@ Prefix/suffix removed from %i lines in selection	Text utilities		Prefix / sufix 
 removed	Text utilities		suprimides
 ROT13 applied to %i characters in entire text	Text utilities		S'ha aplicat ROT13 a %i caràcters de tot el text.
 ROT13 applied to %i characters in selection	Text utilities		S'ha aplicat ROT13 a %i caràcters de la selecció.
+Selected text Base64-decoded	Text utilities		Text seleccionat descodificat en Base64
+Selected text Base64-encoded	Text utilities		Text seleccionat codificat en Base64
 Selected text URL-decoded	Text utilities		Text seleccionat descodificat per URL
 Selected text URL-encoded	Text utilities		Text seleccionat codificat per URL
 spaces	Text utilities		espais
 STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		ESTADÍSTIQUES DEL TEXT ACTUAL\n\nCaràcters: %d\nParaules: %d\nLínies: %d\nFrases: %d\nLínia més llarga: %d caràcters\nLongitud mitjana de la paraula: %.2f\n\nParaules més usades:\n
 tabs	Text utilities		tabulacions
+Text HTML-decoded	Text utilities		Text d'HTML descodificat
+Text HTML-encoded (named entities)	Text utilities		Text d'HTML codificat (entitats amb nom)
+Text HTML-encoded (numeric entities)	Text utilities		Text d'HTML codificat (entitats numèriques)
 Whitespace trimmed from lines in entire text	Text utilities		Espai en blanc retallat de les línies de tot el text
 Whitespace trimmed from lines in selection	Text utilities		Espai en blanc retallat de les línies de la selecció
 %d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Caràcters: %d | Paraules: %d | Línies: %d
 About…	MainView		Quant a...
-Add prefix/suffix	MainView		Afegiu un prefix / sufix
 AlTeRnAtInG cAsE	MainView		CaIxA AlTeRnAnT
-Break lines on delimiter	MainView		Línies de trencament al delimitador
+Base64 encode/decode	MainView		Codifica / descodifica en Base64
+Cancel	MainView		Cancel·la
 Capitalize	MainView		Posa en majúscules
 Clean and transform text easily with this lightweight tool.	MainView		Netegeu i transformeu text fàcilment amb aquesta eina lleugera.
-Cleanup	MainView		Neteja
 Copy	MainView		Copia
+Could not restore previous file	MainView		No s'ha pogut restaurar el fitxer anterior.
 Cut	MainView		Retalla
+Decode HTML entities	MainView		Descodifica entitats HTML
 Distributed under the terms of the MIT License.	MainView		Distribuïda d'acord amb els termes de la llicència MIT.
+Don't save	MainView		No ho desis
 Edit	MainView		Edita
-Encode/decode	MainView		Codifica / descodifica
+Encode HTML entities (names)	MainView		Codifica entitats HTML (noms)
+Encode HTML entities (numbers)	MainView		Codifica entitats HTML (números)
 File	MainView		Fitxer
+Format	MainView		Format
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		El Haiku és un sistema operatiu de codi obert.\nÉs ràpid, senzill i elegant.\nAls desenvolupadors els n'encanta l'arquitectura neta.\nAls usuaris els n'agrada la interfície intuïtiva.\nComenceu a explorar el poder del Haiku avui mateix.
 Help…	MainView		Ajuda...
-Humdinger for advice and review	MainView		Humdinger, pel consell i revisió
-Indent lines	MainView		Sagnat de línies
+Humdinger (advice and review)	MainView		Humdinger (consells i ressenyes)
 Insert example text	MainView		Insereix text d'exemple
-Insert line breaks (width)	MainView		Insereix salts de línia (amplada)
-Line tools	MainView		Eines de línia
+Latin-1/ISO-8859-1	MainView		Llatí-1 / ISO-8859-1
+Line endings	MainView		Finals de línia
 lowercase	MainView		minúscula
 Modified	MainView		Modificat
 New	MainView		Nou
 OK	MainView		D'acord
+Old Mac format	MainView		Format de Mac antic
 Open…	MainView		Obre...
 Paste	MainView		Enganxa
 Quit	MainView		Surt
@@ -83,17 +94,15 @@ Redo	MainView		Refés
 Remove duplicate lines	MainView		Suprimeix les línies duplicades
 Remove empty lines	MainView		Suprimeix les línies buides
 Remove line breaks	MainView		Suprimeix els salts de línia
-Remove prefix/suffix	MainView		Suprimeix el prefix / sufix
-Replace line breaks	MainView		Substitueix els salts de línia
 Report a bug…	MainView		Informeu d'un error...
 ROT-13 encode/decode	MainView		Codificació / descodificació ROT-13
 Save	MainView		Desa
 Save as…	MainView		Desa com a...
-Search/replace	MainView		Cerca / substitueix
+Save changes to the file \"%s\"?	MainView		Voleu desar els canvis al fitxer %s?
 Select all	MainView		Selecciona-ho tot
+Settings updated	MainView		Configuració actualitzada
 Settings…	MainView		Paràmetres...
 Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Perdoneu, aquesta funcionalitat encara no s'ha implementat, però està prevista per a un futur proper.
-Sort lines	MainView		Ordena les línies
 Text case	MainView		Caixa del text
 TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		Ajuda del TextWorker\n\nUseu les pestanyes de l'esquerra per aplicar transformacions com ara les següents:\n- Cercar i substituir\n- Afegir / suprimir prefixos i sufixos\n- Ordenar o netejar línies\n- Ajustar el sagnat\n\nPodeu obrir fitxers de text mitjançant \"Fitxer → Obre\" o arrossegant-los a la finestra.\n\nDesfeu els canvis amb \"Edita → Desfés\" o Alt+Z.\n\nUseu \"Paràmetres\" per configurar la font i les opcions de desar.
 The selected file is not a recognized text file.	MainView		El fitxer seleccionat no és un fitxer de text reconegut.
@@ -102,15 +111,20 @@ Toggle case	MainView		Commuta'n la caixa
 Transform	MainView		Transforma
 Trim whitespace	MainView		Retalla els espais en blanc
 Undo	MainView		Desfés
-Unindent lines	MainView		Suprimeix el sagnat
+Unix format	MainView		Format d'Unix
+Untitled	MainView		Sense títol
 UPPERCASE	MainView		MAJÚSCULA
 URL decode	MainView		Descodificació d'URL
 URL encode	MainView		Codificació d'URL
+UTF-16 LE	MainView		UTF-16 LE
+UTF-8	MainView		UTF-8
+Windows format	MainView		Format de Windows
 ZuMi (Toolbar icons)	MainView		ZuMi (icones de la barra d'eines)
 Add	Sidebar	As short as possible	Afegeix
 Alphabetical	Sidebar		Alfabètic
 Apply	Sidebar		Aplica
 Ascending	Sidebar		Ascendent
+Base64	Sidebar		Base64
 Break after X characters…	Sidebar		Interromp després de X caràcters…
 Break on…	Sidebar		Interromp...
 By line length	Sidebar		Per longitud de línia
@@ -118,11 +132,19 @@ Case sensitive	Sidebar		Sensible a majúscules i minúscules
 Case sensitive	Sidebar	As short as possible	Sensible a majúscules i minúscules
 Chars:	Sidebar	As short as possible	Caràcters:
 Cleanup	Sidebar		Neteja
+Decode	Sidebar		Descodifica
+Decode entities	Sidebar		Descodifica entitats
 Descending	Sidebar		Descendent
+Encode	Sidebar		Codifica
+Encode / decode	Sidebar		Codifica / descodifica
+Encode as names	Sidebar		Codifica com a noms
+Encode as numbers	Sidebar		Codifica com a números
+Encode/Decode	Sidebar	As short as possible	Codifica / descodifica
 Full words	Sidebar	As short as possible	Paraules senceres
+HTML Entities	Sidebar		Entitats HTML
 Indent	Sidebar	As short as possible	Sagnat
 Indent size:	Sidebar		Mida del sagnat:
-Indent/unindent lines	Sidebar		Sagnat / No sagnat de linies
+Indent/unindent lines	Sidebar		Amb / sense sagnat de línies
 Keep delimiter	Sidebar	As short as possible	Mantén el delimitador
 Line break options	Sidebar		Opcions de salt de línia
 Lines	Sidebar	As short as possible	Línies
@@ -136,6 +158,7 @@ Remove empty lines	Sidebar	As short as possible	Suprimeix les línies buides
 Replace	Sidebar		Substitueix
 Replace with…	Sidebar		Substitueix per...
 Replace:	Sidebar	As short as possible	Substitueix:
+ROT-13	Sidebar		ROT-13
 Search and replace	Sidebar		Cerca i substitueix
 Search:	Sidebar	As short as possible	Cerca:
 Sort	Sidebar		Ordena
@@ -149,12 +172,26 @@ Suffix:	Sidebar	As short as possible	Sufix:
 Tabs	Sidebar		Tabulacions
 Trim whitespace	Sidebar	As short as possible	Retalla els espais en blanc
 Unindent	Sidebar	As short as possible	Sense sagnat
+URL encoding	Sidebar		Codificació d'URL
+Appearance	Settings		Aspecte
+Clear field values after use	Settings		Esborra els valors del camp després de l'ús
+Close	Settings		Tanca
+Close on Escape	Settings		Tanca amb la tecla Esc.
+Font family:	Settings		Família de la lletra:
+Font size:	Settings		Mida de la lletra:
+Paste clipboard contents on open	Settings		Enganxa el contingut del porta-retalls en obrir
+Preferences	Settings		Preferències
+Prompt to save changes before closing	Settings		Demana desar els canvis abans de tancar.
+Restore last session on startup	Settings		Restaura l'última sessió a l'inici.
+Save field values on exit	Settings		Desa els valors dels camps en sortir
+Settings	Settings		Paràmetres
+Base64 encode/decode	Toolbar		Codifica / descodifica en Base64
 Capitalize	Toolbar		Posa en majúscules
 Copy	Toolbar		Copia
 Cut	Toolbar		Retalla
 Help…	Toolbar		Ajuda...
 lowercase	Toolbar		minúscula
-New file	Toolbar		Fitxer nou
+New	Toolbar		Nou
 Open file…	Toolbar		Obre un fiter...
 Paste	Toolbar		Enganxa
 Redo	Toolbar		Refés
@@ -168,12 +205,4 @@ UPPERCASE	Toolbar		MAJÚSCULA
 URL decode	Toolbar		Descodificació d'URL
 URL encode	Toolbar		Codificació d'URL
 Word wrap	Toolbar		Ajustament de paraules
-Clear field values after use	Settings		Esborra els valors del camp després de l'ús
-Close	Settings		Tanca
-Font family:	Settings		Família de la lletra:
-Font size:	Settings		Mida de la lletra:
-Paste clipboard contents on open	Settings		Enganxa el contingut del porta-retalls en obrir
-Save field values on exit	Settings		Desa els valors dels camps en sortir
-Save text on exit	Settings		Desa el text en sortir
-Settings	Settings		Paràmetres
 TextWorker	System name		Treballador de textos

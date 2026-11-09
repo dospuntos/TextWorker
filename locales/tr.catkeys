@@ -1,4 +1,4 @@
-1	Turkish	application/x-vnd.jpw-TextWorker	4267162439
+1	Turkish	application/x-vnd.jpw-TextWorker	1852723354
 %d empty lines removed from entire text	Text utilities		Tüm metinden %d boş satır kaldırıldı
 %d empty lines removed from selection	Text utilities		Seçimden %d boş satır kaldırıldı
 %d occurrences of \"%s\" replaced in entire text	Text utilities		Tüm metinde %d “%s” oluşu değiştirildi
@@ -27,6 +27,8 @@ ascending	Text utilities		artan
 breaking anywhere	Text utilities		herhangi bir yerde sonlanan
 breaking on words	Text utilities		sözcüklerde sonlanan
 descending	Text utilities		azalan
+Entire text Base64-decoded	Text utilities		Bütün metin Base64 ile kodu çözülmüş
+Entire text Base64-encoded	Text utilities		Bütün metin Base64 kodlu
 Entire text URL-decoded	Text utilities		Tüm metnin URL kodu çözüldü
 Entire text URL-encoded	Text utilities		Tüm metin URL olarak kodlandı
 kept	Text utilities		tutuldu
@@ -43,38 +45,47 @@ Prefix/suffix removed from %i lines in selection	Text utilities		Seçimden %i sa
 removed	Text utilities		kaldırıldı
 ROT13 applied to %i characters in entire text	Text utilities		Tüm metinde %i karaktere ROT13 uygulandı
 ROT13 applied to %i characters in selection	Text utilities		Seçimde %i karaktere ROT13 uygulandı
+Selected text Base64-decoded	Text utilities		Seçili metin Base64 ile kodu çözülmüş
+Selected text Base64-encoded	Text utilities		Seçili metin Base64 ile kodlu
 Selected text URL-decoded	Text utilities		Seçili metnin URL kodu çözüldü
 Selected text URL-encoded	Text utilities		Seçimin URL kodu çözüldü
 spaces	Text utilities		boşluklar
 STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		GEÇERLİ METNİN İSTATİSTİKLERİ\n\nKarakter: %d\nSözcük: %d\nSatır: %d\nTümce: %d\nEn uzun satır: %d karakter\nOrtalama sözcük uzunluğu: %.2f\n\nEn çok kullanılan sözcükler:\n
 tabs	Text utilities		sekmeler
+Text HTML-decoded	Text utilities		Metin HTML ile kodu çözülmüş
+Text HTML-encoded (named entities)	Text utilities		Metin HTML ile kodlu (adlı varlıklar)
+Text HTML-encoded (numeric entities)	Text utilities		Metin HTML ile kodlu (sayısal varlıklar)
 Whitespace trimmed from lines in entire text	Text utilities		Tüm metinde satırlardaki boşluklar kırpıldı
 Whitespace trimmed from lines in selection	Text utilities		Seçimde satırlardaki boşluklar kırpıldı
 %d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Karakter: %d | Sözcük: %d | Satır: %d
 About…	MainView		Hakkında…
-Add prefix/suffix	MainView		Önek/sonek ekle
 AlTeRnAtInG cAsE	MainView		DöNüŞüMlÜ bİçİm yap
-Break lines on delimiter	MainView		Sınırlayıcıda satırı sonlandır
+Base64 encode/decode	MainView		Base64 kodla/kod çöz
+Cancel	MainView		Vazgeç
 Capitalize	MainView		BÜYÜK harf yap
 Clean and transform text easily with this lightweight tool.	MainView		Bu hafif araçla metinleri hızlıca dönüştürün.
-Cleanup	MainView		Temizle
 Copy	MainView		Kopyala
+Could not restore previous file	MainView		Önceki dosya geri yüklenemedi
 Cut	MainView		Kes
+Decode HTML entities	MainView		HTML varlıklarının kodunu çöz
 Distributed under the terms of the MIT License.	MainView		MIT lisansının koşulları altında dağıtılır.
+Don't save	MainView		Kaydetme
 Edit	MainView		Düzen
-Encode/decode	MainView		Kodla/kodunu çöz
+Encode HTML entities (names)	MainView		HTML varlıkları kodla (adlar)
+Encode HTML entities (numbers)	MainView		HTML varlıkları kodla (sayılar)
 File	MainView		Dosya
+Format	MainView		Biçim
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku, açık kaynaklı bir işletim sistemidir.\nHızlıdır, basittir ve özenlidir.\nGeliştiriciler, onun temiz mimarisini çok severler.\nKullanıcılar onun sezgisel arayüzüne bayılırlar.\nHaiku’nun gücünü keşfetmeye başlayın.
 Help…	MainView		Yardım…
-Humdinger for advice and review	MainView		Tavsiyeler ve inceleme için Humdinger’e
-Indent lines	MainView		Satırları girintile
+Humdinger (advice and review)	MainView		Humdinger (öneri ve inceleme)
 Insert example text	MainView		Örnek metin gir
-Insert line breaks (width)	MainView		Satır sonu ekle (genişlik)
-Line tools	MainView		Satır araçları
+Latin-1/ISO-8859-1	MainView		Latin-1/ISO-8859-1
+Line endings	MainView		Satır sonları
 lowercase	MainView		küçük harf yap
 Modified	MainView		Değiştirilmiş
 New	MainView		Yeni
 OK	MainView		Tamam
+Old Mac format	MainView		Eski Mac biçimi
 Open…	MainView		Aç…
 Paste	MainView		Yapıştır
 Quit	MainView		Çık
@@ -83,17 +94,15 @@ Redo	MainView		Yinele
 Remove duplicate lines	MainView		Yinelenmiş satırları kaldır
 Remove empty lines	MainView		Boş satırları kaldır
 Remove line breaks	MainView		Satır sonlarını kaldır
-Remove prefix/suffix	MainView		Öneki/soneki kaldır
-Replace line breaks	MainView		Satır sonlarını değiştir
 Report a bug…	MainView		Hata bildir…
 ROT-13 encode/decode	MainView		ROT-13 kodla/kodunu çöz
 Save	MainView		Kaydet
 Save as…	MainView		Farklı kaydet…
-Search/replace	MainView		Ara/değiştir
+Save changes to the file \"%s\"?	MainView		“%s” dosyasına yapılan değişiklikler kaydedilsin mi?
 Select all	MainView		Tümünü seç
+Settings updated	MainView		Ayarlar güncellendi
 Settings…	MainView		Ayarlar…
 Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Üzgünüm, bu işlevsellik henüz gerçeklenmedi; ancak yakın gelecekte eklenecek.
-Sort lines	MainView		Satırları sırala
 Text case	MainView		Tümce biçimi yap
 TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		TextWorker Yardımı\n\nŞunun gibi dönüşümleri uygulamak için soldaki sekmeleri kullanın:\n- Ara ve değiştir\n- Önekler ve sonekler ekle ve kaldır\n- Satırları sırala veya temizle\n- Girintilemeyi ayarla\n\n“Dosya → Aç” veya pencereye sürükleyerek metin dosyalarını aç\n\nDeğişiklikleri “Düzen → Geri al” veya Seçenek+Z ile değişiklikleri geri al\n\nYazıtipi ve kayıt ayarlarını yapılandırmak için “Ayarlar”ı kullan
 The selected file is not a recognized text file.	MainView		Seçili dosya, bir metin dosyası olarak algılanamadı.
@@ -102,15 +111,20 @@ Toggle case	MainView		Biçimi değiştir
 Transform	MainView		Dönüştür
 Trim whitespace	MainView		Boşlukları kırp
 Undo	MainView		Geri al
-Unindent lines	MainView		Satır girintilemesini geri al
+Unix format	MainView		Unix biçimi
+Untitled	MainView		Başlıksız
 UPPERCASE	MainView		TÜMÜNÜ BÜYÜK HARF yap
 URL decode	MainView		URL kodunu çöz
 URL encode	MainView		URL kodla
+UTF-16 LE	MainView		UTF-16 LE
+UTF-8	MainView		UTF-8
+Windows format	MainView		Windows biçimi
 ZuMi (Toolbar icons)	MainView		ZuMi (Araç çubuğu simgeleri)
 Add	Sidebar	As short as possible	Ekle
 Alphabetical	Sidebar		Abecesel
 Apply	Sidebar		Uygula
 Ascending	Sidebar		Artan
+Base64	Sidebar		Base64
 Break after X characters…	Sidebar		N karakterden sonra sonlandır…
 Break on…	Sidebar		Şurada sonlandır…
 By line length	Sidebar		Satır uzunluğuna göre
@@ -118,8 +132,16 @@ Case sensitive	Sidebar		BÜYÜK/küçük harf duyarlı
 Case sensitive	Sidebar	As short as possible	BÜYÜK/küçük harf duyarlı
 Chars:	Sidebar	As short as possible	Karakter:
 Cleanup	Sidebar		Temizle
+Decode	Sidebar		Kod çöz
+Decode entities	Sidebar		Varlıkların kodunu çöz
 Descending	Sidebar		Azalan
+Encode	Sidebar		Kodla
+Encode / decode	Sidebar		Kodla/kod çöz
+Encode as names	Sidebar		Ad olarak kodla
+Encode as numbers	Sidebar		Sayı olarak kodla
+Encode/Decode	Sidebar	As short as possible	Kodla/kod çöz
 Full words	Sidebar	As short as possible	Tam sözcük
+HTML Entities	Sidebar		HTML varlıklar
 Indent	Sidebar	As short as possible	Girintile
 Indent size:	Sidebar		Girintileme boyutu:
 Indent/unindent lines	Sidebar		Satırları girintile/geri al
@@ -136,6 +158,7 @@ Remove empty lines	Sidebar	As short as possible	Boş satırları kaldır
 Replace	Sidebar		Değiştir
 Replace with…	Sidebar		Şununla değiştir…
 Replace:	Sidebar	As short as possible	Değiştir:
+ROT-13	Sidebar		ROT-13
 Search and replace	Sidebar		Ara ve değiştir
 Search:	Sidebar	As short as possible	Ara:
 Sort	Sidebar		Sırala
@@ -149,12 +172,26 @@ Suffix:	Sidebar	As short as possible	Sonek:
 Tabs	Sidebar		Sekmeler
 Trim whitespace	Sidebar	As short as possible	Boşlukları kırp
 Unindent	Sidebar	As short as possible	Girintilemeyi geri al
+URL encoding	Sidebar		URL kodlaması
+Appearance	Settings		Görünüş
+Clear field values after use	Settings		Kullanımdan sonra alan değerlerini temizle
+Close	Settings		Kapat
+Close on Escape	Settings		Esc’ye basınca kapat
+Font family:	Settings		Yazıtipi ailesi:
+Font size:	Settings		Yazıtipi boyutu:
+Paste clipboard contents on open	Settings		Açılışta pano içeriğini yapıştır
+Preferences	Settings		Tercihler
+Prompt to save changes before closing	Settings		Kapatmadan önce değişiklikleri kaydetmek için sor
+Restore last session on startup	Settings		Başlangıçta son oturumu geri yükle
+Save field values on exit	Settings		Çıkışta alan değerlerini kaydet
+Settings	Settings		Ayarlar
+Base64 encode/decode	Toolbar		Base64 kodla/kod çöz
 Capitalize	Toolbar		Baş Harfi Büyük Yap
 Copy	Toolbar		Kopyala
 Cut	Toolbar		Kes
 Help…	Toolbar		Yardım…
 lowercase	Toolbar		küçük harf yap
-New file	Toolbar		Yeni dosya
+New	Toolbar		Yeni
 Open file…	Toolbar		Dosya aç…
 Paste	Toolbar		Yapıştır
 Redo	Toolbar		Yinele
@@ -168,12 +205,4 @@ UPPERCASE	Toolbar		BÜYÜK HARF yap
 URL decode	Toolbar		URL kodunu çöz
 URL encode	Toolbar		URL kodla
 Word wrap	Toolbar		Sözcük kaydır
-Clear field values after use	Settings		Kullanımdan sonra alan değerlerini temizle
-Close	Settings		Kapat
-Font family:	Settings		Yazıtipi ailesi:
-Font size:	Settings		Yazıtipi boyutu:
-Paste clipboard contents on open	Settings		Açılışta pano içeriğini yapıştır
-Save field values on exit	Settings		Çıkışta alan değerlerini kaydet
-Save text on exit	Settings		Çıkışta metni kaydet
-Settings	Settings		Ayarlar
 TextWorker	System name		TextWorker

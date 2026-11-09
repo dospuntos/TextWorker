@@ -1,80 +1,91 @@
-1	Friulian	application/x-vnd.jpw-TextWorker	4267162439
-%d empty lines removed from entire text	Text utilities		%d empty lines removed from entire text
-%d empty lines removed from selection	Text utilities		%d empty lines removed from selection
-%d occurrences of \"%s\" replaced in entire text	Text utilities		%d occurrences of \"%s\" replaced in entire text
-%d occurrences of \"%s\" replaced in selection	Text utilities		%d occurrences of \"%s\" replaced in selection
-%i characters changed in entire text	Text utilities		%i characters changed in entire text
-%i characters changed in selection	Text utilities		%i characters changed in selection
-%i characters changed to lowercase in entire text	Text utilities		%i characters changed to lowercase in entire text
-%i characters changed to lowercase in selection	Text utilities		%i characters changed to lowercase in selection
-%i characters changed to uppercase in entire text	Text utilities		%i characters changed to uppercase in entire text
-%i characters changed to uppercase in selection	Text utilities		%i characters changed to uppercase in selection
-%i duplicated lines removed from entire text	Text utilities		%i duplicated lines removed from entire text
-%i duplicated lines removed from selection	Text utilities		%i duplicated lines removed from selection
-%i line breaks removed in entire text	Text utilities		%i line breaks removed in entire text
-%i line breaks removed in selection	Text utilities		%i line breaks removed in selection
-%i line breaks replaced in entire text	Text utilities		%i line breaks replaced in entire text
-%i line breaks replaced in selection	Text utilities		%i line breaks replaced in selection
-%i lines indented by %i %s	Text utilities		%i lines indented by %i %s
-%i lines unindented by %i %s	Text utilities		%i lines unindented by %i %s
-%i selected lines indented by %i %s	Text utilities		%i selected lines indented by %i %s
-%i selected lines unindented by %i %s	Text utilities		%i selected lines unindented by %i %s
-%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu lines sorted alphabetically in %s order in entire text
-%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu lines sorted alphabetically in %s order in selection
-%zu lines sorted by line length in %s order in entire text	Text utilities		%zu lines sorted by line length in %s order in entire text
-%zu lines sorted by line length in %s order in selection	Text utilities		%zu lines sorted by line length in %s order in selection
+1	Friulian	application/x-vnd.jpw-TextWorker	1852723354
+%d empty lines removed from entire text	Text utilities		%d riis vueidis gjavadis di dut il test
+%d empty lines removed from selection	Text utilities		%d riis gjavadis de selezion
+%d occurrences of \"%s\" replaced in entire text	Text utilities		%d câs di \"%s\" sostituîts in dut il test
+%d occurrences of \"%s\" replaced in selection	Text utilities		%d câs di \"%s\" sostituîts te selezion
+%i characters changed in entire text	Text utilities		%i caratars modificâts in dut il test
+%i characters changed in selection	Text utilities		%i caratars modificâts te selezion
+%i characters changed to lowercase in entire text	Text utilities		%i caratars metûts minuscui in dut il test
+%i characters changed to lowercase in selection	Text utilities		%i caratars metûts minuscui te selezion
+%i characters changed to uppercase in entire text	Text utilities		%i caratars metûts maiuscui in dut il test
+%i characters changed to uppercase in selection	Text utilities		%i caratars metûts maiuscui te selezion
+%i duplicated lines removed from entire text	Text utilities		%i riis doplis gjavadis di dut il test
+%i duplicated lines removed from selection	Text utilities		%i riis doplis gjavadis de selezion
+%i line breaks removed in entire text	Text utilities		%i interuzions di rie gjavadis in dut il test
+%i line breaks removed in selection	Text utilities		%i interuzions di rie gjavadis te selezion
+%i line breaks replaced in entire text	Text utilities		%i interuzions di rie sostituidis in dut il test
+%i line breaks replaced in selection	Text utilities		%i interuzions di rie sostituidis te selezion
+%i lines indented by %i %s	Text utilities		%i riis indentadis di %i %s
+%i lines unindented by %i %s	Text utilities		%i riis gjavadis di intentazion di %i %s
+%i selected lines indented by %i %s	Text utilities		%i riis selezionadis indentadis di %i %s
+%i selected lines unindented by %i %s	Text utilities		%i riis selezionadis gjavadis di indentazion di %i %s
+%zu lines sorted alphabetically in %s order in entire text	Text utilities		%zu riis ordenadis in mût alfabetic in ordin %s in dut il test
+%zu lines sorted alphabetically in %s order in selection	Text utilities		%zu riis ordenadis in mût alfabetic in ordin %s te selezion
+%zu lines sorted by line length in %s order in entire text	Text utilities		%zu riis ordenadis par lungjece di rie in ordin %s in dut il test
+%zu lines sorted by line length in %s order in selection	Text utilities		%zu riis ordenadis par lungjece di rie in ordin %s te selezion
 ascending	Text utilities		assendent
 breaking anywhere	Text utilities		interuzion dapardut
 breaking on words	Text utilities		interuzion aes peraulis
 descending	Text utilities		dissendent
+Entire text Base64-decoded	Text utilities		Dut il test decodificât in Base64
+Entire text Base64-encoded	Text utilities		Dut il test codificât in Base64
 Entire text URL-decoded	Text utilities		Dut il test decodificât in URL
 Entire text URL-encoded	Text utilities		Dut il test codificât in URL
 kept	Text utilities		tignût
-Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Line breaks inserted in entire text (max length: %d, %s)
-Line breaks inserted in selection (max length: %d, %s)	Text utilities		Line breaks inserted in selection (max length: %d, %s)
-Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Lines broken on delimiter \"%s\" (%s) in entire text
-Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Lines broken on delimiter \"%s\" (%s) in selection
-No text selected	Text utilities		No text selected
-OK	Text utilities		OK
-Prefix/suffix added to %i lines in entire text	Text utilities		Prefix/suffix added to %i lines in entire text
-Prefix/suffix added to %i lines in selection	Text utilities		Prefix/suffix added to %i lines in selection
-Prefix/suffix removed from %i lines in entire text	Text utilities		Prefix/suffix removed from %i lines in entire text
-Prefix/suffix removed from %i lines in selection	Text utilities		Prefix/suffix removed from %i lines in selection
-removed	Text utilities		removed
-ROT13 applied to %i characters in entire text	Text utilities		ROT13 applied to %i characters in entire text
-ROT13 applied to %i characters in selection	Text utilities		ROT13 applied to %i characters in selection
-Selected text URL-decoded	Text utilities		Selected text URL-decoded
-Selected text URL-encoded	Text utilities		Selected text URL-encoded
-spaces	Text utilities		spaces
-STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n
-tabs	Text utilities		tabs
-Whitespace trimmed from lines in entire text	Text utilities		Whitespace trimmed from lines in entire text
-Whitespace trimmed from lines in selection	Text utilities		Whitespace trimmed from lines in selection
+Line breaks inserted in entire text (max length: %d, %s)	Text utilities		Interuzions di rie inseridis in dut il test (lungjece massime: %d, %s)
+Line breaks inserted in selection (max length: %d, %s)	Text utilities		Interuzions di rie inseridis te selezion (lungjece massime: %d, %s)
+Lines broken on delimiter \"%s\" (%s) in entire text	Text utilities		Riis dividudis sul delimitadôr \"%s\" (%s) in dut il test
+Lines broken on delimiter \"%s\" (%s) in selection	Text utilities		Riis dividudis sul delimitadôr \"%s\" (%s) te selezion
+No text selected	Text utilities		Nissun test selezionât
+OK	Text utilities		Va ben
+Prefix/suffix added to %i lines in entire text	Text utilities		Prefìs/sufìs zontât a %i riis in dut il test
+Prefix/suffix added to %i lines in selection	Text utilities		Prefìs/sufìs zontât a %i riis te selezion
+Prefix/suffix removed from %i lines in entire text	Text utilities		Prefìs/sufìs gjavât di %i riis in dut il test
+Prefix/suffix removed from %i lines in selection	Text utilities		Prefìs/sufìs gjavât di %i riis te selezion
+removed	Text utilities		gjavât
+ROT13 applied to %i characters in entire text	Text utilities		ROT13 aplicât a %i caratars in dut il test
+ROT13 applied to %i characters in selection	Text utilities		ROT13 aplicât a %i caratars te selezion
+Selected text Base64-decoded	Text utilities		Selezionât test decodificât in Base64
+Selected text Base64-encoded	Text utilities		Selezionât test codificât in Base64
+Selected text URL-decoded	Text utilities		Selezionât test decodificât di URL
+Selected text URL-encoded	Text utilities		Selezionât test codificât come URL
+spaces	Text utilities		spazis
+STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		STATISTICHIS PAL TEST CORINT\n\nCaratars: %d\nPeraulis: %d\nRiis: %d\nFrasis: %d\nRie plui lungje: %d caratars\nLungjece medie des peraulis: %.2f\n\nPeraule plui doprade:\n
+tabs	Text utilities		tabulazions
+Text HTML-decoded	Text utilities		Test decodificât di HTML
+Text HTML-encoded (named entities)	Text utilities		Test codificât come HTML (entitâts cun non)
+Text HTML-encoded (numeric entities)	Text utilities		Test codificât come HTML (entitâts numerichis)
+Whitespace trimmed from lines in entire text	Text utilities		Spazis gjavâts des riis in dut il test
+Whitespace trimmed from lines in selection	Text utilities		Spazis gjavâts des riis te selezion
 %d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Caratars: %d | Peraulis: %d | Riis: %d
 About…	MainView		Informazions…
-Add prefix/suffix	MainView		Zonte prefìs/sufìs
 AlTeRnAtInG cAsE	MainView		AlTeRnAdE
-Break lines on delimiter	MainView		Riis di interuzion al delimitadôr
+Base64 encode/decode	MainView		Codifiche/decodifiche in Base64
+Cancel	MainView		Anule
 Capitalize	MainView		Maiusculis
 Clean and transform text easily with this lightweight tool.	MainView		Nete e trasforme il test in facilitât cun chest imprest lizêr.
-Cleanup	MainView		Nete
 Copy	MainView		Copie
+Could not restore previous file	MainView		Impussibil ripristinâ il file de volte prime
 Cut	MainView		Taie
+Decode HTML entities	MainView		Decodifiche entitâts HTML
 Distributed under the terms of the MIT License.	MainView		Distribuît secont i tiermins de licence MIT.
+Don't save	MainView		No sta salvâ
 Edit	MainView		Modifiche
-Encode/decode	MainView		Codifiche/decodifiche
+Encode HTML entities (names)	MainView		Codifiche entitâts HTML (nons)
+Encode HTML entities (numbers)	MainView		Codifiche entitâts HTML (numars)
 File	MainView		File
+Format	MainView		Formât
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku al è un sisteme operatîf open-source (vâl a dî a codiç viert).\nAl è svelt, sempliç e elegant.\nAl plâs ai svilupadôrs pe sô architeture nete.\nI utents a gjoldin de sô interface intuitive.\nScomence a esplorâ la potence di Haiku vuê.
 Help…	MainView		Jutori…
-Humdinger for advice and review	MainView		Humdinger par conseis e recensions
-Indent lines	MainView		Incrès indentazion riis
+Humdinger (advice and review)	MainView		Humdinger (conseis e revision)
 Insert example text	MainView		Inserìs test di esempli
-Insert line breaks (width)	MainView		Inserìs interuzions di rie (largjece)
-Line tools	MainView		Struments pes riis
+Latin-1/ISO-8859-1	MainView		Latin-1/ISO-8859-1
+Line endings	MainView		Fin riis
 lowercase	MainView		minuscul
 Modified	MainView		Modificât
 New	MainView		Gnûf
 OK	MainView		Va ben
+Old Mac format	MainView		Formât Mac vieri
 Open…	MainView		Vierç…
 Paste	MainView		Tache
 Quit	MainView		Jes
@@ -83,17 +94,15 @@ Redo	MainView		Torne fâs
 Remove duplicate lines	MainView		Gjave riis doplis
 Remove empty lines	MainView		Gave riis vueidis
 Remove line breaks	MainView		Gjave interuzions di rie
-Remove prefix/suffix	MainView		Gjave prefìs/sufìs
-Replace line breaks	MainView		Sostituìs interuzions di rie
 Report a bug…	MainView		Segnale un erôr…
 ROT-13 encode/decode	MainView		Codifiche/decodifiche ROT-13
 Save	MainView		Salve
 Save as…	MainView		Salve come…
-Search/replace	MainView		Cîr/sostituìs
+Save changes to the file \"%s\"?	MainView		Salvâ lis modifichis al file \"%s\"?
 Select all	MainView		Selezione dut
+Settings updated	MainView		Impostazions inzornadis
 Settings…	MainView		Impostazions…
 Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Nus displâs, cheste funzion no je stade ancjemò implementade, me e je daûr a rivâ in curt.
-Sort lines	MainView		Ordene riis
 Text case	MainView		Di frase
 TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		Jutori di TextWorker\n\nDopre lis schedis a çampe par aplicâ lis trasformazions come:\n- Cîrî e sostituî\n- Zontâ/gjavâ prefìs e sufìs\n- Ordenâ o netâ vie riis\n- Regolâ la indentazion\n\nTu puedis vierzi i files di test midiant \"File → Vierç\" o strissinant i files tal barcon.\n\nDisfe lis modifichis cun \"Modifiche → Disfe\" o Alt+Z.\n\nDopre \"Impostazions\" par configurâ caratars e salvâ opzions.
 The selected file is not a recognized text file.	MainView		Il file selezionât nol è un file di test ricognossût.
@@ -102,24 +111,37 @@ Toggle case	MainView		Invertide
 Transform	MainView		Trasforme
 Trim whitespace	MainView		Gjave vie spazis di masse
 Undo	MainView		Disfe
-Unindent lines	MainView		Ridûs indentazion riis
+Unix format	MainView		Formât Unix
+Untitled	MainView		Cence titul
 UPPERCASE	MainView		MAIUSCUL
 URL decode	MainView		Decodifiche URL
 URL encode	MainView		Codifiche URL
+UTF-16 LE	MainView		UTF-16 LE
+UTF-8	MainView		UTF-8
+Windows format	MainView		Fromât Windows
 ZuMi (Toolbar icons)	MainView		ZuMi (iconis de sbare dai struments)
 Add	Sidebar	As short as possible	Zonte
 Alphabetical	Sidebar		Alfabetic
 Apply	Sidebar		Apliche
 Ascending	Sidebar		Assendent
-Break after X characters…	Sidebar		Interuzion dopo X caratars…
-Break on…	Sidebar		Interuzion su…
+Base64	Sidebar		Base64
+Break after X characters…	Sidebar		Divît dopo X caratars…
+Break on…	Sidebar		Divît su…
 By line length	Sidebar		Par lungjece di rie
 Case sensitive	Sidebar		Corispondence maiusculis
 Case sensitive	Sidebar	As short as possible	Maiuscul/minuscul
 Chars:	Sidebar	As short as possible	Caratars:
 Cleanup	Sidebar		Nete
+Decode	Sidebar		Decodifiche
+Decode entities	Sidebar		Decodifiche entitâts
 Descending	Sidebar		Dissendent
+Encode	Sidebar		Codifiche
+Encode / decode	Sidebar		Codifiche / decodifiche
+Encode as names	Sidebar		Codifiche come nons
+Encode as numbers	Sidebar		Codifiche come numars
+Encode/Decode	Sidebar	As short as possible	Codifiche/Decodifiche
 Full words	Sidebar	As short as possible	Peraulis interiis
+HTML Entities	Sidebar		Entitâts HTML
 Indent	Sidebar	As short as possible	Indentazion
 Indent size:	Sidebar		Dimension indentazion:
 Indent/unindent lines	Sidebar		Incrìs/ridûs indentazion riis
@@ -136,6 +158,7 @@ Remove empty lines	Sidebar	As short as possible	Gjave riis vueidis
 Replace	Sidebar		Sostituìs
 Replace with…	Sidebar		Sostituìs cun…
 Replace:	Sidebar	As short as possible	Sostituìs:
+ROT-13	Sidebar		ROT-13
 Search and replace	Sidebar		Cîr e sostituìs
 Search:	Sidebar	As short as possible	Cîr:
 Sort	Sidebar		Ordene
@@ -149,31 +172,37 @@ Suffix:	Sidebar	As short as possible	Sufìs:
 Tabs	Sidebar		Schedis
 Trim whitespace	Sidebar	As short as possible	Gjave spazis di masse
 Unindent	Sidebar	As short as possible	Ridûs indent.
-Capitalize	Toolbar		Capitalize
-Copy	Toolbar		Copy
-Cut	Toolbar		Cut
-Help…	Toolbar		Help…
-lowercase	Toolbar		lowercase
-New file	Toolbar		New file
-Open file…	Toolbar		Open file…
-Paste	Toolbar		Paste
-Redo	Toolbar		Redo
-ROT13 encode/decode	Toolbar		ROT13 encode/decode
-Save file	Toolbar		Save file
-Settings…	Toolbar		Settings…
-Show stats…	Toolbar		Show stats…
-Title Case	Toolbar		Title Case
-Undo	Toolbar		Undo
-UPPERCASE	Toolbar		UPPERCASE
-URL decode	Toolbar		URL decode
-URL encode	Toolbar		URL encode
-Word wrap	Toolbar		Word wrap
+URL encoding	Sidebar		Codifiche URL
+Appearance	Settings		Aspiet
 Clear field values after use	Settings		Nete i valôrs dai cjamps dopo l'ûs
 Close	Settings		Siere
+Close on Escape	Settings		Siere cun Esc
 Font family:	Settings		Famee caratar:
 Font size:	Settings		Dimension caratar:
 Paste clipboard contents on open	Settings		Ae viertidure, tache i contignûts des notis
+Preferences	Settings		Preferencis
+Prompt to save changes before closing	Settings		Domande di salvâ lis modifichis prime di sierâ
+Restore last session on startup	Settings		Ripristine la ultime session al inviament
 Save field values on exit	Settings		Salve i valôrs dai cjamps ae jessude
-Save text on exit	Settings		Salve il test ae jessude
 Settings	Settings		Impostazions
+Base64 encode/decode	Toolbar		Codifiche/decodifiche in Base64
+Capitalize	Toolbar		Maiuscul
+Copy	Toolbar		Copie
+Cut	Toolbar		Taie
+Help…	Toolbar		Jutori…
+lowercase	Toolbar		minuscul
+New	Toolbar		Gnûf
+Open file…	Toolbar		Vierç file…
+Paste	Toolbar		Tache
+Redo	Toolbar		Torne fâs
+ROT13 encode/decode	Toolbar		Codifiche/decodifiche in ROT13
+Save file	Toolbar		Salve file
+Settings…	Toolbar		Impostazions…
+Show stats…	Toolbar		Mostre statistichis…
+Title Case	Toolbar		Iniziâls maiusculis
+Undo	Toolbar		Disfe
+UPPERCASE	Toolbar		DUT MAIUSCUL
+URL decode	Toolbar		Decodifiche URL
+URL encode	Toolbar		Codifiche come URL
+Word wrap	Toolbar		Gnove rie automatiche
 TextWorker	System name		TextWorker

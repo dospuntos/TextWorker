@@ -1,4 +1,4 @@
-1	Spanish	application/x-vnd.jpw-TextWorker	4267162439
+1	Spanish	application/x-vnd.jpw-TextWorker	1852723354
 %d empty lines removed from entire text	Text utilities		%d líneas vacías eliminadas del texto completo
 %d empty lines removed from selection	Text utilities		%d líneas vacías eliminadas de la selección
 %d occurrences of \"%s\" replaced in entire text	Text utilities		%d casos de «%s» sustituidos en todo el texto
@@ -27,6 +27,8 @@ ascending	Text utilities		ascendente
 breaking anywhere	Text utilities		saltos en cualquier sitio
 breaking on words	Text utilities		saltos en palabras
 descending	Text utilities		descendente
+Entire text Base64-decoded	Text utilities		Texto completo descodificado en Base64
+Entire text Base64-encoded	Text utilities		Texto completo codificado en Base64
 Entire text URL-decoded	Text utilities		Texto completo decodificado en URL
 Entire text URL-encoded	Text utilities		Texto completo codificado en URL
 kept	Text utilities		guardado
@@ -43,38 +45,47 @@ Prefix/suffix removed from %i lines in selection	Text utilities		Prefijo/sufijo 
 removed	Text utilities		eliminado
 ROT13 applied to %i characters in entire text	Text utilities		ROT13 aplicado a %i caracteres en todo el texto
 ROT13 applied to %i characters in selection	Text utilities		ROT13 aplicado a %i caracteres en la selección
+Selected text Base64-decoded	Text utilities		Texto seleccionado descodificado en Base64
+Selected text Base64-encoded	Text utilities		Texto seleccionado codificado en Base64
 Selected text URL-decoded	Text utilities		Texto seleccionado decodificado en URL
 Selected text URL-encoded	Text utilities		Texto seleccionado codificado en URL
 spaces	Text utilities		espacios
 STATISTICS FOR CURRENT TEXT\n\nCharacters: %d\nWords: %d\nLines: %d\nSentences: %d\nLongest line: %d chars\nAverage word length: %.2f\n\nMost used words:\n	Text utilities		ESTADÍSTICAS DEL TEXTO ACTUAL\n\nCaracteres: %d\nPalabras: %d\nLíneas: %d\nOraciones: %d\nLínea más larga: %d caracteres\nLongitud media de las palabras: %.2f\n\nPalabras más utilizadas:\n
 tabs	Text utilities		saltos
+Text HTML-decoded	Text utilities		Texto descodificado en HTML
+Text HTML-encoded (named entities)	Text utilities		Texto codificado en HTML (entidades con nombre)
+Text HTML-encoded (numeric entities)	Text utilities		Texto codificado en HTML (entidades numéricas)
 Whitespace trimmed from lines in entire text	Text utilities		Espacios en blanco recortados de las líneas en todo el texto
 Whitespace trimmed from lines in selection	Text utilities		Espacios en blanco recortados de las líneas de la selección
 %d:%d | Chars: %d | Words: %d | Lines: %d	MainView	Statusbar text - only change Chars, Words and Lines	%d:%d | Letras: %d | Palabras: %d | Líneas: %d
 About…	MainView		Acerca de…
-Add prefix/suffix	MainView		Añadir prefijo/sufijo
 AlTeRnAtInG cAsE	MainView		InTeRcAlAdO
-Break lines on delimiter	MainView		Dividir líneas en delimitador
+Base64 encode/decode	MainView		Codificar/decodificar Base64
+Cancel	MainView		Cancelar
 Capitalize	MainView		Mayúscula inicial
 Clean and transform text easily with this lightweight tool.	MainView		Limpia y transforma texto fácilmente con esta herramienta ligera.
-Cleanup	MainView		Limpiar
 Copy	MainView		Copiar
+Could not restore previous file	MainView		No se pudo restaurar el archivo anterior
 Cut	MainView		Cortar
+Decode HTML entities	MainView		Decodificar entidades HTML
 Distributed under the terms of the MIT License.	MainView		Distribuido bajo los términos de la licencia MIT.
+Don't save	MainView		No guardar
 Edit	MainView		Editar
-Encode/decode	MainView		Codificar/decodificar
+Encode HTML entities (names)	MainView		Codificar entidades HTML (nombres)
+Encode HTML entities (numbers)	MainView		Codificar entidades HTML (números)
 File	MainView		Archivo
+Format	MainView		Formato
 Haiku is an open-source operating system.\nIt is fast, simple and elegant.\nDevelopers love its clean architecture.\nUsers enjoy its intuitive interface.\nStart exploring the power of Haiku today.	MainView		Haiku es un sistema operativo de código abierto.\nEs rápido, sencillo y elegante.\nLos desarrolladores adoran su arquitectura limpia.\nLos usuarios disfrutan su interfaz intuitiva.\nComienza hoy a explorar el poder de Haiku.
 Help…	MainView		Ayuda…
-Humdinger for advice and review	MainView		Humdinger para asesoramiento y revisión
-Indent lines	MainView		Incrementar sangría
+Humdinger (advice and review)	MainView		Humdinger (asesoramiento y revisión)
 Insert example text	MainView		Insertar texto de ejemplo
-Insert line breaks (width)	MainView		Insertar saltos de línea (anchura)
-Line tools	MainView		Herramientas de línea
+Latin-1/ISO-8859-1	MainView		Latin-1/ISO-8859-1
+Line endings	MainView		Finales de línea
 lowercase	MainView		minúsculas
 Modified	MainView		Modificado
 New	MainView		Nuevo
 OK	MainView		Aceptar
+Old Mac format	MainView		Formato Mac antiguo
 Open…	MainView		Abrir…
 Paste	MainView		Pegar
 Quit	MainView		Salir
@@ -83,17 +94,15 @@ Redo	MainView		Rehacer
 Remove duplicate lines	MainView		Eliminar líneas duplicadas
 Remove empty lines	MainView		Eliminar líneas vacías
 Remove line breaks	MainView		Eliminar saltos de línea
-Remove prefix/suffix	MainView		Eliminar prefijo/sufijo
-Replace line breaks	MainView		Reemplazar saltos de línea
 Report a bug…	MainView		Informar de un error…
 ROT-13 encode/decode	MainView		Codificación/decodificación ROT-13
 Save	MainView		Guardar
 Save as…	MainView		Guardar como…
-Search/replace	MainView		Buscar/reemplazar
+Save changes to the file \"%s\"?	MainView		Guardar los cambios al archivo \"%s\"?
 Select all	MainView		Seleccionar todo
+Settings updated	MainView		Configuración actualizada
 Settings…	MainView		Ajustes…
 Sorry, this functionality has not been implemented yet, but it is planned for the near future.	MainView		Lo sentimos, esta funcionalidad aún no se ha implementado, pero está prevista para un futuro próximo.
-Sort lines	MainView		Ordenar líneas
 Text case	MainView		Mayúsculas/minúsculas
 TextWorker Help\n\nUse the tabs on the left to apply transformations such as:\n- Search and replace\n- Add/remove prefixes and suffixes\n- Sort or clean up lines\n- Adjust indentation\n\nYou can open text files via \"File → Open\" or by dragging them into the window.\n\nUndo changes with \"Edit → Undo\" or Alt+Z.\n\nUse \"Settings\" to configure font and save options.	MainView		Ayuda de TextWorker\n\nUtilice las pestañas de la izquierda para aplicar transformaciones tales como:\n- Buscar y reemplazar\n- Añadir/eliminar prefijos y sufijos\n- Ordenar o limpiar líneas\n- Ajustar sangría\n\nPuede abrir archivos de texto mediante \"Archivo → Abrir\" o arrastrándolos a la ventana.\n\nDeshacer cambios con \"Editar → Deshacer\" o Alt+Z.\n\nUtilice \"Ajustes\" para configurar la fuente y guardar las opciones.
 The selected file is not a recognized text file.	MainView		El archivo seleccionado no es un archivo de texto reconocido.
@@ -102,15 +111,20 @@ Toggle case	MainView		Alternar
 Transform	MainView		Transformar
 Trim whitespace	MainView		Recortar espacios en blanco
 Undo	MainView		Deshacer
-Unindent lines	MainView		Disminuir sangría
+Unix format	MainView		Formato Unix
+Untitled	MainView		Sin nombre
 UPPERCASE	MainView		MAYÚSCULAS
 URL decode	MainView		Decodificación URL
 URL encode	MainView		Codificación URL
+UTF-16 LE	MainView		UTF-16 LE
+UTF-8	MainView		UTF-8
+Windows format	MainView		Formato Windows
 ZuMi (Toolbar icons)	MainView		ZuMi (Iconos de la barra de herramientas)
 Add	Sidebar	As short as possible	Añadir
 Alphabetical	Sidebar		Alfabético
 Apply	Sidebar		Aplicar
 Ascending	Sidebar		Ascendente
+Base64	Sidebar		Base64
 Break after X characters…	Sidebar		Salto tras X caracteres...
 Break on…	Sidebar		Salto en...
 By line length	Sidebar		Por longitud de línea
@@ -118,8 +132,16 @@ Case sensitive	Sidebar		MAYÚSCULAS/minúsculas
 Case sensitive	Sidebar	As short as possible	MAYÚS/minús
 Chars:	Sidebar	As short as possible	Caract:
 Cleanup	Sidebar		Limpiar
+Decode	Sidebar		Descodificar
+Decode entities	Sidebar		Descodificar entidades
 Descending	Sidebar		Descendente
+Encode	Sidebar		Codificar
+Encode / decode	Sidebar		Codificar /descodificar
+Encode as names	Sidebar		Codificar como nombres
+Encode as numbers	Sidebar		Codificar como números
+Encode/Decode	Sidebar	As short as possible	Codificar/Descodificar
 Full words	Sidebar	As short as possible	Palabras completas
+HTML Entities	Sidebar		Entidades HTML
 Indent	Sidebar	As short as possible	Incrementar
 Indent size:	Sidebar		Tamaño de sangría:
 Indent/unindent lines	Sidebar		Incrementar/disminuir sangría
@@ -136,6 +158,7 @@ Remove empty lines	Sidebar	As short as possible	Eliminar líneas vacías
 Replace	Sidebar		Reemplazar
 Replace with…	Sidebar		Reemplazar con…
 Replace:	Sidebar	As short as possible	Reemplazar:
+ROT-13	Sidebar		ROT-13
 Search and replace	Sidebar		Buscar y reemplazar
 Search:	Sidebar	As short as possible	Buscar:
 Sort	Sidebar		Ordenar
@@ -149,12 +172,26 @@ Suffix:	Sidebar	As short as possible	Sufijo:
 Tabs	Sidebar		Saltos
 Trim whitespace	Sidebar	As short as possible	Recortar espacios en blanco
 Unindent	Sidebar	As short as possible	Disminuir
+URL encoding	Sidebar		Codificación URL
+Appearance	Settings		Apariencia
+Clear field values after use	Settings		Borrar los valores del campo después de su uso.
+Close	Settings		Cerrar
+Close on Escape	Settings		Cerrar con Escape
+Font family:	Settings		Fuente:
+Font size:	Settings		Tamaño de fuente:
+Paste clipboard contents on open	Settings		Pegar el contenido del portapapeles al abrir
+Preferences	Settings		Preferencias
+Prompt to save changes before closing	Settings		Preguntar si guardar cambios antes de cerrar
+Restore last session on startup	Settings		Restaurar la última sesión al iniciar
+Save field values on exit	Settings		Guardar los valores de los campos al salir
+Settings	Settings		Ajustes
+Base64 encode/decode	Toolbar		Codificar/decodificar Base64
 Capitalize	Toolbar		Mayúscula inicial
 Copy	Toolbar		Copiar
 Cut	Toolbar		Cortar
 Help…	Toolbar		Ayuda…
 lowercase	Toolbar		minúscula
-New file	Toolbar		Nuevo archivo
+New	Toolbar		Nuevo
 Open file…	Toolbar		Abrir archivo…
 Paste	Toolbar		Pegar
 Redo	Toolbar		Rehacer
@@ -168,12 +205,4 @@ UPPERCASE	Toolbar		MAYÚSCULAS
 URL decode	Toolbar		Decodificación URL
 URL encode	Toolbar		Codificación URL
 Word wrap	Toolbar		Ajuste de línea
-Clear field values after use	Settings		Borrar los valores del campo después de su uso.
-Close	Settings		Cerrar
-Font family:	Settings		Fuente:
-Font size:	Settings		Tamaño de fuente:
-Paste clipboard contents on open	Settings		Pegar el contenido del portapapeles al abrir
-Save field values on exit	Settings		Guardar los valores de los campos al salir
-Save text on exit	Settings		Guardar texto al salir
-Settings	Settings		Ajustes
 TextWorker	System name		TextWorker
